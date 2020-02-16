@@ -3823,6 +3823,13 @@ namespace battleutils
         //IT                30 seconds  guess
         uint32 CharmTime = 0;
 
+        //Bind PC with Charm
+        if (PCharmer->objtype == TYPE_PC && PVictim->objtype == TYPE_PC)
+        {
+            PVictim->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_BIND, EFFECT_BIND, 1, 0, dsprand::GetRandomNumber(1, 5)));
+            return;
+        }
+
         // player charming mob
         CMobEntity* PMob = dynamic_cast<CMobEntity*>(PVictim);
         if (PMob && PCharmer->objtype == TYPE_PC)
@@ -3993,8 +4000,8 @@ namespace battleutils
         uint8 charmerLvl = PCharmer->GetMLevel();
         uint8 targetLvl = PTarget->GetMLevel();
 
-        //printf("Charmer = %s, Lvl. %u\n", PCharmer->name.c_str(), charmerLvl);
-        //printf("Target = %s, Lvl. %u\n", PTarget->name.c_str(), targetLvl);
+        printf("Charmer = %s, Lvl. %u\n", PCharmer->name.c_str(), charmerLvl);
+        printf("Target = %s, Lvl. %u\n", PTarget->name.c_str(), targetLvl);
 
         EMobDifficulty mobCheck = charutils::CheckMob(charmerLvl, targetLvl);
         float charmChance = 0.f;
@@ -4005,25 +4012,30 @@ namespace battleutils
             charmChance = 90.f;
             break;
         case EMobDifficulty::IncredibyEasyPrey:
+            charmChance = 80.f;
+            break;
         case EMobDifficulty::EasyPrey:
-            charmChance = 75.f;
+            charmChance = 70.f;
             break;
         case EMobDifficulty::DecentChallenge:
             charmChance = 60.f;
             break;
         case EMobDifficulty::EvenMatch:
-            charmChance = 40.f;
+            charmChance = 50.f;
             break;
         case EMobDifficulty::Tough:
-            charmChance = 30.f;
+            charmChance = 35.f;
             break;
         case EMobDifficulty::VeryTough:
             charmChance = 20.f;
             break;
         case EMobDifficulty::IncrediblyTough:
-            charmChance = 10.f;
+            charmChance = 5.f;
             break;
         }
+
+        printf("%u\n", mobCheck);
+        printf("%f\n", charmChance);
 
         uint8 charmerBSTlevel = 0;
 
@@ -4042,11 +4054,19 @@ namespace battleutils
         }
 
         // FIXME: Level and CHR ratios are complete guesses
-        const float levelRatio = (targetLvl - charmerBSTlevel) / 100.f;
-        charmChance *= (1.f + levelRatio);
+        //const float levelRatio = (targetLvl - charmerBSTlevel) / 100.f;
+        //charmChance *= (1.f + levelRatio);
+        const float levelRatio = (charmerBSTlevel / targetLvl) * 1.f;
+        charmChance *= (levelRatio);
 
-        const float chrRatio = (PTarget->CHR() - PCharmer->CHR()) / 100.f;
-        charmChance *= (1.f + chrRatio);
+        printf("%f\n", charmChance);
+
+        //const float chrRatio = (PTarget->CHR() - PCharmer->CHR()) / 100.f;
+        //charmChance *= (1.f + chrRatio);
+        const float chrRatio = (PCharmer->CHR() / PTarget->CHR()) * 1.f;
+        charmChance *= (chrRatio);
+
+        printf("%f\n", charmChance);
 
         // Retail doesn't take light/apollo into account for Gauge
         if (includeCharmAffinityAndChanceMods)
@@ -4057,6 +4077,10 @@ namespace battleutils
 
             charmChance *= (1.f + (charmChanceMods + charmAffintyMods) / 100.0f);
         }
+
+        printf("%f\n", charmChance);
+        printf("%f\n", levelRatio);
+        printf("%f\n", chrRatio);
 
         // Cap chance at 95%
         return std::clamp(charmChance, 0.f, 95.f);

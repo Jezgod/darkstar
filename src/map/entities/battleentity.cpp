@@ -1153,12 +1153,24 @@ bool CBattleEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
     {
         if (!isDead())
         {
-            if (allegiance == (PInitiator->allegiance % 2 == 0 ? PInitiator->allegiance + 1 : PInitiator->allegiance - 1))
+            //if (allegiance != (PInitiator->allegiance % 2 == 0 ? PInitiator->allegiance + 1 : PInitiator->allegiance - 1))
+            if (allegiance != (PInitiator->allegiance))
             {
                 return true;
             }
         }
     }
+    /*if (targetFlags & TARGET_PLAYER)
+    {
+        if (!isDead())
+        {
+            if (allegiance != PInitiator->allegiance)
+            {
+                return true;
+            }
+        }
+    }
+    */
     if ((targetFlags & TARGET_SELF) && (this == PInitiator || (PInitiator->objtype == TYPE_PET &&
         static_cast<CPetEntity*>(PInitiator)->getPetType() == PETTYPE_AUTOMATON && this == PInitiator->PMaster)))
     {
