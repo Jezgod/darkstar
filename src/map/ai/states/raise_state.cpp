@@ -25,6 +25,7 @@ This file is part of DarkStar-server source code.
 
 #include "../../entities/battleentity.h"
 #include "../../entities/charentity.h"
+#include "death_state.h"
 
 CRaiseState::CRaiseState(CBattleEntity* PEntity) :
     CState(PEntity, PEntity->targid),
@@ -43,6 +44,17 @@ bool CRaiseState::Update(time_point tick)
     {
         m_PEntity->animation = ANIMATION_NONE;
         m_PEntity->updatemask |= UPDATE_HP;
+        uint8 x = SavedAllegiance;
+
+        if (x == 2) {
+            m_PEntity->allegiance = ALLEGIANCE_SAN_DORIA;
+        }
+        else if (x == 3) {
+            m_PEntity->allegiance = ALLEGIANCE_BASTOK;
+        }
+        else if (x == 4) {
+            m_PEntity->allegiance = ALLEGIANCE_WINDURST;
+        }
         return true;
     }
     return false;

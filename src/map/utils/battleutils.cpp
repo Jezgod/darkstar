@@ -3992,10 +3992,9 @@ namespace battleutils
         if (PTargetAsMob)
         {
             // Cannot charm NMs, pets, or other non-charmable mobs
-            if (PTargetAsMob->m_Type & MOBTYPE_NOTORIOUS || !PTargetAsMob->getMobMod(MOBMOD_CHARMABLE) || PTargetAsMob->PMaster)
+            if (PTargetAsMob->m_Type & MOBTYPE_NOTORIOUS || !PTargetAsMob->getMobMod(MOBMOD_CHARMABLE) || PTargetAsMob->PMaster || PTarget->objtype == TYPE_PC)
                 return 0.f;
         }
-
 
         uint8 charmerLvl = PCharmer->GetMLevel();
         uint8 targetLvl = PTarget->GetMLevel();
@@ -4054,18 +4053,14 @@ namespace battleutils
         }
 
         // FIXME: Level and CHR ratios are complete guesses
-        //const float levelRatio = (targetLvl - charmerBSTlevel) / 100.f;
-        //charmChance *= (1.f + levelRatio);
-        const float levelRatio = (charmerBSTlevel / targetLvl) * 1.f;
-        charmChance *= (levelRatio);
+        const float levelRatio = (targetLvl - charmerBSTlevel) / 100.f;
+        charmChance *= (1.f - levelRatio);
 
         printf("%f\n", charmChance);
 
-        //const float chrRatio = (PTarget->CHR() - PCharmer->CHR()) / 100.f;
-        //charmChance *= (1.f + chrRatio);
-        const float chrRatio = (PCharmer->CHR() / PTarget->CHR()) * 1.f;
-        charmChance *= (chrRatio);
-
+        const float chrRatio = (PTarget->CHR() - PCharmer->CHR()) / 100.f;
+        charmChance *= (1.f - chrRatio);
+        
         printf("%f\n", charmChance);
 
         // Retail doesn't take light/apollo into account for Gauge

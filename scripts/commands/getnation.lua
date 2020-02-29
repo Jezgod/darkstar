@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------------------------------
+-- func: getid
+-- desc: Prints the ID of the currently selected target under the cursor
+---------------------------------------------------------------------------------------------------
+
+cmdprops =
+{
+    permission = 0,
+    parameters = ""
+};
+
+function onTrigger(player)
+    local targ = player:getCursorTarget();
+    if (targ ~= nil) then
+        player:PrintToPlayer(string.format("%s's nation is: %u ", targ:getName(),targ:getNation()));
+    else
+        player:PrintToPlayer("Must select a target using in game cursor first.");
+    end
+end;

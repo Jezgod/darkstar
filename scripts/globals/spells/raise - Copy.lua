@@ -10,17 +10,8 @@ function onMagicCastingCheck(caster,target,spell)
 end
 
 function onSpellCast(caster,target,spell)
-    local nation = 0
-	
-    -- get nation
-    nation = target:getNation()
-    allegiance = nation + 2
-
-    -- set nation  
-    target:setAllegiance( allegiance );
-
     if (target:isPC()) then
-        target:sendRaise(2)
+        target:sendRaise(1)
     else
         if (target:getName() == "Prishe") then
             -- CoP 8-4 Prishe
@@ -32,5 +23,5 @@ function onSpellCast(caster,target,spell)
     end
     spell:setMsg(dsp.msg.basic.MAGIC_CASTS_ON)
 
-    return 2
+    return 1
 end

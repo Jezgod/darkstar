@@ -299,6 +299,7 @@ public:
 
     int8			  getShieldSize();
 
+    /*int8              pNation(int8 isnation);*/
     bool			  getWeaponSkillKill();
     void			  setWeaponSkillKill(bool isWeaponSkillKill);
 
