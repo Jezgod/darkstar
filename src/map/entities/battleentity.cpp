@@ -119,6 +119,11 @@ bool CBattleEntity::isInAssault()
     return false;
 }
 
+//bool CBattleEntity::isInParty()
+//{
+//        return true;
+//}
+
 // return true if the mob has immunity
 bool CBattleEntity::hasImmunity(uint32 imID)
 {
@@ -1153,6 +1158,11 @@ bool CBattleEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
     {
         if (!isDead())
         {
+       /*     if (PartyCheck())
+            {
+                return false;
+            }*/
+
             //if (allegiance != (PInitiator->allegiance % 2 == 0 ? PInitiator->allegiance + 1 : PInitiator->allegiance - 1))
             if (allegiance != (PInitiator->allegiance))
             {
@@ -1160,17 +1170,7 @@ bool CBattleEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
             }
         }
     }
-    /*if (targetFlags & TARGET_PLAYER)
-    {
-        if (!isDead())
-        {
-            if (allegiance != PInitiator->allegiance)
-            {
-                return true;
-            }
-        }
-    }
-    */
+
     if ((targetFlags & TARGET_SELF) && (this == PInitiator || (PInitiator->objtype == TYPE_PET &&
         static_cast<CPetEntity*>(PInitiator)->getPetType() == PETTYPE_AUTOMATON && this == PInitiator->PMaster)))
     {
@@ -1350,15 +1350,16 @@ void CBattleEntity::OnCastFinished(CMagicState& state, action_t& action)
         }
     }
 
-    // TODO: Pixies will probably break here, once they're added.
-    if (this->allegiance != PActionTarget->allegiance)
+    // TODO: Pixies will probably break here, once they're added.  Fixed Sneak/Invis/Deo not applying to party members of different allegiances.
+    if ((this->allegiance == PActionTarget->allegiance) || (this->allegiance != PActionTarget->allegiance))
     {
         // Should not be removed by AoE effects that don't target the player or
         // buffs cast by other players or mobs.
-        PActionTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);
+        /*PActionTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);*/
+        this->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);
     }
 
-    this->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);
+    /*this->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);*/
 }
 
 void CBattleEntity::OnCastInterrupted(CMagicState& state, action_t& action, MSGBASIC_ID msg)

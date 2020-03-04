@@ -347,9 +347,10 @@ bool CTargetFind::validEntity(CBattleEntity* PTarget)
         return true;
     }
 
+    //Allow -ras cross allegiance in a party
 	if (m_PTarget->allegiance != PTarget->allegiance)
 	{
-		return false;
+		return true;
 	}
 
     // shouldn't add if target is charmed by the enemy

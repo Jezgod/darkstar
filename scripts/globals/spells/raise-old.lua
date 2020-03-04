@@ -9,7 +9,21 @@ function onMagicCastingCheck(caster,target,spell)
     return 0
 end
 
-function onSpellCast(caster,target,spell)
+--function onSpellCast(caster,target,spell)
+    --local nationtarg = 0
+    --local allegcast = 0
+	
+    -- get nation
+    --nationtarg = target:getNation()
+    --allegcast = caster:getAllegiance()
+    --allegiance = nationtarg + 2
+	
+	
+    -- set nation  
+    --if allegcast ~= 1 then
+      --target:setAllegiance( allegiance );
+    --end
+
     if (target:isPC()) then
         target:sendRaise(1)
     else

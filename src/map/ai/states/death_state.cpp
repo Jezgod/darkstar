@@ -43,8 +43,12 @@ CDeathState::CDeathState(CBattleEntity* PEntity, duration death_time) :
 
     m_PEntity->animation = ANIMATION_DEATH;
     m_PEntity->updatemask |= UPDATE_HP;
-    SavedAllegiance = m_PEntity->allegiance;
-    m_PEntity->allegiance = ALLEGIANCE_PLAYER;
+
+    if (m_PEntity->objtype == TYPE_PC)
+    {
+        SavedAllegiance = m_PEntity->allegiance;
+        m_PEntity->allegiance = ALLEGIANCE_PLAYER;
+    }
 
     if (m_PEntity->PAI->PathFind)
     {

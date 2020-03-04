@@ -221,7 +221,7 @@ CCharEntity::~CCharEntity()
     delete Container;
     delete UContainer;
     delete CraftContainer;
-    //delete PMeritPoints;
+    delete PMeritPoints;
 }
 
 uint8 CCharEntity::GetGender()
@@ -1713,21 +1713,6 @@ int32 CCharEntity::GetTimeRemainingUntilDeathHomepoint()
     // Once the returned value here reaches below 360 then the client with force homepoint the character
     return 0x0003A020 - (60 * GetSecondsElapsedSinceDeath());
 }
-
-//int8 CCharEntity::pNation(int8 isnation)
-//{
-//
-//    if (profile.nation == 0) {
-//        isnation = 0;
-//    }
-//    else if (profile.nation == 1) {
-//        isnation = 1;
-//    }
-//    else if (profile.nation == 2) {
-//        isnation = 2;
-//    }
-//    return isnation;
-//}
 
 bool CCharEntity::hasMoghancement(uint16 moghancementID)
 {
