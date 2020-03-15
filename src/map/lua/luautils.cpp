@@ -2752,7 +2752,8 @@ namespace luautils
 
     int32 OnCriticalHit(CBattleEntity* PMob)
     {
-        DSP_DEBUG_BREAK_IF(PMob == nullptr || PMob->objtype != TYPE_MOB)
+        /*DSP_DEBUG_BREAK_IF(PMob == nullptr || PMob->objtype != TYPE_MOB)*/
+        DSP_DEBUG_BREAK_IF(PMob == nullptr)
 
             CLuaBaseEntity LuaMobEntity(PMob);
 

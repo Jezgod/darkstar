@@ -47,6 +47,4 @@ private:
     time_point m_raiseTime;
 };
 
-extern uint8 SavedAllegiance;
-
 #endif

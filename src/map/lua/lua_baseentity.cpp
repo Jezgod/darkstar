@@ -130,6 +130,7 @@
 #include "../packets/server_ip.h"
 #include "../packets/shop_items.h"
 #include "../packets/shop_menu.h"
+#include "../packets/treasure_lot_item.h"
 #include "../packets/weather.h"
 
 #include "../utils/battleutils.h"
@@ -2264,6 +2265,9 @@ inline int32 CLuaBaseEntity::sendMenu(lua_State *L)
             break;
         case 3:
             PChar->pushPacket(new CAuctionHousePacket(2));
+            break;
+        case 4:
+            PChar->pushPacket(new CTreasureLotItemPacket(0, ITEMLOT_WIN));
             break;
         default:
             ShowDebug("Menu %i not implemented, yet.\n", menu);
@@ -13823,7 +13827,7 @@ inline int32 CLuaBaseEntity::addTreasure(lua_State *L)
 inline int32 CLuaBaseEntity::getStealItem(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
+    /*DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);*/
 
     CMobEntity* PMob = static_cast<CMobEntity*>(m_PBaseEntity);
     if (PMob)

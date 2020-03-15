@@ -293,7 +293,7 @@ int16 CBattleEntity::GetWeaponDelay(bool tp)
 
 uint8 CBattleEntity::GetMeleeRange()
 {
-    return m_ModelSize + 3;
+    return m_ModelSize + 4;
 }
 
 int16 CBattleEntity::GetRangedWeaponDelay(bool tp)
@@ -1158,10 +1158,10 @@ bool CBattleEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
     {
         if (!isDead())
         {
-       /*     if (PartyCheck())
+            if ((allegiance == 0) && (PInitiator->allegiance == 1)) //Prevent attack from Player Allegiance state
             {
                 return false;
-            }*/
+            }
 
             //if (allegiance != (PInitiator->allegiance % 2 == 0 ? PInitiator->allegiance + 1 : PInitiator->allegiance - 1))
             if (allegiance != (PInitiator->allegiance))
@@ -1398,6 +1398,10 @@ void CBattleEntity::OnDisengage(CAttackState& s)
         animation = ANIMATION_NONE;
     }
     updatemask |= UPDATE_HP;
+    if (objtype == TYPE_PC)
+    {
+        speed = GetSpeed() - 25;
+    }
     PAI->EventHandler.triggerListener("DISENGAGE", this);
 }
 
@@ -1687,6 +1691,10 @@ void CBattleEntity::OnEngage(CAttackState& state)
 {
     animation = ANIMATION_ATTACK;
     updatemask |= UPDATE_HP;
+    if (objtype == TYPE_PC)
+    {
+        speed = (GetSpeed()) + 25;
+    }
     PAI->EventHandler.triggerListener("ENGAGE", this, state.GetTarget());
 }
 

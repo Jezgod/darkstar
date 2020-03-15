@@ -825,7 +825,7 @@ search_req _HandleSearchRequest(CTCPRequestPacket& PTCPRequest)
                 bitOffset += 2;
                 nationid = country;
 
-                printf("SEARCH::Nationality Entry found. (%2X) Sorting: (%s).\n", country, (sortDescending == 0x00) ? "ascending" : "descending");
+                //printf("SEARCH::Nationality Entry found. (%2X) Sorting: (%s).\n", country, (sortDescending == 0x00) ? "ascending" : "descending");
             }
             break;
         }

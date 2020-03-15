@@ -31,8 +31,6 @@ This file is part of DarkStar-server source code.
 #include "../../status_effect_container.h"
 #include "raise_state.h"
 
-uint8 SavedAllegiance = 0;
-
 CDeathState::CDeathState(CBattleEntity* PEntity, duration death_time) :
     CState(PEntity, PEntity->targid),
     m_PEntity(PEntity),
@@ -46,7 +44,6 @@ CDeathState::CDeathState(CBattleEntity* PEntity, duration death_time) :
 
     if (m_PEntity->objtype == TYPE_PC)
     {
-        SavedAllegiance = m_PEntity->allegiance;
         m_PEntity->allegiance = ALLEGIANCE_PLAYER;
     }
 

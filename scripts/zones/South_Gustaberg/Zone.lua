@@ -35,7 +35,7 @@ function onZoneIn(player, prevZone)
 
     -- set nation  
     player:setAllegiance( allegiance );
-    player:PrintToPlayer( string.format("Allegiance set to", nationByNum[allegiance]));
+    player:PrintToPlayer( string.format("Allegiance set to %s", nationByNum[allegiance]));
 
     if player:getXPos() == 0 and player:getYPos() == 0 and player:getZPos() == 0 then
         player:setPos(-601.433, 35.204, -520.031, 1)
