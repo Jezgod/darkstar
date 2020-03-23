@@ -571,7 +571,7 @@ void CZoneEntities::SpawnTransport(CCharEntity* PChar)
 }
 
 CBaseEntity* CZoneEntities::GetEntity(uint16 targid, uint8 filter)
-{
+    {
     if (targid < 0x400)
     {
         if (filter & TYPE_MOB)

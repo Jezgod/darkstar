@@ -2200,6 +2200,7 @@ namespace battleutils
         if (PSpell->canTargetEnemy() && damage > 0 && PSpell->dealsDamage())
         {
             PDefender->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DAMAGE);
+            PDefender->StatusEffectContainer->DelStatusEffect(EFFECT_MOUNTED);
             // Check for bind breaking
             BindBreakCheck(PAttacker, PDefender);
 

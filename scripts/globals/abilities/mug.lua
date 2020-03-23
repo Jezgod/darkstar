@@ -16,6 +16,7 @@ end
 function onUseAbility(player,target,ability,action)
     local thfLevel
     local gil = 0
+    local fatpurse = 0
 
     if (player:getMainJob() == dsp.job.THF) then
         thfLevel = player:getMainLvl()
@@ -27,7 +28,7 @@ function onUseAbility(player,target,ability,action)
 
     if (target:isMob() and math.random(100) < mugChance and target:getMobMod(dsp.mobMod.MUG_GIL) > 0) then
         local purse = target:getMobMod(dsp.mobMod.MUG_GIL)
-        local fatpurse = target:getGil()
+        fatpurse = target:getGil()
         gil = fatpurse / (8 + math.random(0,8))
         if (gil == 0) then
             gil = fatpurse / 2
@@ -47,10 +48,27 @@ function onUseAbility(player,target,ability,action)
             target:setMobMod(dsp.mobMod.MUG_GIL, target:getMobMod(dsp.mobMod.MUG_GIL) - gil)
             ability:setMsg(dsp.msg.basic.MUG_SUCCESS)
         end
+
+    --PvP Mug Attempt
+    elseif (target:isPC() and math.random(100) < (mugChance - 25)) then
+	fatpurse = target:getGil()
+	gil = fatpurse * math.random(10) / 100
+	--player:PrintToPlayer( fatpurse )
+	--player:PrintToPlayer( gil )
+	player:addGil(gil)
+	target:delGil(gil)
+	ability:setMsg(dsp.msg.basic.MUG_SUCCESS)
+
+    elseif (target:isPC()) then
+	player:setHP(1)
+	ability:setMsg(dsp.msg.basic.MUG_FAIL)
+        action:animation(target:getID(), 184)
+
     else
         ability:setMsg(dsp.msg.basic.MUG_FAIL)
         action:animation(target:getID(), 184)
     end
-
+	--player:PrintToPlayer( mugChance )
     return gil
+	
 end

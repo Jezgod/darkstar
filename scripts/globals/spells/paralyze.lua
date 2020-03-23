@@ -22,14 +22,15 @@ function onSpellCast(caster, target, spell)
     -- Calculate duration.
     local duration = calculateDuration(120, spell:getSkillType(), spell:getSpellGroup(), caster, target)
 
-    -- printf("Duration : %u",duration)
-    -- printf("Potency : %u",potency)
+    --printf("Duration : %u",duration)
+    --printf("Potency : %u",potency)
     local params = {}
     params.diff = dMND
     params.skillType = dsp.skill.ENFEEBLING_MAGIC
     params.bonus = 0
     params.effect = dsp.effect.PARALYSIS
     local resist = applyResistanceEffect(caster, target, spell, params)
+    --printf("Resist : %u",resist)
 
     if resist >= 0.5 then -- There are no quarter or less hits, if target resists more than .5 spell is resisted completely
         if target:addStatusEffect(params.effect, potency, 0, duration * resist) then

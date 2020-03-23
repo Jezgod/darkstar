@@ -11,6 +11,9 @@ cmdprops =
 
 local zone_list =
 {
+	 26, -- Tavnazian Safehold 
+	 48, -- Al Zahbi
+	 50, -- Aht Urhgan Whitegate
 	230, -- Southern San d'Oria
     	231, -- Northern San d'Oria
     	232, -- Port San d'Oria

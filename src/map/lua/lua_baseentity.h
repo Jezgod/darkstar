@@ -243,6 +243,7 @@ public:
     int32 setAllegiance(lua_State* L);
     int32 getCampaignAllegiance(lua_State*); // Gets Campaign Allegiance of Entity
     int32 setCampaignAllegiance(lua_State*); // Sets Campaign Allegiance of Entity
+    int32 lockstyleOn(lua_State*);           // Turns lockstyle on
 
     int32 getNewPlayer(lua_State* L);
     int32 setNewPlayer(lua_State* L);
@@ -414,6 +415,7 @@ public:
     int32 getPartyMember(lua_State* L);             // Get a character entity from another entity's party or alliance
     int32 getPartyLeader(lua_State* L);
     int32 getLeaderID(lua_State* L);              // Get the id of the alliance/party leader *falls back to player id if no party*
+    int32 getPartyTID(lua_State* L);    
 
     int32 forMembersInRange(lua_State* L);
 

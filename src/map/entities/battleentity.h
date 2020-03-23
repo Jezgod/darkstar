@@ -481,6 +481,7 @@ struct action_t;
 
 class CBattleEntity : public CBaseEntity
 {
+
 public:
     CBattleEntity();						// конструктор
     virtual ~CBattleEntity();						// деструктор
@@ -670,10 +671,11 @@ public:
     CBattleEntity*	PMaster;				    // владелец/хозяин сущности (распространяется на все боевые сущности)
     CBattleEntity*	PLastAttacker;
 
+    bool            m_stylelockedOn;
+    /*bool            m_stylelockedOff;*/
+
     std::unique_ptr<CStatusEffectContainer> StatusEffectContainer;
     std::unique_ptr<CRecastContainer> PRecastContainer;         //
-
-
 
 private:
 
@@ -687,6 +689,7 @@ private:
     std::unordered_map<Mod, int16, EnumClassHash>		m_modStat;	// массив модификаторов
     std::unordered_map<Mod, int16, EnumClassHash>		m_modStatSave;	// saved state
     std::unordered_map<PetModType, std::unordered_map<Mod, int16, EnumClassHash>, EnumClassHash> m_petMod;
+
 };
 
 #endif

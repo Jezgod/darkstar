@@ -109,7 +109,7 @@ bool CPetController::TryDeaggro()
 
     // target is no longer valid, so wipe them from our enmity list
     if (PTarget->isDead() ||
-        PTarget->isMounted() ||
+        /*PTarget->isMounted() ||*/
         PTarget->loc.zone->GetID() != PPet->loc.zone->GetID() ||
         PPet->StatusEffectContainer->GetConfrontationEffect() != PTarget->StatusEffectContainer->GetConfrontationEffect())
     {

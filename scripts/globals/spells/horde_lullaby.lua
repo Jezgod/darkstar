@@ -7,7 +7,13 @@ require("scripts/globals/msg")
 -----------------------------------------
 
 function onMagicCastingCheck(caster,target,spell)
-    return 0
+    local cpid = caster:getPartyTID()
+    local tpid = target:getPartyTID()
+    if (cpid == tpid and cpid ~= nil) then
+	return 1
+    else
+	return 0
+    end
 end
 
 function onSpellCast(caster,target,spell)

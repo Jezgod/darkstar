@@ -4871,6 +4871,28 @@ inline int32 CLuaBaseEntity::setCampaignAllegiance(lua_State *L)
     return 0;
 }
 
+// LOCKSTYLE
+inline int32 CLuaBaseEntity::lockstyleOn(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+
+    /*DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));*/
+    DSP_DEBUG_BREAK_IF(lua_tointeger(L, 1) > 99);
+
+    if (auto PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
+    {
+
+        charutils::SetStyleLock(PChar, true);
+
+        PChar->pushPacket(new CCharAppearancePacket(PChar));
+        PChar->pushPacket(new CCharSyncPacket(PChar));
+    }
+
+    return 0;
+}
+//LOCKSTYLE
+
 /************************************************************************
 *  Function: getNewPlayer()
 *  Purpose : Returns true if a player is new
@@ -8823,6 +8845,24 @@ inline int32 CLuaBaseEntity::getLeaderID(lua_State* L)
     return 1;
 }
 
+
+inline int32 CLuaBaseEntity::getPartyTID(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    /*DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);*/
+
+    if (const CCharEntity* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
+    {
+        if (PChar->PParty != nullptr)
+        {
+            lua_pushnumber(L, PChar->PParty->GetPartyID());
+            return 1;
+        }
+    }
+    lua_pushnil(L);
+    return 1;
+}
+
 /************************************************************************
 *  Function: reloadParty()
 *  Purpose : Display a new party in the event of alliance form/disband
@@ -10180,7 +10220,7 @@ inline int32 CLuaBaseEntity::resetEnmity(lua_State *L)
 inline int32 CLuaBaseEntity::updateClaim(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
+    /*DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);*/
 
     //DSP_DEBUG_BREAK_IF(lua_gettop(L) > 1);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
@@ -14141,6 +14181,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setAllegiance),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCampaignAllegiance),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setCampaignAllegiance),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, lockstyleOn),    //FORCE LOCKSTYLE ON
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getNewPlayer),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setNewPlayer),
@@ -14313,6 +14354,8 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPartyMember),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPartyLeader),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getLeaderID),
+
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPartyTID),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,forMembersInRange),
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,addPartyEffect),

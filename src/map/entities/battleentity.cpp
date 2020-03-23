@@ -45,6 +45,10 @@
 #include "../packets/action.h"
 #include "../utils/petutils.h"
 #include "../utils/puppetutils.h"
+#include "../utils/charutils.h"
+#include "../entities/charentity.h"
+#include "../party.h"
+
 
 CBattleEntity::CBattleEntity()
 {
@@ -1154,11 +1158,12 @@ void CBattleEntity::delTrait(CTrait* PTrait)
 
 bool CBattleEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
 {
+
     if (targetFlags & TARGET_ENEMY)
     {
         if (!isDead())
         {
-            if ((allegiance == 0) && (PInitiator->allegiance == 1)) //Prevent attack from Player Allegiance state
+            if ((PInitiator->allegiance == 1)) //Prevent attack from Player Allegiance state
             {
                 return false;
             }
@@ -1209,7 +1214,15 @@ void CBattleEntity::OnCastFinished(CMagicState& state, action_t& action)
     auto PSpell = state.GetSpell();
     auto PActionTarget = static_cast<CBattleEntity*>(state.GetTarget());
 
+    //LOCKSTYLE
+    /*auto MPChar = dynamic_cast<CCharEntity*>(this);
+    bool m_stylelockedOn = true;
+    bool isStyleLocked = m_stylelockedOn;
+    MPChar->setStyleLocked(isStyleLocked);*/
+    //LOCKSTYLE
+
     luautils::OnSpellPrecast(this, PSpell);
+    
 
     state.SpendCost();
 
@@ -1398,10 +1411,17 @@ void CBattleEntity::OnDisengage(CAttackState& s)
         animation = ANIMATION_NONE;
     }
     updatemask |= UPDATE_HP;
+
+    /*auto PChar = dynamic_cast<CCharEntity*>(this);
+    bool m_stylelockedOff = false;
+    bool isStyleLocked = m_stylelockedOff;*/
+
     if (objtype == TYPE_PC)
-    {
-        speed = GetSpeed() - 25;
-    }
+        {
+            speed = 50;                                     //Speed adjustment to normal value                               
+            //PChar->setStyleLocked(isStyleLocked);           //StyleLock ON
+        }
+
     PAI->EventHandler.triggerListener("DISENGAGE", this);
 }
 
@@ -1422,6 +1442,7 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
     {
         // TODO: Should not be removed by AoE effects that don't target the player.
         PTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);
+        PTarget->StatusEffectContainer->DelStatusEffect(EFFECT_MOUNTED);
     }
 
     if (battleutils::IsParalyzed(this))
@@ -1691,10 +1712,19 @@ void CBattleEntity::OnEngage(CAttackState& state)
 {
     animation = ANIMATION_ATTACK;
     updatemask |= UPDATE_HP;
+
+    //LOCKSTYLE
+    auto PChar = dynamic_cast<CCharEntity*>(this);
+    bool m_stylelockedOn = true;
+    bool isStyleLocked = m_stylelockedOn;
+   //LOCKSTYLE
+    
     if (objtype == TYPE_PC)
     {
-        speed = (GetSpeed()) + 25;
+        speed = 75;                                     //Speed adjustment to increased value
+        PChar->setStyleLocked(isStyleLocked);           //Lockst ON
     }
+
     PAI->EventHandler.triggerListener("ENGAGE", this, state.GetTarget());
 }
 

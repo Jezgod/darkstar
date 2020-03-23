@@ -30,4 +30,5 @@ function onUseAbility(player,target,ability)
 
     player:spawnPet(id)
     player:removeAmmo()
+    player:setCharVar("familiar", 0)
 end
