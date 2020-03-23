@@ -45,6 +45,7 @@ CDeathState::CDeathState(CBattleEntity* PEntity, duration death_time) :
     if (m_PEntity->objtype == TYPE_PC)
     {
         m_PEntity->allegiance = ALLEGIANCE_PLAYER;
+        m_PEntity->speed = 50;
     }
 
     if (m_PEntity->PAI->PathFind)
