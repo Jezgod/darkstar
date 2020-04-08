@@ -1,11 +1,11 @@
 ---------------------------------------------------------------------------------------------------
--- func: getid
--- desc: Prints the ID of the currently selected target under the cursor
+-- func: getNation
+-- desc: Prints the nation of the currently selected target under the cursor
 ---------------------------------------------------------------------------------------------------
 
 cmdprops =
 {
-    permission = 0,
+    permission = 1,
     parameters = ""
 };
 

@@ -1,11 +1,11 @@
 ---------------------------------------------------------------------------------------------------
--- func: getid
--- desc: Prints the ID of the currently selected target under the cursor
+-- func: PartyTID
+-- desc: Prints the Party ID of the currently selected target under the cursor
 ---------------------------------------------------------------------------------------------------
 
 cmdprops =
 {
-    permission = 0,
+    permission = 1,
     parameters = ""
 };
 
