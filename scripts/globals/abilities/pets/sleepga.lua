@@ -8,7 +8,16 @@ require("scripts/globals/msg")
 -----------------------------------------
 
 function onAbilityCheck(player, target, ability)
-    return 0,0
+    local cpid = player:getPartyTID()
+    local tpid = target:getPartyTID()
+    local master = target:getMaster()
+    if (cpid == tpid and cpid ~= nil) then
+	return dsp.msg.basic.CANNOT_ATTACK_TARGET,0
+    elseif (master ~= nil and cpid == master:getPartyTID()) then
+	return dsp.msg.basic.CANNOT_ATTACK_TARGET,0
+    else
+    	return 0,0
+    end
 end
 
 function onPetAbility(target, pet, skill)

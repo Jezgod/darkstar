@@ -2403,12 +2403,264 @@ namespace charutils
         }
         if (PPet->getPetType() == PETTYPE_JUG_PET)
         {
-            auto skillList {battleutils::GetMobSkillList(PPet->m_MobSkillList)};
+            //auto skillList {battleutils::GetMobSkillList(PPet->m_MobSkillList)};
+
+            //656 to 750 are the ability ids for all bst pets
+            //751 to 762 are out of bit range and aren't used by any pets anyway
+
+            int32 abilityidindex = 656;
+            int16 ab1 = -1; // always highest id
+            int16 ab2 = -1;
+            int16 ab3 = -1;
+            int16 ab4 = -1;
+            int16 ab5 = -1;
+            int16 ab6 = -1;
+            int16 ab7 = -1;
+            int16 ab8 = -1;
+
+            if (PetID == 21) // SHEEP FAMILIAR
+            {
+                ab1 = 676;
+                ab2 = 675;
+                ab3 = 674;
+                ab4 = 673;
+            }
+
+            if (PetID == 22) // HARE FAMILIAR
+            {
+                ab1 = 658;
+                ab2 = 657;
+                ab3 = 656;
+            }
+
+            if (PetID == 23) // CRAB FAMILIAR
+            {
+                ab1 = 681;
+                ab2 = 680;
+                ab3 = 679;
+                ab4 = 678;
+                ab5 = 677;
+            }
+
+            if (PetID == 24) // COURIER CARRIE
+            {
+                ab1 = 681;
+                ab2 = 680;
+                ab3 = 679;
+                ab4 = 678;
+                ab5 = 677;
+            }
+
+            if (PetID == 25) // HOMUNCULUS
+            {
+                ab1 = 663;
+                ab2 = 662;
+                ab3 = 661;
+                ab4 = 660;
+                ab5 = 659;
+            }
+
+            if (PetID == 26) // FLYTRAP FAMILIAR
+            {
+                ab1 = 704;
+                ab2 = 703;
+                ab3 = 702;
+            }
+
+            if (PetID == 27) // TIGER FAMILIAR
+            {
+                ab1 = 666;
+                ab2 = 665;
+                ab3 = 664;
+            }
+
+            if (PetID == 28) // FLOWERPOT BILL
+            {
+                ab1 = 663;
+                ab2 = 662;
+                ab3 = 661;
+                ab4 = 660;
+                ab5 = 659;
+            }
+
+            if (PetID == 29) // EFT FAMILIAR
+            {
+                ab1 = 709;
+                ab2 = 708;
+                ab3 = 707;
+                ab4 = 706;
+                ab5 = 705;
+            }
+
+            if (PetID == 30) // LIZARD FAMILIAR
+            {
+                ab1 = 672;
+                ab2 = 671;
+                ab3 = 670;
+                ab4 = 669;
+                ab5 = 668;
+                ab6 = 667;
+            }
+
+            if (PetID == 31) // MAYFLY FAMILIAR
+            {
+                ab1 = 697;
+                ab2 = 696;
+            }
+
+            if (PetID == 32) // FUNGUAR FAMILIAR
+            {
+                ab1 = 690;
+                ab2 = 689;
+                ab3 = 688;
+                ab4 = 687;
+                ab5 = 686;
+                ab6 = 685;
+                ab7 = 684;
+            }
+
+            if (PetID == 33) // BEETLE FAMILIAR
+            {
+                ab1 = 695;
+                ab2 = 694;
+                ab3 = 693;
+                ab4 = 692;
+                ab5 = 691;
+            }
+
+            if (PetID == 34) // ANTLION FAMILIAR
+            {
+                ab1 = 701;
+                ab2 = 700;
+                ab3 = 699;
+                ab4 = 698;
+            }
+
+            if (PetID == 35) // MITE FAMILIAR
+            {
+                ab1 = 713;
+                ab2 = 712;
+                ab3 = 711;
+                ab4 = 710;
+            }
+
+            if (PetID == 36) // LULLABY MELODIA
+            {
+                ab1 = 676;
+                ab2 = 675;
+                ab3 = 674;
+                ab4 = 673;
+            }
+
+            if (PetID == 37) // KEENEARED STEFFI
+            {
+                ab1 = 658;
+                ab2 = 657;
+                ab3 = 656;
+            }
+
+            if (PetID == 38) // FLOWERPOT BEN
+            {
+                ab1 = 663;
+                ab2 = 662;
+                ab3 = 661;
+                ab4 = 660;
+                ab5 = 659;
+            }
+
+            if (PetID == 39) // SABER SIRAVARDE
+            {
+                ab1 = 666;
+                ab2 = 665;
+                ab3 = 664;
+            }
+
+            if (PetID == 40) // COLDBLOOD COMO
+            {
+                ab1 = 672;
+                ab2 = 671;
+                ab3 = 670;
+                ab4 = 669;
+                ab5 = 668;
+                ab6 = 667;
+            }
+
+            if (PetID == 41) // SHELLBUSTER OROB
+            {
+                ab1 = 697;
+                ab2 = 696;
+            }
+
+            if (PetID == 42) // VORACIOUS AUDREY
+            {
+                ab1 = 704;
+                ab2 = 703;
+                ab3 = 702;
+            }
+
+            if (PetID == 43) // AMBUSHER ALLIE
+            {
+                ab1 = 709;
+                ab2 = 708;
+                ab3 = 707;
+                ab4 = 706;
+                ab5 = 705;
+            }
+
+            if (PetID == 44) // LIFEDRINKER LARS
+            {
+                ab1 = 713;
+                ab2 = 712;
+                ab3 = 711;
+                ab4 = 710;
+            }
+
+            if (PetID == 45) // PANZER GALAHAD
+            {
+                ab1 = 695;
+                ab2 = 694;
+                ab3 = 693;
+                ab4 = 692;
+                ab5 = 691;
+            }
+
+            if (PetID == 46) // CHOPSUEY CHUCKY
+            {
+                ab1 = 701;
+                ab2 = 700;
+                ab3 = 699;
+                ab4 = 698;
+            }
+
+            if (PetID == 47) // AMIGO SABOTENDER
+            {
+                ab1 = 682;
+            }
+
+            if (ab1 != -1) { abilityidindex = ab1; }
+            if (ab2 != -1) { abilityidindex = ab2; }
+            if (ab3 != -1) { abilityidindex = ab3; }
+            if (ab4 != -1) { abilityidindex = ab4; }
+            if (ab5 != -1) { abilityidindex = ab5; }
+            if (ab6 != -1) { abilityidindex = ab6; }
+            if (ab7 != -1) { abilityidindex = ab7; }
+            if (ab8 != -1) { abilityidindex = ab8; }
+
+            while (abilityidindex <= ab1)
+            {
+                if (abilityidindex == ab1 || abilityidindex == ab2 || abilityidindex == ab3 || abilityidindex == ab4 || abilityidindex == ab5 || abilityidindex == ab6 || abilityidindex == ab7 || abilityidindex == ab8)
+                {
+                    addPetAbility(PChar, abilityidindex - 496);
+                }
+                abilityidindex++;
+            }
+            /*
             for (auto&& abilityid : skillList)
             {
                 addPetAbility(PChar, abilityid - 496);
-            }
+            }*/
         }
+
         PChar->pushPacket(new CCharAbilitiesPacket(PChar));
     }
 
@@ -3501,7 +3753,16 @@ namespace charutils
         }
 
         uint8 mLevel = (PChar->m_LevelRestriction != 0 && PChar->m_LevelRestriction < PChar->GetMLevel()) ? PChar->m_LevelRestriction : PChar->GetMLevel();
-        uint16 exploss = mLevel <= 67 ? (GetExpNEXTLevel(mLevel) * 8) / 100 : 2400;
+
+        uint16 exploss = 0;
+        if (mLevel == 75)
+        {
+            exploss = 1000;
+        }
+        else
+        {
+            exploss = mLevel <= 67 ? (GetExpNEXTLevel(mLevel) * 8) / 100 : 2400;
+        }
 
         if (forcedXpLoss > 0)
         {
@@ -3580,6 +3841,50 @@ namespace charutils
         SaveCharExp(PChar, PChar->GetMJob());
         PChar->pushPacket(new CCharStatsPacket(PChar));
     }
+
+    /************************************************************************
+    *                                                                       *
+    *  PvP EXP LOST FOR CONQUEST GAIN                                       *
+    *                                                                       *
+    ************************************************************************/
+    void PvPExpLostCPGain(CCharEntity* PChar, CBattleEntity* PLastAttacker, uint16 pvpexp)
+    {
+
+        uint8 mLevel = (PChar->m_LevelRestriction != 0 && PChar->m_LevelRestriction < PChar->GetMLevel()) ? PChar->m_LevelRestriction : PChar->GetMLevel();
+        pvpexp = mLevel <= 67 ? (GetExpNEXTLevel(mLevel) * 8) / 100 : 2400;
+        pvpexp = pvpexp * 10;
+
+        conquest::AddConquestPointsPVP(PLastAttacker, pvpexp);
+
+    }
+
+    /************************************************************************
+    *                                                                       *
+    *  PvP EXP LOST FOR IMP STANDING                                        *
+    *                                                                       *
+    ************************************************************************/
+    uint32 PvPExpLostISGain(CCharEntity* PChar, CBattleEntity* PLastAttacker, uint16 pvpexp)
+    {
+
+        uint8 mLevel = (PChar->m_LevelRestriction != 0 && PChar->m_LevelRestriction < PChar->GetMLevel()) ? PChar->m_LevelRestriction : PChar->GetMLevel();
+        pvpexp = mLevel <= 67 ? (GetExpNEXTLevel(mLevel) * 8) / 100 : 2400;
+        pvpexp = pvpexp * 10;
+
+        CCharEntity* PCharL = dynamic_cast<CCharEntity*>(PLastAttacker);
+
+        if (PCharL)
+        {
+            charutils::AddPoints(PCharL, "imperial_standing", (int32)(pvpexp * 0.5f));
+            PCharL->pushPacket(new CConquestPacket(PCharL));
+            return 0;
+        }
+
+        else
+        {
+            return 0;
+        }
+    }
+
 
     /************************************************************************
     *                                                                       *

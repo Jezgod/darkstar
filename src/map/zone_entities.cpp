@@ -571,7 +571,7 @@ void CZoneEntities::SpawnTransport(CCharEntity* PChar)
 }
 
 CBaseEntity* CZoneEntities::GetEntity(uint16 targid, uint8 filter)
-    {
+{
     if (targid < 0x400)
     {
         if (filter & TYPE_MOB)
@@ -582,7 +582,6 @@ CBaseEntity* CZoneEntities::GetEntity(uint16 targid, uint8 filter)
                 return it->second;
             }
         }
-
         if (filter & TYPE_NPC)
         {
             EntityList_t::const_iterator it = m_npcList.find(targid);

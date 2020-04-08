@@ -169,7 +169,7 @@ local loot =
             {itemid = 14204, droprate =  125}, -- river_gaiters
         },
         {
-            {itemid = 17472, droprate =   43}, -- cross-counters
+            {itemid = 18752, droprate =   43}, -- retaliators
             {itemid =   801, droprate =   10}, -- chrysoberyl
             {itemid =   784, droprate =   94}, -- jadeite
             {itemid =   803, droprate =  113}, -- sunstone
@@ -203,7 +203,7 @@ local loot =
         },
         {
             {itemid =     0, droprate =  957}, -- nothing
-            {itemid = 17187, droprate =   43}, -- eurytos_bow
+            {itemid = 18714, droprate =   43}, -- valis_bow
         },
         {
             {itemid =     0, droprate =  582}, -- nothing

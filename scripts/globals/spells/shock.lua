@@ -55,7 +55,8 @@ function onSpellCast(caster,target,spell)
                 DOT = DOT + mbonus/2 -- Damage
                 DOTp = DOTp + mbonus -- Stat Enfeeb
 
-                target:addStatusEffect(dsp.effect.SHOCK,DOT, 3, duration, dsp.effect.SHOCK, DOTp)
+                --target:addStatusEffect(dsp.effect.SHOCK,DOT, 3, duration, dsp.effect.SHOCK, DOTp)
+                target:addStatusEffect(dsp.effect.SHOCK,DOT, 3, duration)
             end
         end
     end

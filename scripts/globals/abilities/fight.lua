@@ -14,11 +14,7 @@ function onAbilityCheck(player,target,ability)
     if (player:getPet() == nil) then
         return dsp.msg.basic.REQUIRES_A_PET,0
     else
-        if (target:getID() == player:getPet():getID() or (target:getMaster() ~= nil and target:getMaster():isPC())) then
-            return dsp.msg.basic.CANNOT_ATTACK_TARGET,0
-        else
-            return 0,0
-        end
+        return 0,0
     end
 end
 

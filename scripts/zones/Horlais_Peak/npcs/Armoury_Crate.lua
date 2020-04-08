@@ -283,7 +283,7 @@ local loot =
         },
         {
             {itemid = 0, droprate = 636},    -- Nothing
-            {itemid = 12486, droprate = 364},-- Emperor Hairpin
+            {itemid = 15224, droprate = 364},-- Empress Hairpin
         },
         {
             {itemid = 12400, droprate = 175},-- Ashigaru Targe
@@ -344,7 +344,7 @@ local loot =
         {
             {itemid = 860, droprate = 535},   -- Behemoth Hide
             {itemid = 883, droprate = 366},   -- Behemoth Horn
-            {itemid = 17108, droprate = 48},  -- Healing Staff
+            {itemid = 18587, droprate = 48},  -- Dryad Staff
         },
         {
             {itemid = 902, droprate = 99},    -- Demon Horn
@@ -430,7 +430,7 @@ local loot =
     {
         {
             {itemid = 0, droprate = 910},    -- Nothing
-            {itemid = 13056, droprate = 90}, -- Peacock Charm
+            {itemid = 15515, droprate = 90}, -- Peacock Amulet
         },
         {
             {itemid = 0, droprate = 467},    -- Nothing

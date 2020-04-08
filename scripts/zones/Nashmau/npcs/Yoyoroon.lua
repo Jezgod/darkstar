@@ -39,6 +39,16 @@ function onTrigger(player,npc)
         2259, 19890,    -- Heatsink
         2263, 19890,    -- Flashbulb
         2267, 19890,    -- Mana Converter
+         718,  5000,	-- Rosewood Lumber
+        2288,  5000,	-- Karakul Cloth
+         879,  5000,	-- Karakul Leather
+         823, 10000,	-- Gold Thread
+         828, 10000,	-- Velvet Cloth
+        2289, 10000,	-- Wamoura Cloth
+       13465, 10000,	-- Brass Ring
+         661, 20000,    -- Brass Sheet
+        2173, 20000,	-- Wamoura Cocoon
+        2290, 20000,	-- Imperial Cermet  
     }
 
     player:showText(npc, ID.text.YOYOROON_SHOP_DIALOG)

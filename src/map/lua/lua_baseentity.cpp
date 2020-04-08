@@ -1461,6 +1461,35 @@ inline int32 CLuaBaseEntity::getCursorTarget(lua_State* L)
 }
 
 /************************************************************************
+*  Function: setCursorTarget()
+*  Purpose : GM command - gets the ID of selected Mob's, NPC's, Players
+*  Example : target:setCursorTarget()
+*  Notes   :
+************************************************************************/
+
+inline int32 CLuaBaseEntity::setCursorTarget(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
+
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+    auto PTarget = PChar->GetEntity(PChar->m_TargID);
+    uint16 id = m_PBaseEntity->targid;
+
+    if (PTarget)
+    {
+        PTarget->PAI->Internal_ChangeTarget(id);
+        PTarget->PAI->Internal_Engage(id);
+    }
+    else
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
+/************************************************************************
 *  Function: getObjType()
 *  Purpose : Returns the int value of an entity's object type (Mob,PC...)
 *  Example : if (caster:getObjType() == TYPE_PC) then
@@ -3835,6 +3864,67 @@ inline int32 CLuaBaseEntity::getCurrentGPItem(lua_State* L)
 
     return 2;
 }
+
+/************************************************************************
+*  Function: addLSpearl()
+*  Purpose : Add LS pearl to a new character 
+*  Example : player:addLSpearl("TheFederation")
+*  Notes   :
+************************************************************************/
+inline int32 CLuaBaseEntity::addLSpearl(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
+
+    std::string linkshellName = lua_tostring(L, 1);
+    const char* Query = "SELECT name FROM linkshells WHERE name='%s'";
+    char* lsName = const_cast<char*>(linkshellName.c_str());
+    Sql_EscapeString(SqlHandle, lsName, lsName);
+    int32 ret = Sql_Query(SqlHandle, Query, lsName);
+
+    if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+    {
+        CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+        std::string qStr = ("UPDATE char_inventory SET signature='");
+        qStr += lsName;
+        qStr += "' WHERE charid = " + std::to_string(PChar->id);
+        qStr += " AND itemId = 515 AND signature = ''";
+        Sql_Query(SqlHandle, qStr.c_str());
+
+        Query = "SELECT linkshellid,color FROM linkshells WHERE name='%s'";
+        ret = Sql_Query(SqlHandle, Query, lsName);
+        if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+        {
+            CItem* PItem = itemutils::GetItem(515);
+
+            // Update item with name & color //
+            int8 EncodedString[16];
+            EncodeStringLinkshell((int8*)lsName, EncodedString);
+            PItem->setSignature(EncodedString);
+            ((CItemLinkshell*)PItem)->SetLSID(Sql_GetUIntData(SqlHandle, 0));
+            ((CItemLinkshell*)PItem)->SetLSColor(Sql_GetIntData(SqlHandle, 1));
+            charutils::AddItem(PChar, LOC_INVENTORY, PItem, 1);
+            // To force equip, UN comment the rest of this!
+            // uint8 invSlotID = PItem->getSlotID();
+            // linkshell::AddOnlineMember(PChar, PItem, PItem->GetLSID());
+            // PItem->setSubType(ITEM_LOCKED);
+            // PChar->equip[SLOT_LINK1] = invSlotID;
+            // PChar->equipLoc[SLOT_LINK1] = LOC_INVENTORY;
+            // PChar->pushPacket(new CInventoryAssignPacket(PItem, INV_LINKSHELL));
+            // charutils::SaveCharEquip(PChar);
+            // PChar->pushPacket(new CLinkshellEquipPacket(PChar, PItem->GetLSID()));
+            // PChar->pushPacket(new CInventoryItemPacket(PItem, LOC_INVENTORY, PItem->getSlotID()));
+            // PChar->pushPacket(new CInventoryFinishPacket());
+            // charutils::LoadInventory(PChar);
+
+            lua_pushboolean(L, true);
+            return 1;
+        }
+    }
+    lua_pushboolean(L, false);
+    return 1;
+}
+
 
 /************************************************************************
 *  Function: getContainerSize()
@@ -14034,6 +14124,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getID),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getShortID),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCursorTarget),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setCursorTarget),
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getObjType),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,isPC),
@@ -14130,6 +14221,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,createShop),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,addShopItem),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCurrentGPItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, addLSpearl),
 
     // Trading
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getContainerSize),

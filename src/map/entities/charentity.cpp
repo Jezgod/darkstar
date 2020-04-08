@@ -24,6 +24,7 @@
 #include "../../common/showmsg.h"
 #include "../../common/timer.h"
 #include "../../common/utils.h"
+#include "../../common/mmo.h"
 
 #include <string.h>
 
@@ -41,6 +42,7 @@
 #include "../packets/char_appearance.h"
 #include "../packets/message_system.h"
 #include "../packets/message_special.h"
+#include "../packets/chat_message.h"
 
 #include "../ai/ai_container.h"
 #include "../ai/controllers/player_controller.h"
@@ -78,6 +80,7 @@
 #include "../packets/char_job_extra.h"
 #include "../packets/status_effects.h"
 #include "../mobskill.h"
+#include "../zone.h"
 
 
 CCharEntity::CCharEntity()
@@ -592,6 +595,11 @@ bool CCharEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
     }
 
     if ((targetFlags & TARGET_PLAYER) && allegiance == PInitiator->allegiance)
+    {
+        return true;
+    }
+
+    if ((targetFlags & TARGET_ENHANCE) && allegiance != PInitiator->allegiance)
     {
         return true;
     }
@@ -1497,6 +1505,9 @@ void CCharEntity::OnRaise()
         // Mijin Gakure used with MIJIN_RERAISE MOD
         if (GetLocalVar("MijinGakure") != 0 && getMod(Mod::MIJIN_RERAISE) != 0)
         {
+            CStatusEffect* PWeaknessEffect = new CStatusEffect(EFFECT_WEAKNESS, EFFECT_WEAKNESS, weaknessLvl, 0, 1);
+            StatusEffectContainer->AddStatusEffect(PWeaknessEffect);
+
             actionTarget.animation = 511;
             hpReturned = (uint16)(GetMaxHP());
         }
@@ -1671,18 +1682,42 @@ CBattleEntity* CCharEntity::IsValidTarget(uint16 targid, uint16 validTargetFlags
 
 void CCharEntity::Die()
 {
-    if (PLastAttacker)
-        loc.zone->PushPacket(this, CHAR_INRANGE_SELF, new CMessageBasicPacket(PLastAttacker, this, 0, 0, MSGBASIC_PLAYER_DEFEATED_BY));
-    else
+    if (PLastAttacker == nullptr)
+    {
         loc.zone->PushPacket(this, CHAR_INRANGE_SELF, new CMessageBasicPacket(this, this, 0, 0, MSGBASIC_FALLS_TO_GROUND));
+    }
+    else if (PLastAttacker->allegiance == 0)
+    {
+        loc.zone->PushPacket(this, CHAR_INRANGE_SELF, new CMessageBasicPacket(PLastAttacker, this, 0, 0, MSGBASIC_PLAYER_DEFEATED_BY));
+        conquest::LoseInfluencePoints(this);  //influence for conquest system
+    }
+    else if (PLastAttacker->allegiance != 0)
+    { 
+        loc.zone->PushPacket(this, CHAR_INRANGE_SELF, new CMessageBasicPacket(PLastAttacker, this, 0, 0, MSGBASIC_PLAYER_DEFEATED_BY));
+        //charutils::PvPExpLostCPGain(this, PLastAttacker, 0); //PVP XP LOSS IS CP GAIN
+        REGIONTYPE region = PLastAttacker->loc.zone->GetRegionID();
+
+        if (PLastAttacker->StatusEffectContainer->HasStatusEffect(EFFECT_SIGNET) &&
+            (region >= 0 && region <= 22))
+        {
+            // Add influence for the players region..
+            charutils::PvPExpLostCPGain(this, PLastAttacker, 0); //PVP XP LOSS IS CP GAIN
+        }
+        if (PLastAttacker->StatusEffectContainer->HasStatusEffect(EFFECT_SANCTION) &&
+            (region >= 28 && region <= 32))
+        {
+            charutils::PvPExpLostISGain(this, PLastAttacker, 0); //PVP XP LOSS IS IS GAIN
+        }
+    }
+    else
+    {
+        loc.zone->PushPacket(this, CHAR_INRANGE_SELF, new CMessageBasicPacket(this, this, 0, 0, MSGBASIC_FALLS_TO_GROUND));
+    }
 
     Die(death_duration);
     SetDeathTimestamp((uint32)time(nullptr));
 
     setBlockingAid(false);
-
-    //influence for conquest system
-    conquest::LoseInfluencePoints(this);
 
     if (GetLocalVar("MijinGakure") == 0)
     {

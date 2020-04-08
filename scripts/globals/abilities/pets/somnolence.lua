@@ -16,6 +16,8 @@ function onPetAbility(target, pet, skill)
     local dmg = 10 + pet:getMainLvl() * 2
     local resist = applyPlayerResistance(pet,-1,target, 0, dsp.skill.ELEMENTAL_MAGIC, dsp.magic.ele.DARK)
     local duration = 120
+    printf("Damage : %u",dmg)
+    printf("Resist : %u",resist)
 
     dmg = dmg*resist
     dmg = mobAddBonuses(pet,spell,target,dmg, dsp.magic.ele.DARK)

@@ -72,7 +72,7 @@ function BluePhysicalSpell(caster, target, spell, params)
         D = params.duppercap;
     end
 
-    -- print("D val is ".. D);
+    --print("D val is ".. D);
 
     local fStr = BluefSTR(caster:getStat(dsp.mod.STR) - target:getStat(dsp.mod.VIT));
     if (fStr > 22) then

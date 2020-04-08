@@ -92,6 +92,7 @@ public:
     int32 getID(lua_State *L);              // Gets Entity Id
     int32 getShortID(lua_State *L);
     int32 getCursorTarget(lua_State *L);    // Returns the ID any object under players in game cursor.
+    int32 setCursorTarget(lua_State* L);    // Returns the ID any object under players in game cursor.
 
     int32 getObjType(lua_State*);
     int32 isPC(lua_State*);
@@ -117,6 +118,7 @@ public:
     int32 clearPath(lua_State* L);           // removes current pathfind and stops moving
     int32 checkDistance(lua_State*);         // Check Distacnce and returns distance number
     int32 wait(lua_State* L);                // make the npc wait a number of ms and then back into roam
+
     // int32 WarpTo(lua_State* L);           // warp to the given point
     // int32 RoamAround(lua_State* L);       // pick a random point to walk to
     // int32 LimitDistance(lua_State* L);    // limits the current path distance to given max distance
@@ -194,6 +196,7 @@ public:
     int32 createShop(lua_State*);            // Prepare the container for work of shop ??
     int32 addShopItem(lua_State*);           // Adds item to shop container (16 max)
     int32 getCurrentGPItem(lua_State*);      // Gets current GP item id and max points
+    int32 addLSpearl(lua_State* L);          // Adds LS to player
 
     // Trading
     int32 getContainerSize(lua_State*);      // Gets the current capacity of a container

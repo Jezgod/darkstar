@@ -29,6 +29,8 @@ function onTrigger(player,npc)
         4150,  2335, 3,    --Eye Drops
         1774,  1984, 3,    --Red Gravel
         17318,    3, 3,    --Wooden Arrow
+        17343,    4, 3,    --Bronze Bullet
+        5493,  6320, 3,    --Corsair Die
         2862,  9200, 3,    --Kingdom Waystone
     }
 

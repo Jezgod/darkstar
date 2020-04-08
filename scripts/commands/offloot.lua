@@ -12,8 +12,10 @@ cmdprops =
 local zone_list =
 {
 	26,  -- Tavnazian Safehold 
+        32,  -- Sealion's Den
 	48,  -- Al Zahbi
 	50,  -- Aht Urhgan Whitegate
+        53,  -- Nashmau
 	230, -- Southern San d'Oria
     	231, -- Northern San d'Oria
     	232, -- Port San d'Oria
@@ -49,7 +51,6 @@ end
 
 function onTrigger(player)
 	zone = player:getZoneID()
-	local var = 2
 	local nationByNum = {
 		[0] = "None",
         	[1] = "Player",
@@ -61,13 +62,13 @@ function onTrigger(player)
     -- set player status
 	nation = player:getNation()
     	allegiance = 0
-	player:setCharVar("loot", 2)
+	player:setCharVar("lootvar", 0)
 	
 	if validZone(zone_list, zone) == true then
 		player:PrintToPlayer( string.format("This function is not valid here."))
 		goto done	
 
-    	elseif player:getCharVar("loot") == 2 then
+    	elseif player:getCharVar("lootvar") == 0 then
 		allegiance = nation + 2
 		player:setAnimation(0)
      		player:setAllegiance( allegiance )

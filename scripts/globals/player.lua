@@ -120,6 +120,17 @@ local function CharCreate(player)
        player:setGil(START_GIL)
     end
 
+    if nation == 0 then
+      player:addLSpearl("TheKingdom")
+      player:addLSpearl("Retribution")
+    elseif nation == 1 then
+      player:addLSpearl("TheRepublic")
+      player:addLSpearl("Retribution")
+    else
+     player:addLSpearl("TheFederation")
+     player:addLSpearl("Retribution")
+    end
+
     player:addItem(536) -- adventurer coupon
     player:addTitle(dsp.title.NEW_ADVENTURER)
     player:setCharVar("MoghouseExplication", 1) -- needs Moghouse intro

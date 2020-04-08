@@ -96,7 +96,7 @@ bool CRangeState::Update(time_point tick)
 
         if (tick > GetEntryTime()) // after checking for the initial time, the mob can move further away and not cancel our RA
         {
-            range = 40;
+            range = 50;
         }
 
         CanUseRangedAttack(PTarget, range);
@@ -188,11 +188,13 @@ bool CRangeState::CanUseRangedAttack(CBattleEntity* PTarget, uint8 range)
         m_errorMsg = std::make_unique<CMessageBasicPacket>(m_PEntity, PTarget, 0, 0, MSGBASIC_CANNOT_SEE);
         return false;
     }
-    if ((distance(m_PEntity->loc.p, PTarget->loc.p) > 25) && range > 40)
+
+    if (distance(m_PEntity->loc.p, PTarget->loc.p) > range)
     {
         m_errorMsg = std::make_unique<CMessageBasicPacket>(m_PEntity, PTarget, 0, 0, MSGBASIC_TOO_FAR_AWAY);
         return false;
     }
+     
     if (!m_PEntity->PAI->TargetFind->canSee(&PTarget->loc.p))
     {
         m_errorMsg = std::make_unique<CMessageBasicPacket>(m_PEntity, PTarget, 0, 0, MSGBASIC_CANNOT_PERFORM_ACTION);

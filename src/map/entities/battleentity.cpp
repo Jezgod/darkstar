@@ -1214,13 +1214,6 @@ void CBattleEntity::OnCastFinished(CMagicState& state, action_t& action)
     auto PSpell = state.GetSpell();
     auto PActionTarget = static_cast<CBattleEntity*>(state.GetTarget());
 
-    //LOCKSTYLE
-    /*auto MPChar = dynamic_cast<CCharEntity*>(this);
-    bool m_stylelockedOn = true;
-    bool isStyleLocked = m_stylelockedOn;
-    MPChar->setStyleLocked(isStyleLocked);*/
-    //LOCKSTYLE
-
     luautils::OnSpellPrecast(this, PSpell);
     
 
@@ -1352,15 +1345,22 @@ void CBattleEntity::OnCastFinished(CMagicState& state, action_t& action)
     }
 
     // TODO: Pixies will probably break here, once they're added.  Fixed Sneak/Invis/Deo not applying to party members of different allegiances.
-    if ((this->allegiance == PActionTarget->allegiance) || (this->allegiance != PActionTarget->allegiance))
+    if (this->objtype == TYPE_PC && PActionTarget->objtype == TYPE_PC)
+    {
+        if ((this->allegiance != PActionTarget->allegiance))
+        {
+        }
+    }
+    else
     {
         // Should not be removed by AoE effects that don't target the player or
-        // buffs cast by other players or mobs.
-        /*PActionTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);*/
-        this->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);
+           // buffs cast by other players or mobs.
+            /*this->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);*/
+        if ((this->allegiance != PActionTarget->allegiance))
+            PActionTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);
     }
 
-    /*this->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);*/
+    this->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);
 }
 
 void CBattleEntity::OnCastInterrupted(CMagicState& state, action_t& action, MSGBASIC_ID msg)

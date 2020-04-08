@@ -57,7 +57,7 @@ function onUseAbility(player,target,ability)
     if mjob == dsp.job.DNC then
         cure = (vit+chr)*0.75+270
     else
-        cure = (vit+chr)*0.375+270
+        cure = (vit+chr)*0.375+135
     end
 
     -- apply waltz modifiers

@@ -133,10 +133,12 @@ void CTargetFind::findWithinArea(CBattleEntity* PTarget, AOERADIUS radiusType, f
     else {
         // handle this as a mob
 
-        if (m_PMasterTarget->objtype == TYPE_PC || m_PBattleEntity->allegiance == ALLEGIANCE_PLAYER){
+        if (m_PMasterTarget->objtype == TYPE_PC || m_PBattleEntity->allegiance == ALLEGIANCE_PLAYER)
+        {
             m_findType = FIND_MONSTER_PLAYER;
         }
-        else {
+        else
+        {
             m_findType = FIND_MONSTER_MONSTER;
         }
 
@@ -348,10 +350,20 @@ bool CTargetFind::validEntity(CBattleEntity* PTarget)
     }
 
     //Allow -ras cross allegiance in a party
-	if (m_PTarget->allegiance != PTarget->allegiance)
-	{
-		return true;
-	}
+    if ((m_PTarget->objtype == TYPE_PC || TYPE_PET) && PTarget->objtype == TYPE_PC)
+    {
+        if (m_PTarget->allegiance != PTarget->allegiance)
+        {
+            return true;
+        }
+    }
+    else
+    {
+        if (m_PTarget->allegiance != PTarget->allegiance)
+        {
+            return false;
+        }
+    }
 
     // shouldn't add if target is charmed by the enemy
     if (PTarget->PMaster != nullptr)

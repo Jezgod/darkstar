@@ -44,13 +44,16 @@ function onZoneIn( player, prevZone)
         [4] = "Windurst"
     }
 	
+    -- turn on stylelock
+    player:lockstyleOn()
+
     -- get nation
     nation = player:getNation()
     allegiance = nation + 2
 
     -- set nation  
-    player:setAllegiance( allegiance )
-    player:PrintToPlayer( string.format("Allegiance set to %s", nationByNum[allegiance])); 
+    player:setAllegiance( allegiance );
+    player:PrintToPlayer( string.format("Allegiance set to %s", nationByNum[allegiance]));
 
     if player:getXPos() == 0 and player:getYPos() == 0 and player:getZPos() == 0 then
         player:setPos(116.825, 6.613, 100, 140)

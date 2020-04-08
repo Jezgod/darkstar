@@ -137,7 +137,7 @@ namespace conquest
             case REGION_GUSTABERG:
             case REGION_SARUTABARUTA:
             {
-                points = 10;
+                points = 100;               //default 10
                 break;
             }
             case REGION_ZULKHEIM:
@@ -146,7 +146,7 @@ namespace conquest
             case REGION_DERFLAND:
             case REGION_ARAGONEU:
             {
-                points = 50;
+                points = 500;               //default 50
                 break;
             }
             case REGION_QUFIMISLAND:
@@ -154,7 +154,7 @@ namespace conquest
             case REGION_KUZOTZ:
             case REGION_ELSHIMOLOWLANDS:
             {
-                points = 75;
+                points = 750;               //default 75
                 break;
             }
             case REGION_VOLLBOW:
@@ -162,14 +162,14 @@ namespace conquest
             case REGION_FAUREGANDI:
             case REGION_ELSHIMOUPLANDS:
             {
-                points = 300;
+                points = 1000;              //default 300
                 break;
             }
             case REGION_TULIA:
             case REGION_MOVALPOLOS:
             case REGION_TAVNAZIA:
             {
-                points = 600;
+                points = 1500;              //default 600
                 break;
             }
             default:
@@ -595,6 +595,36 @@ namespace conquest
     }
 
 
+    uint32 AddConquestPointsPVP(CBattleEntity* PLastAttacker, uint32 exp)
+    {
+        // ВНИМЕНИЕ: не нужно отправлять персонажу CConquestPacket,
+        // т.к. клиент сам запрашивает этот пакет через фиксированный промежуток времени
+
+        /*auto PChar = static_cast<CBattleEntity*>(PLastAttacker);*/
+        CCharEntity* PChar = dynamic_cast<CCharEntity*>(PLastAttacker);
+        if (PChar) 
+        {
+            REGIONTYPE region = PChar->loc.zone->GetRegionID();
+
+            if (region != REGION_UNKNOWN)
+            {
+                // 10% if region control is player's nation
+                // 15% otherwise
+
+                double percentage = PChar->profile.nation == GetRegionOwner(region) ? 0.5 : 0.65;
+                percentage += PChar->getMod(Mod::CONQUEST_BONUS) / 100.0;
+                uint32 points = (uint32)(exp * percentage);
+
+                charutils::AddPoints(PChar, charutils::GetConquestPointsName(PChar).c_str(), points);
+                GainInfluencePoints(PChar, points / 25);
+            }
+            return 0; // added conquest points (пока не вижу в этом определенного смысла)
+        }
+        else
+        {
+            return 0;
+        }
+    }
 	//GetConquestInfluence(region,nation)
 	//AddConquestInfluence(region,nation)
 	//ResetConquestInfluence()

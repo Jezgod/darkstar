@@ -338,6 +338,7 @@ local helmInfo =
                     { 420,  1236}, -- Cactus Stems
                     { 420,  1473}, -- High Quality Scorpion Shell
                     { 420,   769}, -- Colored Rock
+                    {  10,  1255}, -- Elemental Ore
                 },
                 points =
                 {
@@ -424,6 +425,7 @@ local helmInfo =
                     { 230,   703}, -- Petrified Log
                     { 100,   769}, -- Colored Rock
                     { 470,  1888}, -- Silica
+                    {   5,  1255}, -- Elemental Ore
                 },
                 points =
                 {
@@ -938,6 +940,7 @@ local helmInfo =
                     { 140,  737}, -- Gold Ore
                     { 340,  738}, -- Platium Ore
                     {  70,  769}, -- Colored Rock
+                    {  50, 1255}, -- Elemental Ore
                 },
                 points =
                 {
@@ -1103,6 +1106,7 @@ local helmInfo =
                     { 840,   768}, -- Flint Stone
                     { 360,   736}, -- Silver Ore
                     { 170,   769}, -- Colored Rock
+                    {  85,  1255}, -- Elemental Ore
                     { 150,   645}, -- Darksteel Ore
                     { 110,   737}, -- Gold Ore
                 },
@@ -1235,6 +1239,7 @@ local helmInfo =
                     { 810,   736}, -- Silver Ore
                     { 590,   645}, -- Darksteel Ore
                     { 400,   769}, -- Colored Rock
+                    {  75,  1255}, -- Elemental Ore
                     {  80,   737}, -- Gold Ore
                 },
                 points =
@@ -1274,6 +1279,7 @@ local helmInfo =
                     {1520,  2126}, -- Orpiment
                     { 100,   739}, -- Orichalcum Ore
                     { 220,   769}, -- Colored Rock
+                    { 150,  1255}, -- Elemental Ore
                 },
                 points =
                 {
@@ -1308,6 +1314,12 @@ local helmInfo =
 -------------------------------------------------
 
 local rocks = {769,771,770,772,773,774,776,775}
+
+-------------------------------------------------
+-- elemental ores. do not change this order!
+-------------------------------------------------
+
+local ores = {1255,1258,1260,1257,1256,1259,1261,1262}
 
 -------------------------------------------------
 -- local functions
@@ -1361,6 +1373,11 @@ function pickItem(player, info)
     -- if we picked a colored rock, change it to the day's element
     if item == 769 then
         item = rocks[VanadielDayElement() + 1]
+    end
+
+    -- if we picked an elemental ore, change it to the day's element
+    if item == 1255 then
+        item = ores[VanadielDayElement() + 1]
     end
 
     return item

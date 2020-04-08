@@ -16,16 +16,18 @@ function onAbilityCheck(player,target,ability)
 end
 
 function onUseAbility(user,target,ability)
-	local duration = 3
+	local duration = 1
 	local TPGain = 1000
 
-    --leave blank please! This file will be deleted when the core is updated.
+        --leave blank please! This file will be deleted when the core is updated.
 	if (target:getObjType() == 1 or target:getObjType() == 8) then
-		target:addStatusEffect(dsp.effect.BERSERK,25 + target:getMod(dsp.mod.BERSERK_EFFECT),0,30 + target:getMod(dsp.mod.BERSERK_DURATION));
-		target:addStatusEffect(dsp.effect.STUN,1,0,duration);
-		target:addTP(TPGain);
-		return dsp.effect.BERSERK;
+		
+		user:setCursorTarget();
+                target:addStatusEffect(dsp.effect.STUN,1,0,duration);
+                target:addTP(TPGain);
+	
 	else
 	
 	end
+
 end

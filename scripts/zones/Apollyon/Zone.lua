@@ -82,12 +82,15 @@ function onZoneIn(player,prevZone)
         [4] = "Windurst"
     }
 	
+    -- turn on stylelock
+    player:lockstyleOn()
+
     -- get nation
     nation = player:getNation()
     allegiance = nation + 2
 
     -- set nation  
-    player:setAllegiance( allegiance )
+    player:setAllegiance( allegiance );
     player:PrintToPlayer( string.format("Allegiance set to %s", nationByNum[allegiance]));
 
     if (prevZone ~= dsp.zone.ALTAIEU) then
