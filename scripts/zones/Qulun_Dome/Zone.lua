@@ -23,6 +23,9 @@ function onZoneIn(player,prevZone)
         [4] = "Windurst"
     }
 	
+    -- turn on stylelock
+    player:lockstyleOn()
+
     -- get nation
     nation = player:getNation()
     allegiance = nation + 2

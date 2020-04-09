@@ -21,7 +21,7 @@ function onZoneIn(player,prevZone)
     local CurrentMission = player:getCurrentMission(WINDURST);
     local MissionStatus = player:getCharVar("MissionStatus");
     local cs = -1;
-    local nation = 0;
+    local nation = 0
     local nationByNum = {
 	[0] = "None",
         [1] = "Player",
@@ -30,6 +30,9 @@ function onZoneIn(player,prevZone)
         [4] = "Windurst"
     }
 	
+    -- turn on stylelock
+    player:lockstyleOn()
+
     -- get nation
     nation = player:getNation()
     allegiance = nation + 2

@@ -16,6 +16,9 @@ local zone_list =
 	 48, -- Al Zahbi
 	 50, -- Aht Urhgan Whitegate
          53, -- Nashmau
+         80, -- Southern San d'Oria [S]
+         87, -- Bastok Markets [S]
+         94, -- Windurst Waters [S]
 	230, -- Southern San d'Oria
     	231, -- Northern San d'Oria
     	232, -- Port San d'Oria
