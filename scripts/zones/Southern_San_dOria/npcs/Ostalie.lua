@@ -9,6 +9,8 @@ require("scripts/globals/npc_util")
 require("scripts/globals/quests")
 require("scripts/globals/shop")
 
+local crystal = {4096, 4099, 4101, 4098, 4097, 4100, 4102, 4103}
+
 function onTrade(player,npc,trade)
     if player:getQuestStatus(SANDORIA, dsp.quest.id.sandoria.FLYERS_FOR_REGINE) == QUEST_ACCEPTED and npcUtil.tradeHas(trade, 532) then
         player:messageSpecial(ID.text.FLYER_REFUSED)
@@ -31,18 +33,30 @@ function onTrigger(player,npc)
         605,    180, 3,    -- Pickaxe
         12600,  216, 3,    -- Robe
         12856,  172, 3,    -- Slops
+        17343,   14, 3,    -- Bronze Bullet
+         5493, 6320, 3,    -- Corsair Die
     }
 
     local rank = getNationRank(dsp.nation.SANDORIA)
+    local pRank = player:getRank()
 
     if rank ~= 1 then
         table.insert(stock,1022)    -- Thief's Tools
         table.insert(stock,3643)
         table.insert(stock,3)
+
     elseif rank == 3 then
         table.insert(stock,1023)    -- Living Key
         table.insert(stock,5520)
         table.insert(stock,3)
+    end
+
+     if (rank == 1 and pRank >=5) then
+   	local daily_crystal = 0
+	daily_crystal = crystal[VanadielDayElement() + 1]
+        table.insert(stock, daily_crystal)    --Crystal of the Day
+        table.insert(stock, 5000)
+        table.insert(stock, 1)
     end
 
     player:showText(npc, ID.text.OSTALIE_SHOP_DIALOG)

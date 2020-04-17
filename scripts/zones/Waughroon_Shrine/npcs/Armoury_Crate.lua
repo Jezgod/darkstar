@@ -468,6 +468,7 @@ local loot =
             {itemid = 775, droprate = 11},   -- Black Rock
             {itemid = 772, droprate = 11},   -- Green Rock
             {itemid = 776, droprate = 9},    -- White Rock
+            {itemid = 1255, droprate = 50},  -- elemental_ore 
         },
         {
             {itemid =     0, droprate =  932}, -- Nothing

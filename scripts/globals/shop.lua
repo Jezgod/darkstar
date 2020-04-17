@@ -90,6 +90,7 @@ dsp.shop =
             4150, 2595, -- Eye Drops
             4112,  910, -- Potion
         }
+
         dsp.shop.general(player, stock)
     end,
 
@@ -150,16 +151,16 @@ dsp.shop =
                  616,    1600,    dsp.craftRank.CRAFTSMAN,      -- Pie Dough
                 2561,    3000,    dsp.craftRank.CRAFTSMAN,      -- Pizza Dough
                 8800,     600,    dsp.craftRank.CRAFTSMAN,      -- Azuki Bean
-                8903,     300,      dsp.craftRank.AMATEUR,      -- Cooking Kit 5
-                8904,     400,      dsp.craftRank.AMATEUR,      -- Cooking Kit 10
-                8905,     650,      dsp.craftRank.AMATEUR,      -- Cooking Kit 15
-                8906,    1050,      dsp.craftRank.AMATEUR,      -- Cooking Kit 20
-                8907,    1600,      dsp.craftRank.AMATEUR,      -- Cooking Kit 25
-                8908,    2300,      dsp.craftRank.AMATEUR,      -- Cooking Kit 30
-                8909,    3150,      dsp.craftRank.AMATEUR,      -- Cooking Kit 35
-                8910,    4150,      dsp.craftRank.AMATEUR,      -- Cooking Kit 40
-                8911,    5300,      dsp.craftRank.AMATEUR,      -- Cooking Kit 45
-                8912,    7600,      dsp.craftRank.AMATEUR       -- Cooking Kit 50
+                8903,    3000,      dsp.craftRank.AMATEUR,      -- Cooking Kit 5
+                8904,    4000,      dsp.craftRank.AMATEUR,      -- Cooking Kit 10
+                8905,    6500,      dsp.craftRank.AMATEUR,      -- Cooking Kit 15
+                8906,   10500,      dsp.craftRank.AMATEUR,      -- Cooking Kit 20
+                8907,   16000,      dsp.craftRank.AMATEUR,      -- Cooking Kit 25
+                8908,   23000,      dsp.craftRank.AMATEUR,      -- Cooking Kit 30
+                8909,   31500,      dsp.craftRank.AMATEUR,      -- Cooking Kit 35
+                8910,   41500,      dsp.craftRank.AMATEUR,      -- Cooking Kit 40
+                8911,   53000,      dsp.craftRank.AMATEUR,      -- Cooking Kit 45
+                8912,   76000,      dsp.craftRank.AMATEUR       -- Cooking Kit 50
         },
         [guild.clothcraft] =
         {
@@ -174,16 +175,16 @@ dsp.shop =
                  816,    1500,   dsp.craftRank.APPRENTICE,      -- Silk Thread
                 2315,    1400,   dsp.craftRank.JOURNEYMAN,      -- Karakul Wool
                  823,   14500,    dsp.craftRank.CRAFTSMAN,      -- Gold Thread
-                8847,     300,      dsp.craftRank.AMATEUR,      -- Clothcraft kit 5
-                8848,     400,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 10
-                8849,     650,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 15
-                8850,    1050,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 20
-                8851,    1600,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 25
-                8852,    2300,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 30
-                8853,    3150,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 35
-                8854,    4150,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 40
-                8855,    5300,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 45
-                8856,    7600,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 50
+                8847,    3000,      dsp.craftRank.AMATEUR,      -- Clothcraft kit 5
+                8848,    4000,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 10
+                8849,    6500,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 15
+                8850,   10500,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 20
+                8851,   16000,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 25
+                8852,   23000,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 30
+                8853,   31500,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 35
+                8854,   41500,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 40
+                8855,   53000,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 45
+                8856,   76000,      dsp.craftRank.AMATEUR,      -- Clothcraft Kit 50
                 9251, 1126125,      dsp.craftRank.AMATEUR       -- Khoma Thread
         },
         [guild.goldsmithing] =
@@ -220,16 +221,16 @@ dsp.shop =
                  752,   32000,   dsp.craftRank.JOURNEYMAN,      -- Gold Sheet
                  761,   58000,   dsp.craftRank.JOURNEYMAN,      -- Gold Chain
                  738,    5000,    dsp.craftRank.CRAFTSMAN,      -- Platinum Ore
-                8833,     300,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 5
-                8834,     400,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 10
-                8835,     650,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 15
-                8836,    1050,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 20
-                8837,    1600,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 25
-                8838,    2300,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 30
-                8839,    3150,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 35
-                8840,    4150,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 40
-                8841,    5300,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 45
-                8842,    7600,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 50
+                8833,    3000,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 5
+                8834,    4000,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 10
+                8835,    6500,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 15
+                8836,   10500,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 20
+                8837,   16000,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 25
+                8838,   23000,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 30
+                8839,   31500,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 35
+                8840,   41500,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 40
+                8841,   53000,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 45
+                8842,   76000,      dsp.craftRank.AMATEUR,      -- Goldsmithing Kit 50
                 9249, 1126125,      dsp.craftRank.AMATEUR       -- Ruthenium Ore
         },
         [guild.woodworking] =
@@ -250,16 +251,16 @@ dsp.shop =
                  700,    4500,   dsp.craftRank.JOURNEYMAN,      -- Mahogany Log
                  702,    5000,    dsp.craftRank.CRAFTSMAN,      -- Ebony Log
                 2761,    5500,    dsp.craftRank.CRAFTSMAN,      -- Feyweald Log
-                8805,     300,      dsp.craftRank.AMATEUR,      -- Smithing Kit 5
-                8806,     400,      dsp.craftRank.AMATEUR,      -- Smithing Kit 10
-                8807,     650,      dsp.craftRank.AMATEUR,      -- Smithing Kit 15
-                8808,    1050,      dsp.craftRank.AMATEUR,      -- Smithing Kit 20
-                8809,    1600,      dsp.craftRank.AMATEUR,      -- Smithing Kit 25
-                8810,    2300,      dsp.craftRank.AMATEUR,      -- Smithing Kit 30
-                8811,    3150,      dsp.craftRank.AMATEUR,      -- Smithing Kit 35
-                8812,    4150,      dsp.craftRank.AMATEUR,      -- Smithing Kit 40
-                8813,    5300,      dsp.craftRank.AMATEUR,      -- Smithing Kit 45
-                8814,    7600,      dsp.craftRank.AMATEUR,      -- Smithing Kit 50
+                8805,    3000,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 5
+                8806,    4000,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 10
+                8807,    6500,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 15
+                8808,   10500,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 20
+                8809,   16000,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 25
+                8810,   23000,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 30
+                8811,   31500,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 35
+                8812,   41500,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 40
+                8813,   53000,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 45
+                8814,   76000,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 50
                 9245, 1126125,      dsp.craftRank.AMATEUR       -- Cypress Log
         },
         [guild.alchemy] =
@@ -282,16 +283,16 @@ dsp.shop =
                  915,    3600,   dsp.craftRank.JOURNEYMAN,      -- Toad Oil
                  931,    5000,    dsp.craftRank.CRAFTSMAN,      -- Cermet Chunk
                  944,    1035,    dsp.craftRank.CRAFTSMAN,      -- Venom Dust
-                8889,     300,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 5
-                8890,     400,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 10
-                8891,     650,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 15
-                8892,    1050,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 20
-                8893,    1600,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 25
-                8894,    2300,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 30
-                8895,    3150,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 35
-                8896,    4150,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 40
-                8897,    5300,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 45
-                8898,    7600,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 50
+                8889,    3000,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 5
+                8890,    4000,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 10
+                8891,    6500,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 15
+                8892,   10500,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 20
+                8893,   16000,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 25
+                8894,   23000,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 30
+                8895,   31500,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 35
+                8896,   41500,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 40
+                8897,   53000,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 45
+                8898,   76000,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 50
                 9257, 1126125,      dsp.craftRank.AMATEUR       -- Azure Leaf
         },
         [guild.bonecraft] =
@@ -311,16 +312,16 @@ dsp.shop =
                 1622,    4000,   dsp.craftRank.JOURNEYMAN,      -- Bugard Tusk [Journeyman]
                  896,    3000,    dsp.craftRank.CRAFTSMAN,      -- Scorpion Shell [Craftsman]
                 2147,    4500,    dsp.craftRank.CRAFTSMAN,      -- Marid Tusk [Craftsman]
-                8875,     300,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 5
-                8876,     400,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 10
-                8877,     650,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 15
-                8878,    1050,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 20
-                8879,    1600,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 25
-                8880,    2300,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 30
-                8881,    3150,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 35
-                8882,    4150,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 40
-                8883,    5300,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 45
-                8884,    7600,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 50
+                8875,    3000,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 5
+                8876,    4000,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 10
+                8877,    6500,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 15
+                8878,   10500,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 20
+                8879,   16000,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 25
+                8880,   23000,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 30
+                8881,   31500,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 35
+                8882,   41500,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 40
+                8883,   53000,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 45
+                8884,   76000,      dsp.craftRank.AMATEUR,      -- Bonecraft Kit 50
                 9255, 1126125,      dsp.craftRank.AMATEUR       -- Cyan Coral
         },
         [guild.leathercraft] =
@@ -339,16 +340,16 @@ dsp.shop =
                 2123,    2500,   dsp.craftRank.JOURNEYMAN,      -- Catoblepas Hide
                 2518,    3000,    dsp.craftRank.CRAFTSMAN,      -- Smilodon Hide
                  854,    3000,    dsp.craftRank.CRAFTSMAN,      -- Cockatrice Skin
-                8861,     300,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 5
-                8862,     400,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 10
-                8863,     650,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 15
-                8864,    1050,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 20
-                8865,    1600,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 25
-                8866,    2300,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 30
-                8867,    3150,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 35
-                8868,    4150,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 40
-                8869,    5300,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 45
-                8870,    7600,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 50
+                8861,    3000,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 5
+                8862,    4000,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 10
+                8863,    6500,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 15
+                8864,   10500,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 20
+                8865,   16000,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 25
+                8866,   23000,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 30
+                8867,   31500,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 35
+                8868,   41500,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 40
+                8869,   53000,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 45
+                8870,   76000,      dsp.craftRank.AMATEUR,      -- Leathercraft Kit 50
                 9253, 1126125,      dsp.craftRank.AMATEUR       -- Synthetic Faulpie Leather
         },
         [guild.smithing] =
@@ -371,16 +372,16 @@ dsp.shop =
                 1235,     800,   dsp.craftRank.JOURNEYMAN,      -- Steel Nugget
                  664,   28000,   dsp.craftRank.JOURNEYMAN,      -- Darksteel Sheet
                 2763,    5000,    dsp.craftRank.CRAFTSMAN,      -- Swamp Ore
-                8819,     300,      dsp.craftRank.AMATEUR,      -- Smithing Kit 5
-                8820,     400,      dsp.craftRank.AMATEUR,      -- Smithing Kit 10
-                8821,     650,      dsp.craftRank.AMATEUR,      -- Smithing Kit 15
-                8822,    1050,      dsp.craftRank.AMATEUR,      -- Smithing Kit 20
-                8823,    1600,      dsp.craftRank.AMATEUR,      -- Smithing Kit 25
-                8824,    2300,      dsp.craftRank.AMATEUR,      -- Smithing Kit 30
-                8825,    3150,      dsp.craftRank.AMATEUR,      -- Smithing Kit 35
-                8826,    4150,      dsp.craftRank.AMATEUR,      -- Smithing Kit 40
-                8827,    5300,      dsp.craftRank.AMATEUR,      -- Smithing Kit 45
-                8828,    7600,      dsp.craftRank.AMATEUR,      -- Smithing Kit 50
+                8819,    3000,      dsp.craftRank.AMATEUR,      -- Smithing Kit 5
+                8820,    4000,      dsp.craftRank.AMATEUR,      -- Smithing Kit 10
+                8821,    6500,      dsp.craftRank.AMATEUR,      -- Smithing Kit 15
+                8822,   10500,      dsp.craftRank.AMATEUR,      -- Smithing Kit 20
+                8823,   16000,      dsp.craftRank.AMATEUR,      -- Smithing Kit 25
+                8824,   23000,      dsp.craftRank.AMATEUR,      -- Smithing Kit 30
+                8825,   31500,      dsp.craftRank.AMATEUR,      -- Smithing Kit 35
+                8826,   41500,      dsp.craftRank.AMATEUR,      -- Smithing Kit 40
+                8827,   53000,      dsp.craftRank.AMATEUR,      -- Smithing Kit 45
+                8828,   76000,      dsp.craftRank.AMATEUR,      -- Smithing Kit 50
                 9247, 1126125,      dsp.craftRank.AMATEUR       -- Niobium Ore
         }
     }

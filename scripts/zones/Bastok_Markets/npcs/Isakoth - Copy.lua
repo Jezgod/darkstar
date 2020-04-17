@@ -7,12 +7,15 @@
 local ID = require("scripts/zones/Bastok_Markets/IDs")
 require("scripts/globals/shop")
 
+function onTrade(player,npc,trade)
+end;
+
 function onTrigger(player,npc)
     local stock = 0
-    local day = VanadielDayElement()
+    local pLevel = player:getMainLvl()
     
     -- Level 1-9
-    local stockfire =
+    local stockA =
     {
 
         16385, 500, 3, --cesti
@@ -83,7 +86,7 @@ function onTrigger(player,npc)
     }
 
    -- Level 10-19
-   local stockearth =
+   local stockB =
     {
  
         16407, 6000, 3,  --brass_baghnakhs
@@ -144,7 +147,7 @@ function onTrigger(player,npc)
     }
 
     -- Level 20-29
-    local stockwater =
+    local stockC =
     {
  
         16392, 8700, 3, --metal_knuckles
@@ -203,7 +206,7 @@ function onTrigger(player,npc)
     }
 
     -- Level 30-39   
-    local stockwind =
+    local stockD =
     {
  
         16411, 18200, 3, --claws
@@ -284,7 +287,7 @@ function onTrigger(player,npc)
     }
 
     -- Level 40-50
-    local stockice =
+    local stockE =
     {
  
         16388, 11400, 3, --himantes
@@ -370,7 +373,7 @@ function onTrigger(player,npc)
     }
 
    -- Level 51-59
-   local stocklightning =
+   local stockF =
     {
  
         16394, 38900, 3, --darksteel_knuckles
@@ -393,7 +396,7 @@ function onTrigger(player,npc)
     }
    
     -- Level 60-69
-    local stocklight =
+    local stockG =
     {
  
         16422, 36200, 3, --tigerfangs
@@ -426,7 +429,7 @@ function onTrigger(player,npc)
     }
 
    -- Level 70+
-   local stockdark =
+   local stockH =
     {
  
         16423, 103300, 3, --manoples
@@ -479,24 +482,24 @@ function onTrigger(player,npc)
 
     player:showText(npc, ID.text.THANK_YOU)
     
-    if day == 0 then
-	stock = stockfire
-    elseif day == 1 then
-	stock = stockearth
-    elseif day == 2 then
-	stock = stockwater
-    elseif day == 3 then
-	stock = stockwind
-    elseif day == 4 then
-	stock = stockice
-    elseif day == 5 then
-	stock = stocklightning
-    elseif day == 6 then
-	stock = stocklight
-    elseif day == 7 then
-	stock = stockdark
+    if pLevel <= 9 then
+	stock = stockA
+    elseif pLevel <= 19 then
+	stock = stockB
+    elseif pLevel <= 29 then
+	stock = stockC
+    elseif pLevel <= 39 then
+	stock = stockD
+    elseif pLevel <= 50 then
+	stock = stockE
+    elseif pLevel <= 59 then
+	stock = stockF
+    elseif pLevel <= 69 then
+	stock = stockG
+    elseif pLevel >= 70 then
+	stock = stockH
     end
 
-    printf("Day : %i",day)
+    printf("Main Level : %i",pLevel)
     dsp.shop.nation(player, stock, dsp.nation.BASTOK)
 end

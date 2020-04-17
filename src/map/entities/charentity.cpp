@@ -1693,6 +1693,11 @@ void CCharEntity::Die()
     }
     else if (PLastAttacker->allegiance != 0)
     { 
+        if (PLastAttacker->objtype == TYPE_PET)
+        {
+            PLastAttacker = PLastAttacker->PMaster;
+        }
+       
         loc.zone->PushPacket(this, CHAR_INRANGE_SELF, new CMessageBasicPacket(PLastAttacker, this, 0, 0, MSGBASIC_PLAYER_DEFEATED_BY));
         //charutils::PvPExpLostCPGain(this, PLastAttacker, 0); //PVP XP LOSS IS CP GAIN
         REGIONTYPE region = PLastAttacker->loc.zone->GetRegionID();

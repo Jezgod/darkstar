@@ -5,7 +5,7 @@
 -----------------------------------------
 -- Bonus: +50%
 -- Duration: 720 min
--- Max bonus: 15000 exp
+-- Max bonus: 1500 exp
 -----------------------------------------
 require("scripts/globals/status")
 -----------------------------------------
@@ -19,5 +19,5 @@ function onItemCheck(target)
 end
 
 function onItemUse(target)
-    target:addStatusEffect(dsp.effect.DEDICATION,50,0,43200,0,15000)
+    target:addStatusEffect(dsp.effect.DEDICATION,50,0,43200,0,1500)
 end

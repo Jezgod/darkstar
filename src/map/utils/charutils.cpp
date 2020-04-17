@@ -2428,9 +2428,10 @@ namespace charutils
 
             if (PetID == 22) // HARE FAMILIAR
             {
-                ab1 = 658;
-                ab2 = 657;
-                ab3 = 656;
+                ab1 = 719;
+                ab2 = 658;
+                ab3 = 657;
+                ab4 = 656;
             }
 
             if (PetID == 23) // CRAB FAMILIAR
@@ -3393,6 +3394,7 @@ namespace charutils
         //work out the amount of gil to give (guessed; replace with testing)
         uint32 gil = PMob->GetRandomGil();
         uint32 gBonus = 0;
+        REGIONTYPE region = PChar->loc.zone->GetRegionID();
 
         if (map_config.all_mobs_gil_bonus > 0)
         {
@@ -3421,19 +3423,61 @@ namespace charutils
                 int32 gilPerPerson = static_cast<int32>(gil / members.size());
                 for (auto PMember : members)
                 {
-                    // Check for gilfinder
-                    gilPerPerson += gilPerPerson * PMember->getMod(Mod::GILFINDER) / 100;
-                    UpdateItem(PMember, LOC_INVENTORY, 0, gilPerPerson);
-                    PMember->pushPacket(new CMessageBasicPacket(PMember, PMember, gilPerPerson, 0, 565));
+                    uint8 gnation = PMember->profile.nation;
+                    if (region >= 0 && region <= 22)
+                    {
+                        gilPerPerson += gilPerPerson * PMember->getMod(Mod::GILFINDER) / 100;
+                        float gilPerPersonR = gilPerPerson * (1 + (conquest::GetConquestRatio(gnation) / 100.f));
+                        UpdateItem(PMember, LOC_INVENTORY, 0, (int32)gilPerPersonR);
+                        PMember->pushPacket(new CMessageBasicPacket(PMember, PMember, (int32)gilPerPersonR, 0, 565));
+                    }
+
+                    else if (region >= 28 && region <= 32)
+                    {
+                        gilPerPerson += gilPerPerson * PMember->getMod(Mod::GILFINDER) / 100;
+                        float gilPerPersonR = gilPerPerson * (1 + (conquest::GetImperialRatio(gnation) / 100.f));
+                        UpdateItem(PMember, LOC_INVENTORY, 0, (int32)gilPerPersonR);
+                        PMember->pushPacket(new CMessageBasicPacket(PMember, PMember, (int32)gilPerPersonR, 0, 565));
+                    }
+
+                    else
+                    {
+                        gilPerPerson += gilPerPerson * PMember->getMod(Mod::GILFINDER) / 100;
+                        UpdateItem(PMember, LOC_INVENTORY, 0, (int32)gilPerPerson);
+                        PMember->pushPacket(new CMessageBasicPacket(PMember, PMember, (int32)gilPerPerson, 0, 565));
+                    }                   
                 }
             }
         }
         else if (distanceSquared(PChar->loc.p, PMob->loc.p) < square(100.f))
         {
-            // Check for gilfinder
-            gil += gil * PChar->getMod(Mod::GILFINDER) / 100;
-            UpdateItem(PChar, LOC_INVENTORY, 0, static_cast<int32>(gil));
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, static_cast<int32>(gil), 0, 565));
+            uint8 snation = PChar->profile.nation;
+            if (region >= 0 && region <= 22)
+            {
+                gil += gil * PChar->getMod(Mod::GILFINDER) / 100;
+                float gilR = gil * (1 + (conquest::GetConquestRatio(snation) / 100.f));
+                UpdateItem(PChar, LOC_INVENTORY, 0, static_cast<int32>(gilR));
+                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, static_cast<int32>(gilR), 0, 565));
+            }
+
+            else if (region >= 28 && region <= 32)
+            {
+                gil += gil * PChar->getMod(Mod::GILFINDER) / 100;
+                float gilR = gil * (1 + (conquest::GetImperialRatio(snation) / 100.f));
+                UpdateItem(PChar, LOC_INVENTORY, 0, static_cast<int32>(gilR));
+                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, static_cast<int32>(gilR), 0, 565));
+            }
+
+            else
+            {
+                gil += gil * PChar->getMod(Mod::GILFINDER) / 100;
+                UpdateItem(PChar, LOC_INVENTORY, 0, static_cast<int32>(gil));
+                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, static_cast<int32>(gil), 0, 565));
+            }
+            /*gil += gil * PChar->getMod(Mod::GILFINDER) / 100;
+            float gilR = gil * (1 + (conquest::GetRegControlCount(snation) / 19.f));
+            UpdateItem(PChar, LOC_INVENTORY, 0, static_cast<int32>(gilR));
+            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, static_cast<int32>(gilR), 0, 565));*/
         }
     }
 
@@ -3728,8 +3772,26 @@ namespace charutils
                         return;
                     }
 
-                    exp = charutils::AddExpBonus(PMember, exp);
-                    charutils::AddExperiencePoints(false, PMember, PMob, (uint32)exp, mobCheck, chainactive);
+                    uint8 nation = PMember->profile.nation;
+                    if (region >= 0 && region <= 22)
+                    {
+                        exp = charutils::AddExpBonus(PMember, exp);
+                        float expR = exp * (1 + (conquest::GetConquestRatio(nation) / 100.f));
+                        charutils::AddExperiencePoints(false, PMember, PMob, (uint32)expR, mobCheck, chainactive);
+                    }
+
+                    else if (region >= 28 && region <= 32)
+                    {
+                        exp = charutils::AddExpBonus(PMember, exp);
+                        float expR = exp * (1 + (conquest::GetImperialRatio(nation) / 100.f));
+                        charutils::AddExperiencePoints(false, PMember, PMob, (uint32)expR, mobCheck, chainactive);
+                    }
+
+                    else
+                    {
+                        exp = charutils::AddExpBonus(PMember, exp);
+                        charutils::AddExperiencePoints(false, PMember, PMob, (uint32)exp, mobCheck, chainactive);
+                    }
                 }
             }
         });
@@ -3860,7 +3922,37 @@ namespace charutils
 
     /************************************************************************
     *                                                                       *
-    *  PvP EXP LOST FOR IMP STANDING                                        *
+    *  SAVE PvP CONQUEST POINTS GAIN                                        *
+    *                                                                       *
+    ************************************************************************/
+    uint32 SaveConquestPointsPVP(CBattleEntity* PLastAttacker, uint32 exp)
+    {
+        CCharEntity* PChar = dynamic_cast<CCharEntity*>(PLastAttacker);
+        if (PChar)
+        {
+            const char* varcp = "conquestpvppoints";
+            const char* Query =
+                "INSERT INTO char_vars "
+                "SET charid = %u, varname = '%s', value = %i "
+                "ON DUPLICATE KEY UPDATE value = value + %i;";
+
+            Sql_Query(SqlHandle, Query,
+                PChar->id,
+                varcp,
+                exp,
+                exp);
+
+            return 0;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    /************************************************************************
+    *                                                                       *
+    *  PvP EXP LOST FOR IMP STANDING GAIN                                   *
     *                                                                       *
     ************************************************************************/
     uint32 PvPExpLostISGain(CCharEntity* PChar, CBattleEntity* PLastAttacker, uint16 pvpexp)
@@ -3874,6 +3966,7 @@ namespace charutils
 
         if (PCharL)
         {
+            charutils::SaveImperialStandingPVP(PCharL, (int32)(pvpexp * 0.5f));
             charutils::AddPoints(PCharL, "imperial_standing", (int32)(pvpexp * 0.5f));
             PCharL->pushPacket(new CConquestPacket(PCharL));
             return 0;
@@ -3885,6 +3978,35 @@ namespace charutils
         }
     }
 
+    /************************************************************************
+    *                                                                       *
+    *  SAVE PvP IMPERIAL STANDING                                           *
+    *                                                                       *
+    ************************************************************************/
+    uint32 SaveImperialStandingPVP(CBattleEntity* PLastAttacker, uint32 exp)
+    {
+        CCharEntity* PChar = dynamic_cast<CCharEntity*>(PLastAttacker);
+        if (PChar)
+        {
+            const char* varcp = "imperialpvppoints";
+            const char* Query =
+                "INSERT INTO char_vars "
+                "SET charid = %u, varname = '%s', value = %i "
+                "ON DUPLICATE KEY UPDATE value = value + %i;";
+
+            Sql_Query(SqlHandle, Query,
+                PChar->id,
+                varcp,
+                exp,
+                exp);
+
+            return 0;
+        }
+        else
+        {
+            return 0;
+        }
+    }
 
     /************************************************************************
     *                                                                       *

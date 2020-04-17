@@ -36,6 +36,7 @@ local loot =
             {itemid =   771, droprate =  125}, -- yellow_rock
             {itemid =   772, droprate =  125}, -- green_rock
             {itemid =   775, droprate =  125}, -- black_rock
+            {itemid =  1255, droprate =   40}, -- elemental_ore 
         },
         {
             {itemid =   790, droprate =   50}, -- garnet
@@ -91,6 +92,7 @@ local loot =
             {itemid =   775, droprate =  167}, -- black_rock
             {itemid =   771, droprate =  167}, -- yellow_rock
             {itemid =   776, droprate =  167}, -- white_rock
+            {itemid =  1255, droprate  =  60}, -- elemental_ore 
         },
         {
             {itemid =   797, droprate =  125}, -- painite
@@ -307,7 +309,7 @@ local loot =
             {itemid = 17820, droprate = 255},-- Gunromaru
             {itemid = 1601, droprate = 260}, -- Mannequin Head
             {itemid = 4853, droprate = 250}, -- Scroll Of Drain
-            {itemid = 930, droprate = 190},  -- Vial Of Beastman Blood
+            {itemid = 930, droprate = 190},  -- Vial Of Beastman Blood 
         },
     },
     -- BCNM Harem Scarem
@@ -596,6 +598,7 @@ local loot =
             {itemid =   784, droprate =   98}, -- jadeite
             {itemid =   797, droprate =   98}, -- painite
             {itemid =  4175, droprate =   99}, -- vile_elixir_+1
+            {itemid =  1255, droprate =   60}, -- elemental_ore
         },
     },
 }

@@ -195,6 +195,7 @@ local loot =
             {itemid =   772, droprate =   38}, -- green_rock
             {itemid =  4173, droprate =   38}, -- hi-reraiser
             {itemid =  4175, droprate =   38}, -- vile_elixir_+1
+            {itemid =  1255, droprate =   60}, -- elemental_ore 
         },
         {
             {itemid =  4812, droprate =  283}, -- scroll_of_flare

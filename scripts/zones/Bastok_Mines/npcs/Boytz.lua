@@ -7,6 +7,8 @@ local ID = require("scripts/zones/Bastok_Mines/IDs")
 require("scripts/globals/conquest")
 require("scripts/globals/shop")
 
+local crystal = {4096, 4099, 4101, 4098, 4097, 4100, 4102, 4103}
+
 function onTrade(player,npc,trade)
 end
 
@@ -23,11 +25,12 @@ function onTrigger(player,npc)
         4148,   290, 3,    --Antidote
         17320,    7, 3,    --Iron Arrow
         17336,    5, 3,    --Crossbow Bolt
-        17343,    4, 3,    --Bronze Bullet
+        17343,   14, 3,    --Bronze Bullet
          5493, 6320, 3,    --Corsair Die 
     }
 
     local rank = getNationRank(dsp.nation.BASTOK)
+    local pRank = player:getRank()
 
     if (rank ~= 1) then
         table.insert(stock, 1022)    --Thief's Tools
@@ -38,6 +41,14 @@ function onTrigger(player,npc)
         table.insert(stock, 1023)    --Living Key
         table.insert(stock, 5520)
         table.insert(stock, 3)
+    end
+
+    if (rank == 1 and pRank >= 5) then
+   	local daily_crystal = 0
+	daily_crystal = crystal[VanadielDayElement() + 1]
+        table.insert(stock, daily_crystal)    --Crystal of the Day
+        table.insert(stock, 5000)
+        table.insert(stock, 1)
     end
 
     player:showText(npc, ID.text.BOYTZ_SHOP_DIALOG)

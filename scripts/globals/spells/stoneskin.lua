@@ -34,7 +34,16 @@ function onSpellCast(caster, target, spell)
     local duration = calculateDuration(300, spell:getSkillType(), spell:getSpellGroup(), caster, target)
     duration = calculateDurationForLvl(duration, 28, target:getMainLvl())
 
+    if (caster:getMainJob() == dsp.job.WHM and caster:hasStatusEffect(dsp.effect.DIVINE_SEAL)) then
+        duration = duration * 2
+    end
+
     local final = pAbs + pEquipMods
+
+    if (caster:getMainJob() == dsp.job.WHM and caster:hasStatusEffect(dsp.effect.DIVINE_SEAL)) then
+        final = final * 2
+    end
+
     if target:addStatusEffect(dsp.effect.STONESKIN, final, 0, duration, 0, 0, 4) then
         spell:setMsg(dsp.msg.basic.MAGIC_GAIN_EFFECT)
     else

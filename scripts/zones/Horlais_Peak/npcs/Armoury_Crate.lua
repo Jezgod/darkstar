@@ -62,6 +62,7 @@ local loot =
             {itemid =   772, droprate =  200}, -- green_rock
             {itemid =   771, droprate =  200}, -- yellow_rock
             {itemid =   774, droprate =  200}, -- purple_rock
+            {itemid =  1255, droprate =   60}, -- elemental_ore 
         },
         {
             {itemid =   797, droprate =  100}, -- painite
@@ -250,7 +251,7 @@ local loot =
             {itemid = 17519, droprate =  130}, -- platoon_cesti
             {itemid = 18209, droprate =  100}, -- platoon_cutter
             {itemid = 17692, droprate =   80}, -- platoon_spatha
-            {itemid = 18045, droprate =  100}, -- platoon_zaghnal
+            {itemid = 18045, droprate =  100}, -- platoon_zaghnal 
         },
         {
             {itemid =     0, droprate =  670}, -- nothing
@@ -475,6 +476,7 @@ local loot =
             {itemid = 798, droprate = 23},   -- Turquoise
             {itemid = 4172, droprate = 21},  -- Reraiser
             {itemid = 4174, droprate = 16},  -- Vile Elixir
+            {itemid = 1255, droprate = 40},  -- elemental_ore 
         },
         {
             {itemid = 4896, droprate = 116}, -- Fire Spirit Pact

@@ -615,6 +615,7 @@ namespace conquest
                 percentage += PChar->getMod(Mod::CONQUEST_BONUS) / 100.0;
                 uint32 points = (uint32)(exp * percentage);
 
+                charutils::SaveConquestPointsPVP(PChar, points);
                 charutils::AddPoints(PChar, charutils::GetConquestPointsName(PChar).c_str(), points);
                 GainInfluencePoints(PChar, points / 25);
             }
@@ -624,6 +625,106 @@ namespace conquest
         {
             return 0;
         }
+    }
+
+    uint32 GetConquestRatio(uint32 nationNum, uint32 sandoria, uint32 bastok, uint32 windurst)
+    {
+        uint32 cptotal = sandoria + bastok + windurst;
+        float ratio = (static_cast<double>(nationNum) / cptotal) * 100.0f;
+
+        return (uint8)ratio;
+    }
+
+    uint8 GetConquestRatio(uint8 nation)
+    {
+        uint32 sandoria = 0;
+        uint32 bastok = 0;
+        uint32 windurst = 0;
+        const char* Query = "SELECT nation, sum(VALUE) FROM char_vars INNER JOIN chars ON char_vars.charid = chars.charid WHERE varname='conquestpvppoints' GROUP BY nation;";
+
+        int32 ret = Sql_Query(SqlHandle, Query);
+
+        if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0)
+        {
+            while (Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+            {
+                if (Sql_GetIntData(SqlHandle, 0) == 0)
+                    sandoria = Sql_GetIntData(SqlHandle, 1);
+                else if (Sql_GetIntData(SqlHandle, 0) == 1)
+                    bastok = Sql_GetIntData(SqlHandle, 1);
+                else if (Sql_GetIntData(SqlHandle, 0) == 2)
+                    windurst = Sql_GetIntData(SqlHandle, 1);
+            }
+        }
+
+        uint32 nationNum = 0;
+
+        if (nation == 0)
+        {
+            nationNum = sandoria;
+        }
+
+        else if (nation == 1)
+        {
+            nationNum = bastok;
+        }
+
+        else
+        {
+            nationNum = windurst;
+        }
+
+        return GetConquestRatio(nationNum, sandoria, bastok, windurst);
+    }
+
+    uint32 GetImperialRatio(uint32 nationNum, uint32 sandoria, uint32 bastok, uint32 windurst)
+    {
+        uint32 cptotal = sandoria + bastok + windurst;
+        float ratio = (static_cast<double>(nationNum) / cptotal) * 100.f;
+
+        return (uint8)ratio;
+    }
+
+    uint8 GetImperialRatio(uint8 nation)
+    {
+        uint32 sandoria = 0;
+        uint32 bastok = 0;
+        uint32 windurst = 0;
+        const char* Query = "SELECT nation, sum(VALUE) FROM char_vars INNER JOIN chars ON char_vars.charid = chars.charid WHERE varname='imperialpvppoints' GROUP BY nation;";
+
+        int32 ret = Sql_Query(SqlHandle, Query);
+
+        if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0)
+        {
+            while (Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+            {
+                if (Sql_GetIntData(SqlHandle, 0) == 0)
+                    sandoria = Sql_GetIntData(SqlHandle, 1);
+                else if (Sql_GetIntData(SqlHandle, 0) == 1)
+                    bastok = Sql_GetIntData(SqlHandle, 1);
+                else if (Sql_GetIntData(SqlHandle, 0) == 2)
+                    windurst = Sql_GetIntData(SqlHandle, 1);
+            }
+        }
+
+        uint32 nationNum = 0;
+
+        if (nation == 0)
+        {
+            nationNum = sandoria;
+        }
+
+        else if (nation == 1)
+        {
+            nationNum = bastok;
+        }
+
+        else
+        {
+            nationNum = windurst;
+        }
+
+        return GetImperialRatio(nationNum, sandoria, bastok, windurst);
     }
 	//GetConquestInfluence(region,nation)
 	//AddConquestInfluence(region,nation)

@@ -17,6 +17,9 @@ function onSpellCast(caster,target,spell)
     params.multiplier = 1
     params.hasMultipleTargetReduction = false
     params.resistBonus = 1.0
+    if (caster:getMainJob() == dsp.job.WHM) then
+	params.dmg = 480;
+    end
     dmg = doDivineBanishNuke(caster, target, spell, params)
     return dmg
 end
