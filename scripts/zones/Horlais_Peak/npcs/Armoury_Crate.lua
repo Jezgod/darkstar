@@ -62,6 +62,7 @@ local loot =
             {itemid =   772, droprate =  200}, -- green_rock
             {itemid =   771, droprate =  200}, -- yellow_rock
             {itemid =   774, droprate =  200}, -- purple_rock
+            {itemid =  1255, droprate =   60}, -- elemental_ore 
         },
         {
             {itemid =   797, droprate =  100}, -- painite
@@ -250,7 +251,7 @@ local loot =
             {itemid = 17519, droprate =  130}, -- platoon_cesti
             {itemid = 18209, droprate =  100}, -- platoon_cutter
             {itemid = 17692, droprate =   80}, -- platoon_spatha
-            {itemid = 18045, droprate =  100}, -- platoon_zaghnal
+            {itemid = 18045, droprate =  100}, -- platoon_zaghnal 
         },
         {
             {itemid =     0, droprate =  670}, -- nothing
@@ -283,7 +284,7 @@ local loot =
         },
         {
             {itemid = 0, droprate = 636},    -- Nothing
-            {itemid = 12486, droprate = 364},-- Emperor Hairpin
+            {itemid = 15224, droprate = 364},-- Empress Hairpin
         },
         {
             {itemid = 12400, droprate = 175},-- Ashigaru Targe
@@ -344,7 +345,7 @@ local loot =
         {
             {itemid = 860, droprate = 535},   -- Behemoth Hide
             {itemid = 883, droprate = 366},   -- Behemoth Horn
-            {itemid = 17108, droprate = 48},  -- Healing Staff
+            {itemid = 18587, droprate = 48},  -- Dryad Staff
         },
         {
             {itemid = 902, droprate = 99},    -- Demon Horn
@@ -430,7 +431,7 @@ local loot =
     {
         {
             {itemid = 0, droprate = 910},    -- Nothing
-            {itemid = 13056, droprate = 90}, -- Peacock Charm
+            {itemid = 15515, droprate = 90}, -- Peacock Amulet
         },
         {
             {itemid = 0, droprate = 467},    -- Nothing
@@ -475,6 +476,7 @@ local loot =
             {itemid = 798, droprate = 23},   -- Turquoise
             {itemid = 4172, droprate = 21},  -- Reraiser
             {itemid = 4174, droprate = 16},  -- Vile Elixir
+            {itemid = 1255, droprate = 40},  -- elemental_ore 
         },
         {
             {itemid = 4896, droprate = 116}, -- Fire Spirit Pact

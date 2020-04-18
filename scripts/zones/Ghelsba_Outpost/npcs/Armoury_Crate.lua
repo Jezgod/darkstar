@@ -43,6 +43,7 @@ local loot =
             {itemid = 772, droprate = 28},   -- Green Rock
             {itemid = 771, droprate = 14},   -- Yellow Rock
             {itemid = 770, droprate = 69},   -- Blue Rock
+            {itemid = 1255, droprate = 20},  -- elemental_ore 
         },
         {
             {itemid =     0, droprate = 389}, -- nothing
@@ -59,7 +60,7 @@ local loot =
         },
         {
             {itemid =     0, droprate =  900}, -- nothing
-            {itemid = 13014, droprate =  100}, -- leaping_boots
+            {itemid = 15351, droprate =  100}, -- bounding_boots
         },
         {
             {itemid = 15282, droprate =   50}, -- Katana Obi

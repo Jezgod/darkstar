@@ -130,6 +130,7 @@
 #include "../packets/server_ip.h"
 #include "../packets/shop_items.h"
 #include "../packets/shop_menu.h"
+#include "../packets/treasure_lot_item.h"
 #include "../packets/weather.h"
 
 #include "../utils/battleutils.h"
@@ -1460,6 +1461,35 @@ inline int32 CLuaBaseEntity::getCursorTarget(lua_State* L)
 }
 
 /************************************************************************
+*  Function: setCursorTarget()
+*  Purpose : GM command - gets the ID of selected Mob's, NPC's, Players
+*  Example : target:setCursorTarget()
+*  Notes   :
+************************************************************************/
+
+inline int32 CLuaBaseEntity::setCursorTarget(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
+
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+    auto PTarget = PChar->GetEntity(PChar->m_TargID);
+    uint16 id = m_PBaseEntity->targid;
+
+    if (PTarget)
+    {
+        PTarget->PAI->Internal_ChangeTarget(id);
+        PTarget->PAI->Internal_Engage(id);
+    }
+    else
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
+/************************************************************************
 *  Function: getObjType()
 *  Purpose : Returns the int value of an entity's object type (Mob,PC...)
 *  Example : if (caster:getObjType() == TYPE_PC) then
@@ -2264,6 +2294,9 @@ inline int32 CLuaBaseEntity::sendMenu(lua_State *L)
             break;
         case 3:
             PChar->pushPacket(new CAuctionHousePacket(2));
+            break;
+        case 4:
+            PChar->pushPacket(new CTreasureLotItemPacket(0, ITEMLOT_WIN));
             break;
         default:
             ShowDebug("Menu %i not implemented, yet.\n", menu);
@@ -3833,6 +3866,67 @@ inline int32 CLuaBaseEntity::getCurrentGPItem(lua_State* L)
 }
 
 /************************************************************************
+*  Function: addLSpearl()
+*  Purpose : Add LS pearl to a new character 
+*  Example : player:addLSpearl("TheFederation")
+*  Notes   :
+************************************************************************/
+inline int32 CLuaBaseEntity::addLSpearl(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
+
+    std::string linkshellName = lua_tostring(L, 1);
+    const char* Query = "SELECT name FROM linkshells WHERE name='%s'";
+    char* lsName = const_cast<char*>(linkshellName.c_str());
+    Sql_EscapeString(SqlHandle, lsName, lsName);
+    int32 ret = Sql_Query(SqlHandle, Query, lsName);
+
+    if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+    {
+        CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+        std::string qStr = ("UPDATE char_inventory SET signature='");
+        qStr += lsName;
+        qStr += "' WHERE charid = " + std::to_string(PChar->id);
+        qStr += " AND itemId = 515 AND signature = ''";
+        Sql_Query(SqlHandle, qStr.c_str());
+
+        Query = "SELECT linkshellid,color FROM linkshells WHERE name='%s'";
+        ret = Sql_Query(SqlHandle, Query, lsName);
+        if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+        {
+            CItem* PItem = itemutils::GetItem(515);
+
+            // Update item with name & color //
+            int8 EncodedString[16];
+            EncodeStringLinkshell((int8*)lsName, EncodedString);
+            PItem->setSignature(EncodedString);
+            ((CItemLinkshell*)PItem)->SetLSID(Sql_GetUIntData(SqlHandle, 0));
+            ((CItemLinkshell*)PItem)->SetLSColor(Sql_GetIntData(SqlHandle, 1));
+            charutils::AddItem(PChar, LOC_INVENTORY, PItem, 1);
+            // To force equip, UN comment the rest of this!
+            // uint8 invSlotID = PItem->getSlotID();
+            // linkshell::AddOnlineMember(PChar, PItem, PItem->GetLSID());
+            // PItem->setSubType(ITEM_LOCKED);
+            // PChar->equip[SLOT_LINK1] = invSlotID;
+            // PChar->equipLoc[SLOT_LINK1] = LOC_INVENTORY;
+            // PChar->pushPacket(new CInventoryAssignPacket(PItem, INV_LINKSHELL));
+            // charutils::SaveCharEquip(PChar);
+            // PChar->pushPacket(new CLinkshellEquipPacket(PChar, PItem->GetLSID()));
+            // PChar->pushPacket(new CInventoryItemPacket(PItem, LOC_INVENTORY, PItem->getSlotID()));
+            // PChar->pushPacket(new CInventoryFinishPacket());
+            // charutils::LoadInventory(PChar);
+
+            lua_pushboolean(L, true);
+            return 1;
+        }
+    }
+    lua_pushboolean(L, false);
+    return 1;
+}
+
+
+/************************************************************************
 *  Function: getContainerSize()
 *  Purpose : Returns the size of an item container
 *  Example : player:getContainerSize(LOC_INVENTORY)
@@ -4866,6 +4960,28 @@ inline int32 CLuaBaseEntity::setCampaignAllegiance(lua_State *L)
     charutils::SaveCampaignAllegiance(PChar);
     return 0;
 }
+
+// LOCKSTYLE
+inline int32 CLuaBaseEntity::lockstyleOn(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+
+    /*DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));*/
+    DSP_DEBUG_BREAK_IF(lua_tointeger(L, 1) > 99);
+
+    if (auto PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
+    {
+
+        charutils::SetStyleLock(PChar, true);
+
+        PChar->pushPacket(new CCharAppearancePacket(PChar));
+        PChar->pushPacket(new CCharSyncPacket(PChar));
+    }
+
+    return 0;
+}
+//LOCKSTYLE
 
 /************************************************************************
 *  Function: getNewPlayer()
@@ -8819,6 +8935,24 @@ inline int32 CLuaBaseEntity::getLeaderID(lua_State* L)
     return 1;
 }
 
+
+inline int32 CLuaBaseEntity::getPartyTID(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    /*DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);*/
+
+    if (const CCharEntity* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
+    {
+        if (PChar->PParty != nullptr)
+        {
+            lua_pushnumber(L, PChar->PParty->GetPartyID());
+            return 1;
+        }
+    }
+    lua_pushnil(L);
+    return 1;
+}
+
 /************************************************************************
 *  Function: reloadParty()
 *  Purpose : Display a new party in the event of alliance form/disband
@@ -10176,7 +10310,7 @@ inline int32 CLuaBaseEntity::resetEnmity(lua_State *L)
 inline int32 CLuaBaseEntity::updateClaim(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
+    /*DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);*/
 
     //DSP_DEBUG_BREAK_IF(lua_gettop(L) > 1);
     DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isuserdata(L, 1));
@@ -13823,7 +13957,7 @@ inline int32 CLuaBaseEntity::addTreasure(lua_State *L)
 inline int32 CLuaBaseEntity::getStealItem(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
+    /*DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);*/
 
     CMobEntity* PMob = static_cast<CMobEntity*>(m_PBaseEntity);
     if (PMob)
@@ -13990,6 +14124,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getID),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getShortID),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCursorTarget),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setCursorTarget),
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getObjType),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,isPC),
@@ -14086,6 +14221,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,createShop),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,addShopItem),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCurrentGPItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, addLSpearl),
 
     // Trading
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getContainerSize),
@@ -14137,6 +14273,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setAllegiance),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCampaignAllegiance),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setCampaignAllegiance),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, lockstyleOn),    //FORCE LOCKSTYLE ON
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getNewPlayer),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setNewPlayer),
@@ -14309,6 +14446,8 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPartyMember),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPartyLeader),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getLeaderID),
+
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPartyTID),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,forMembersInRange),
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,addPartyEffect),

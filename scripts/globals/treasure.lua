@@ -28,6 +28,18 @@ local keyType =
     LIVING_KEY    = 4,
 }
 
+local af_dnc_map =
+{
+    [dsp.race.HUME_M]   = {gear = {head = 16138, hands = 15002, feet = 15746}},
+    [dsp.race.HUME_F]   = {gear = {head = 16139, hands = 15003, feet = 15747}},
+    [dsp.race.ELVAAN_M] = {gear = {head = 16138, hands = 15002, feet = 15746}},
+    [dsp.race.ELVAAN_F] = {gear = {head = 16139, hands = 15003, feet = 15747}},
+    [dsp.race.TARU_M]   = {gear = {head = 16138, hands = 15002, feet = 15746}},
+    [dsp.race.TARU_F]   = {gear = {head = 16139, hands = 15003, feet = 15747}},
+    [dsp.race.MITHRA]   = {gear = {head = 16139, hands = 15003, feet = 15747}},
+    [dsp.race.GALKA]    = {gear = {head = 16138, hands = 15002, feet = 15746}},
+}
+
 local treasureInfo =
 {
     [dsp.treasure.type.CHEST] =
@@ -867,6 +879,9 @@ local treasureInfo =
                 {
                     [dsp.job.NIN] = {quest = dsp.quest.id.jeuno.BORGHERTZ_S_LURKING_HANDS, reward = 13869}, -- Ninja Hatsuburi
                 },
+		afhead = {
+          	    [dsp.job.DNC] = true,
+          	},
                 points =
                 {
                     {  28.477,    6.335,  145.925,  95},
@@ -1060,6 +1075,9 @@ local treasureInfo =
                 {
                     [dsp.job.NIN] = {quest = dsp.quest.id.jeuno.BORGHERTZ_S_LURKING_HANDS, reward = 14101}, -- Ninja Kyahan
                 },
+                afhands = {
+          	    [dsp.job.DNC] = true,
+          	},
                 points =
                 {
                     {-184.862,   17.989, -108.860, 207},
@@ -1198,6 +1216,9 @@ local treasureInfo =
                 {
                     [dsp.job.DRG] = {quest = dsp.quest.id.jeuno.BORGHERTZ_S_DRAGON_HANDS, reward = 12649}, -- Drachen Mail
                 },
+                affeet = {
+          	    [dsp.job.DNC] = true,
+          	},
                 points =
                 {
                     { 190.735,   -0.191,  -30.485, 159},
@@ -1326,6 +1347,8 @@ dsp.treasure.onTrade = function(player, npc, trade, chestType)
     local mLvl = player:getMainLvl()
     local activeHands = player:getCharVar("BorghertzAlreadyActiveWithJob")
     local illusionCooldown  = npc:getLocalVar("illusionCooldown")
+    local race = player:getRace()
+    local raceInfo = af_dnc_map[race]
 
     -- determine type of key traded
     local keyTraded = nil
@@ -1417,6 +1440,54 @@ dsp.treasure.onTrade = function(player, npc, trade, chestType)
     then
         player:messageSpecial(msgBase)
         if npcUtil.giveItem(player, info.af[mJob].reward) then
+            player:confirmTrade()
+            moveChest(npc, zoneId, chestType)
+        end
+        return
+    end
+
+    -- artifact armor dnc head
+    if
+        chestType == dsp.treasure.type.COFFER and
+        info.afhead and
+        info.afhead[mJob] and
+        player:getMainLvl() > 53 and
+        not player:hasItem(raceInfo.gear.head)
+    then
+        player:messageSpecial(msgBase)
+        if npcUtil.giveItem(player, raceInfo.gear.head) then
+            player:confirmTrade()
+            moveChest(npc, zoneId, chestType)
+        end
+        return
+    end
+
+    -- artifact armor dnc hands
+    if
+        chestType == dsp.treasure.type.COFFER and
+        info.afhands and
+        info.afhands[mJob] and
+        player:getMainLvl() > 51 and
+        not player:hasItem(raceInfo.gear.hands)
+    then
+        player:messageSpecial(msgBase)
+        if npcUtil.giveItem(player, raceInfo.gear.hands) then
+            player:confirmTrade()
+            moveChest(npc, zoneId, chestType)
+        end
+        return
+    end
+
+    -- artifact armor dnc feet
+    if
+        chestType == dsp.treasure.type.COFFER and
+        info.affeet and
+        info.affeet[mJob] and
+        player:getMainLvl() > 55 and
+        not player:hasItem(raceInfo.gear.feet)
+    then
+        player:messageSpecial(msgBase)
+        if npcUtil.giveItem(player, raceInfo.gear.feet) then
             player:confirmTrade()
             moveChest(npc, zoneId, chestType)
         end

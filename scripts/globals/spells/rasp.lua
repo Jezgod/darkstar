@@ -54,8 +54,10 @@ function onSpellCast(caster,target,spell)
                 local mbonus = caster:getMerit(dsp.merit.ELEMENTAL_DEBUFF_EFFECT)
                 DOT = DOT + mbonus/2 -- Damage
                 DOTp = DOTp + mbonus -- Stat Enfeeb
-
-                target:addStatusEffect(dsp.effect.RASP,DOT, 3, duration, dsp.effect.RASP, DOTp)
+                printf("DOT : %u",DOT)
+		printf("DOTp : %u",DOTp)
+                --target:addStatusEffect(dsp.effect.RASP,DOT, 3, duration, dsp.effect.RASP, DOTp)
+                target:addStatusEffect(dsp.effect.RASP,DOT, 3, duration)
             end
         end
     end

@@ -1,6 +1,6 @@
 -----------------------------------
 --
--- Zone: Apollyon
+-- Zone: Apollyon (38)
 --
 -----------------------------------
 local ID = require("scripts/zones/Apollyon/IDs")
@@ -72,7 +72,27 @@ end;
 -----------------------------------
 
 function onZoneIn(player,prevZone)
-cs = -1;
+    cs = -1;
+    local nation = 0
+    local nationByNum = {
+	[0] = "None",
+        [1] = "Player",
+        [2] = "San d'Oria",
+        [3] = "Bastok",
+        [4] = "Windurst"
+    }
+	
+    -- turn on stylelock
+    player:lockstyleOn()
+
+    -- get nation
+    nation = player:getNation()
+    allegiance = nation + 2
+
+    -- set nation  
+    player:setAllegiance( allegiance );
+    player:PrintToPlayer( string.format("Allegiance set to %s", nationByNum[allegiance]));
+
     if (prevZone ~= dsp.zone.ALTAIEU) then
       local playerLimbusID = player:getCharVar("LimbusID");
         if (playerLimbusID== 1290 or playerLimbusID== 1291 or playerLimbusID== 1294 or playerLimbusID== 1295 or playerLimbusID== 1296 or playerLimbusID== 1297) then

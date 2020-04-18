@@ -10,6 +10,30 @@ require("scripts/globals/keyitems");
 local ID = require("scripts/zones/Windurst_Waters/IDs");
 -----------------------------------
 
+function onTrade(player,npc,trade)
+    whisper = player:hasKeyItem(dsp.ki.WHISPER_OF_THE_MOON);
+    staff = 18633
+    if (trade:getGil() == 1000000 and 
+	trade:hasItemQty(17546,1) and 
+	trade:hasItemQty(17548,1) and 
+	trade:hasItemQty(17550,1) and 
+	trade:hasItemQty(17552,1) and 
+	trade:hasItemQty(17554,1) and 
+	trade:hasItemQty(17556,1) and 
+	trade:hasItemQty(17558,1) and 
+	trade:hasItemQty(17560,1) and 
+	whisper == true and
+	trade:getItemCount() == 9) then
+
+    	player:tradeComplete();
+    	player:addItem(staff);
+       	player:delKeyItem(dsp.ki.WHISPER_OF_THE_MOON);
+    	player:messageSpecial(ID.text.ITEM_OBTAINED,staff);
+    else
+	player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED,staff);
+    end
+end;
+
 function onTrigger(player,npc)
     local moonlitPath = player:getQuestStatus(WINDURST,dsp.quest.id.windurst.THE_MOONLIT_PATH)
     local realday = tonumber(os.date("%j")); -- %M for next minute, %j for next day

@@ -76,6 +76,10 @@ namespace charutils
     uint32	GetExpNEXTLevel(uint8 charlvl);
 
     void	DelExperiencePoints(CCharEntity* PChar, float retainpct, uint16 forcedXpLoss);
+    void	PvPExpLostCPGain(CCharEntity* PChar, CBattleEntity* PLastAttacker, uint16 pvpexp);           //xp lost for conquest gain
+    uint32  PvPExpLostISGain(CCharEntity* PChar, CBattleEntity* PLastAttacker, uint16 pvpexp);           //xp lost for imp standing gain
+    uint32  SaveConquestPointsPVP(CBattleEntity* PLastAttacker, uint32 exp);                             //save conquest points to char_vars
+    uint32  SaveImperialStandingPVP(CBattleEntity* PLastAttacker, uint32 exp);                           //save imperial standing to char_vars
     void	DistributeExperiencePoints(CCharEntity* PChar, CMobEntity* PMob);
     void	DistributeGil(CCharEntity* PChar, CMobEntity* PMob);
     void	DistributeItem(CCharEntity* PChar, CBaseEntity* PEntity, uint16 itemid, uint16 droprate);
@@ -133,7 +137,7 @@ namespace charutils
     int32   hasTitle(CCharEntity* PChar, uint16 Title);
     int32   addTitle(CCharEntity* PChar, uint16 Title);
     int32   delTitle(CCharEntity* PChar, uint16 Title);
-    void   setTitle(CCharEntity* PChar, uint16 Title); // set title if not, save and update player
+    void    setTitle(CCharEntity* PChar, uint16 Title); // set title if not, save and update player
 
     int32	hasPetAbility(CCharEntity* PChar, uint16 AbilityID);	    //same as Ability but for pet commands (e.g. Healing Ruby)
     int32	addPetAbility(CCharEntity* PChar, uint16 AbilityID);

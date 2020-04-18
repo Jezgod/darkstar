@@ -1,4 +1,4 @@
-require("scripts/globals/magicburst");
+﻿require("scripts/globals/magicburst");
 require("scripts/globals/settings");
 require("scripts/globals/weather");
 require("scripts/globals/status");
@@ -1287,6 +1287,10 @@ function doNuke(caster, target, spell, params)
     dmg = addBonuses(caster, spell, target, dmg, params);
     --add in target adjustment
     dmg = adjustForTarget(target,dmg,spell:getElement());
+    
+    if (caster:getMainJob() == dsp.job.WHM and caster:hasStatusEffect(dsp.effect.DIVINE_SEAL)) then
+	dmg = dmg * 2;
+    end
     --add in final adjustments
     dmg = finalMagicAdjustments(caster,target,spell,dmg);
     return dmg;
@@ -1309,6 +1313,10 @@ function doDivineBanishNuke(caster, target, spell, params)
     dmg = adjustForTarget(target,dmg,spell:getElement());
     --handling afflatus misery
     dmg = handleAfflatusMisery(caster, spell, dmg);
+    --whm and divine seal bonus
+    if (caster:getMainJob() == dsp.job.WHM and caster:hasStatusEffect(dsp.effect.DIVINE_SEAL)) then
+	dmg = dmg * 2;
+    end
     --add in final adjustments
     dmg = finalMagicAdjustments(caster,target,spell,dmg);
     return dmg;

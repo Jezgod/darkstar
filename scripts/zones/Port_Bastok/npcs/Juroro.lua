@@ -11,6 +11,24 @@ local ID = require("scripts/zones/Port_Bastok/IDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)
+    whisper = player:hasKeyItem(dsp.ki.WHISPER_OF_TREMORS);
+    staff = 0
+    chance = 90
+    if (math.random(100) < chance) then
+	staff = 17551
+    else
+	staff = 17552
+    end
+    if (trade:getGil() == 500000 and trade:hasItemQty(1205,1) and whisper == true and
+	trade:getItemCount() == 2) then
+
+    	player:tradeComplete();
+    	player:addItem(staff);
+       	player:delKeyItem(dsp.ki.WHISPER_OF_TREMORS);
+    	player:messageSpecial(ID.text.ITEM_OBTAINED,staff);
+    else
+	player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED,staff);
+    end
 end;
 
 function onTrigger(player,npc)

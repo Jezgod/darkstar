@@ -9,6 +9,10 @@ require("scripts/globals/keyitems");
 -----------------------------------
 
 function onTrade(player,npc,trade)
+    if (trade:getGil() == 10000) then
+    player:messageSpecial(ID.text.KEYITEM_OBTAINED,dsp.ki.MAGICKED_ASTROLABE);
+    player:addKeyItem(dsp.ki.MAGICKED_ASTROLABE);
+    end
 end;
 
 function onTrigger(player,npc)

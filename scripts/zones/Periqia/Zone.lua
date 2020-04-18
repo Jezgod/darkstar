@@ -10,9 +10,27 @@ function onInitialize(zone)
 end
 
 function onInstanceZoneIn(player,instance)
-
     local cs = -1
     local pos = player:getPos()
+    local nation = 0
+    local nationByNum = {
+	[0] = "None",
+        [1] = "Player",
+        [2] = "San d'Oria",
+        [3] = "Bastok",
+        [4] = "Windurst"
+    }
+	
+    -- turn on stylelock
+    player:lockstyleOn()
+
+    -- get nation
+    nation = player:getNation()
+    allegiance = nation + 2
+
+    -- set nation  
+    player:setAllegiance( allegiance );
+    player:PrintToPlayer( string.format("Allegiance set to %s", nationByNum[allegiance]));
 
     if (pos.x == 0 and pos.y == 0 and pos.z == 0) then
         local entrypos = instance:getEntryPos()

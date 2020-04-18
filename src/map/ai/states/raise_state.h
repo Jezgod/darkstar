@@ -26,6 +26,8 @@ This file is part of DarkStar-server source code.
 
 #include "state.h"
 
+class CCharEntity;
+
 class CRaiseState : public CState
 {
 public:

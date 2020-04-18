@@ -95,8 +95,24 @@ function onUseAbility(player,target,ability,action)
                 end
             end
         end
+
+    --PvP Steal Attempt
+    elseif (target:isPC() and math.random(100) < stealChance) then
+    	local resist = applyResistanceAbility(player, target, dsp.magic.ele.NONE, 0, 0)
+        local effectStealSuccess = false
+	local leveldiff = thfLevel - target:getMainLvl()
+	--player:PrintToPlayer(resist) 
+        if (resist > 0.0625) then
+        	local auraStealChance = math.random((65 + leveldiff))
+        	if (math.random(100) < auraStealChance) then
+              		stolen = player:stealStatusEffect(target)
+			ability:setMsg(dsp.msg.basic.STEAL_EFFECT)
+            	--else
+                --	effect = target:dispelStatusEffect()
+            	end
+        end
     end
-    
+
     return stolen
 end
 

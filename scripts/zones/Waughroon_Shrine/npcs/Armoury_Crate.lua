@@ -283,7 +283,7 @@ local loot =
             {itemid =   683, droprate =  446}, -- Adaman Chain
             {itemid =   908, droprate =  420}, -- Adamantoise Shell
             {itemid =  1312, droprate =   71}, -- Piece Of Angel Skin
-            {itemid = 14080, droprate =   26}, -- Strider Boots
+            {itemid = 15736, droprate =   26}, -- Trotter Boots
         },
         {
             {itemid =   887, droprate =  116}, -- Coral Fragment
@@ -468,10 +468,11 @@ local loot =
             {itemid = 775, droprate = 11},   -- Black Rock
             {itemid = 772, droprate = 11},   -- Green Rock
             {itemid = 776, droprate = 9},    -- White Rock
+            {itemid = 1255, droprate = 50},  -- elemental_ore 
         },
         {
             {itemid =     0, droprate =  932}, -- Nothing
-            {itemid = 17440, droprate =   13}, -- Kraken Club
+            {itemid = 18852, droprate =   13}, -- Octave Club
             {itemid = 15185, droprate =   55}, -- Walkure Mask
         },
     },

@@ -169,7 +169,7 @@ local loot =
             {itemid = 14204, droprate =  125}, -- river_gaiters
         },
         {
-            {itemid = 17472, droprate =   43}, -- cross-counters
+            {itemid = 18752, droprate =   43}, -- retaliators
             {itemid =   801, droprate =   10}, -- chrysoberyl
             {itemid =   784, droprate =   94}, -- jadeite
             {itemid =   803, droprate =  113}, -- sunstone
@@ -195,6 +195,7 @@ local loot =
             {itemid =   772, droprate =   38}, -- green_rock
             {itemid =  4173, droprate =   38}, -- hi-reraiser
             {itemid =  4175, droprate =   38}, -- vile_elixir_+1
+            {itemid =  1255, droprate =   60}, -- elemental_ore 
         },
         {
             {itemid =  4812, droprate =  283}, -- scroll_of_flare
@@ -203,7 +204,7 @@ local loot =
         },
         {
             {itemid =     0, droprate =  957}, -- nothing
-            {itemid = 17187, droprate =   43}, -- eurytos_bow
+            {itemid = 18714, droprate =   43}, -- valis_bow
         },
         {
             {itemid =     0, droprate =  582}, -- nothing

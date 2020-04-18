@@ -14,5 +14,5 @@ end
 
 function onUseAbility(player,target,ability)
     local duration = 30 + player:getMod(dsp.mod.FLEE_DURATION)
-    player:addStatusEffect(dsp.effect.FLEE,100,0,duration)
+    player:addStatusEffect(dsp.effect.FLEE,125,0,duration)
 end

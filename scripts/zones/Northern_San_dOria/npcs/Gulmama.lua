@@ -13,6 +13,25 @@ local ID = require("scripts/zones/Northern_San_dOria/IDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)
+    whisper = player:hasKeyItem(dsp.ki.WHISPER_OF_FROST);
+    staff = 0
+    chance = 90
+
+    if (math.random(100) < chance) then
+	staff = 17547
+    else
+	staff = 17548
+    end
+    if (trade:getGil() == 500000 and trade:hasItemQty(1207,1) and whisper == true and
+	trade:getItemCount() == 2) then
+
+	player:tradeComplete();
+    	player:addItem(staff);
+       	player:delKeyItem(dsp.ki.WHISPER_OF_FROST);
+    	player:messageSpecial(ID.text.ITEM_OBTAINED,staff);
+    else
+	player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED,staff);
+    end
 end;
 
 function onTrigger(player,npc)

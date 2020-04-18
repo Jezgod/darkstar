@@ -90,6 +90,43 @@ function onSpellCast(caster,target,spell)
         target:addHP(final)
         target:wakeUp()
         caster:updateEnmityFromCure(target,final)
+
+	elseif (target:getAllegiance() ~= caster:getAllegiance()) and target:getObjType() ~= dsp.objType.MOB then
+	if (USE_OLD_CURE_FORMULA == true) then
+            basecure = getBaseCureOld(power,divisor,constant)
+        else
+            basecure = getBaseCure(power,divisor,constant,basepower)
+        end
+        final = getCureFinal(caster,spell,basecure,minCure,false)
+        if (caster:hasStatusEffect(dsp.effect.AFFLATUS_SOLACE) and target:hasStatusEffect(dsp.effect.STONESKIN) == false) then
+            local solaceStoneskin = 0
+            local equippedBody = caster:getEquipID(dsp.slot.BODY)
+            if (equippedBody == 11186) then
+                solaceStoneskin = math.floor(final * 0.30)
+            elseif (equippedBody == 11086) then
+                solaceStoneskin = math.floor(final * 0.35)
+            else
+                solaceStoneskin = math.floor(final * 0.25)
+            end
+
+            solaceStoneskin = solaceStoneskin * (1 + caster:getMerit(dsp.merit.ANIMUS_SOLACE)/100)
+
+            target:addStatusEffect(dsp.effect.STONESKIN,solaceStoneskin,0,25,0,0,1)
+        end
+        final = final + (final * (target:getMod(dsp.mod.CURE_POTENCY_RCVD)/100))
+
+        --Applying server mods....
+        final = final * CURE_POWER
+
+        local diff = (target:getMaxHP() - target:getHP())
+        if (final > diff) then
+            final = diff
+        end
+        target:addHP(final)
+
+        target:wakeUp()
+        caster:updateEnmityFromCure(target,final)
+
     else
         if (target:isUndead()) then
             spell:setMsg(dsp.msg.basic.MAGIC_DMG)

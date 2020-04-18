@@ -245,6 +245,7 @@ public:
     std::unique_ptr<CAIContainer> PAI;       // AI container
     CBattlefield* PBattlefield;            // pointer to battlefield (if in one)
     CInstance*		PInstance;
+
 protected:
     std::map<std::string, uint32> m_localVars;
 };

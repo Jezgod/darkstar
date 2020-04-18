@@ -456,7 +456,7 @@ bool CAttack::CheckCounter()
 void CAttack::ProcessDamage()
 {
     // Sneak attack.
-    if (m_attacker->GetMJob() == JOB_THF &&
+    if ((m_attacker->GetMJob() == JOB_THF || m_attacker->GetSJob() == JOB_THF) &&
         m_isFirstSwing &&
         m_attacker->StatusEffectContainer->HasStatusEffect(EFFECT_SNEAK_ATTACK) &&
         ((abs(m_victim->loc.p.rotation - m_attacker->loc.p.rotation) < 23) ||

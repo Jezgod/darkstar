@@ -33,6 +33,7 @@
 #include "../party.h"
 #include "../alliance.h"
 #include "../modifier.h"
+#include "../zone.h"
 
 enum ECOSYSTEM
 {
@@ -367,7 +368,8 @@ enum TARGETTYPE
     TARGET_PLAYER_DEAD = 0x20,
     TARGET_NPC = 0x40,		// скорее всего подразумевается mob, выглядящий как npc и воюющий на стороне персонажа
     TARGET_PLAYER_PARTY_PIANISSIMO = 0x80,
-    TARGET_PET = 0x100
+    TARGET_PET = 0x100,
+    TARGET_ENHANCE = 0x05B
 };
 
 enum SKILLCHAIN_ELEMENT
@@ -481,6 +483,7 @@ struct action_t;
 
 class CBattleEntity : public CBaseEntity
 {
+
 public:
     CBattleEntity();						// конструктор
     virtual ~CBattleEntity();						// деструктор
@@ -509,6 +512,7 @@ public:
     bool            isAsleep();
     bool            isMounted();
     bool            isSitting();
+    /*bool            PartyCheck();*/
 
     JOBTYPE		    GetMJob();					// главная профессия
     JOBTYPE		    GetSJob();					// дополнительная профессия
@@ -669,10 +673,11 @@ public:
     CBattleEntity*	PMaster;				    // владелец/хозяин сущности (распространяется на все боевые сущности)
     CBattleEntity*	PLastAttacker;
 
+    bool            m_stylelockedOn;
+    /*bool            m_stylelockedOff;*/
+
     std::unique_ptr<CStatusEffectContainer> StatusEffectContainer;
     std::unique_ptr<CRecastContainer> PRecastContainer;         //
-
-
 
 private:
 
@@ -686,6 +691,7 @@ private:
     std::unordered_map<Mod, int16, EnumClassHash>		m_modStat;	// массив модификаторов
     std::unordered_map<Mod, int16, EnumClassHash>		m_modStatSave;	// saved state
     std::unordered_map<PetModType, std::unordered_map<Mod, int16, EnumClassHash>, EnumClassHash> m_petMod;
+
 };
 
 #endif

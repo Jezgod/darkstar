@@ -75,7 +75,12 @@ namespace conquest
 	uint8	GetNexTally();												// Next tally (weekly or every hour ?)
     uint8	GetRegionOwner(REGIONTYPE RegionID);						// Get owner of the region
 
-    uint32	AddConquestPoints(CCharEntity* PChar, uint32 exp);			// Add conquest points
+    uint32	AddConquestPoints(CCharEntity* PChar, uint32 exp);			            // Add conquest points
+    uint32	AddConquestPointsPVP(CBattleEntity* PLastAttacker, uint32 exp);			// Add conquest points from PVP
+    uint32  GetConquestRatio(uint32 nationNum, uint32 sandoria, uint32 bastok, uint32 windurst);
+    uint8   GetConquestRatio(uint8 nation);
+    uint32  GetImperialRatio(uint32 nationNum, uint32 sandoria, uint32 bastok, uint32 windurst);
+    uint8   GetImperialRatio(uint8 nation);
 };
 
 #endif

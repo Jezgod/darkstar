@@ -23,18 +23,11 @@ local loot =
             {itemid = 4751, droprate = 143},  -- Scroll Of Erase
             {itemid = 4714, droprate = 119},  -- Scroll Of Phalanx
             {itemid = 4896, droprate = 48},   -- Fire Spirit Pact
-            {itemid = 1255, droprate = 48},   -- Chunk Of Fire Ore
-            {itemid = 1256, droprate = 48},   -- Chunk Of Ice Ore
-            {itemid = 1257, droprate = 48},   -- Chunk Of Wind Ore
-            {itemid = 1258, droprate = 48},   -- Chunk Of Earth Ore
-            {itemid = 1259, droprate = 48},   -- Chunk Of Lightning Ore
-            {itemid = 1260, droprate = 48},   -- Chunk Of Water Ore
-            {itemid = 1261, droprate = 48},   -- Chunk Of Light Ore
-            {itemid = 1262, droprate = 48},   -- Chunk Of Dark Ore
+            {itemid = 1255, droprate = 60},   -- elemental_ore
         },
         {
             {itemid = 751, droprate = 833},   -- Platinum Beastcoin
-            {itemid = 1256, droprate = 167},  -- Chunk Of Ice Ore
+            {itemid =   0, droprate = 167},   -- nothing 
         },
         {
             {itemid = 13155, droprate = 250}, -- Enfeebling Torque
@@ -95,14 +88,8 @@ local loot =
             {itemid = 13154, droprate =  250}, -- Enhancing Torque
         },
         {
-            {itemid =  1260, droprate =  125}, -- Chunk Of Water Ore
-            {itemid =  1257, droprate =  125}, -- Chunk Of Wind Ore
-            {itemid =  1256, droprate =  125}, -- Chunk Of Ice Ore
-            {itemid =  1259, droprate =  125}, -- Chunk Of Lightning Ore
-            {itemid =  1261, droprate =  125}, -- Chunk Of Light Ore
-            {itemid =  1255, droprate =  125}, -- Chunk Of Fire Ore
-            {itemid =  1262, droprate =  125}, -- Chunk Of Dark Ore
-            {itemid =  1258, droprate =  125}, -- Chunk Of Earth Ore
+            {itemid =    0, droprate =  940},  -- nothing
+	    {itemid = 1255, droprate =   60},  -- elemental_ore
         },
         {
             {itemid =     0, droprate =  750}, -- nothing

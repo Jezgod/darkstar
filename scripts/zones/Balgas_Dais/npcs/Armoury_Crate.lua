@@ -36,6 +36,7 @@ local loot =
             {itemid =   771, droprate =  125}, -- yellow_rock
             {itemid =   772, droprate =  125}, -- green_rock
             {itemid =   775, droprate =  125}, -- black_rock
+            {itemid =  1255, droprate =   40}, -- elemental_ore 
         },
         {
             {itemid =   790, droprate =   50}, -- garnet
@@ -73,11 +74,11 @@ local loot =
         },
         {
             {itemid =     0, droprate =  250}, -- nothing
-            {itemid = 13054, droprate =  100}, -- fuma_kyahan
+            {itemid = 15737, droprate =  100}, -- sarutobi kyahan
             {itemid = 13555, droprate =  200}, -- peace_ring
             {itemid = 13624, droprate =  200}, -- enhancing_mantle
             {itemid = 13236, droprate =  150}, -- master_belt
-            {itemid = 13952, droprate =  100}, -- ochiudos_kote
+            {itemid = 14986, droprate =  100}, -- ochimusha_kote
         },
         {
             {itemid =     0, droprate =  850}, -- nothing
@@ -91,6 +92,7 @@ local loot =
             {itemid =   775, droprate =  167}, -- black_rock
             {itemid =   771, droprate =  167}, -- yellow_rock
             {itemid =   776, droprate =  167}, -- white_rock
+            {itemid =  1255, droprate  =  60}, -- elemental_ore 
         },
         {
             {itemid =   797, droprate =  125}, -- painite
@@ -307,7 +309,7 @@ local loot =
             {itemid = 17820, droprate = 255},-- Gunromaru
             {itemid = 1601, droprate = 260}, -- Mannequin Head
             {itemid = 4853, droprate = 250}, -- Scroll Of Drain
-            {itemid = 930, droprate = 190},  -- Vial Of Beastman Blood
+            {itemid = 930, droprate = 190},  -- Vial Of Beastman Blood 
         },
     },
     -- BCNM Harem Scarem
@@ -390,7 +392,7 @@ local loot =
             {itemid = 4486, droprate = 522}, -- Dragon Heart
             {itemid = 4272, droprate = 346}, -- Slice Of Dragon Meat
             {itemid = 17928, droprate = 82}, -- Juggernaut
-            {itemid = 13189, droprate = 59}, -- Speed Belt
+            {itemid = 15899, droprate = 59}, -- Velocious Belt
         },
         {
             {itemid = 887, droprate = 32},   -- Coral Fragment
@@ -596,6 +598,7 @@ local loot =
             {itemid =   784, droprate =   98}, -- jadeite
             {itemid =   797, droprate =   98}, -- painite
             {itemid =  4175, droprate =   99}, -- vile_elixir_+1
+            {itemid =  1255, droprate =   60}, -- elemental_ore
         },
     },
 }

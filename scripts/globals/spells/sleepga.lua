@@ -6,8 +6,17 @@ require("scripts/globals/msg")
 require("scripts/globals/status")
 -----------------------------------------
 
-function onMagicCastingCheck(caster, target, spell)
-    return 0
+function onMagicCastingCheck(caster,target,spell)
+    local cpid = caster:getPartyTID()
+    local tpid = target:getPartyTID()
+    local master = target:getMaster()
+    if (cpid == tpid and cpid ~= nil) then
+	return 1
+    elseif (master ~= nil and cpid == master:getPartyTID()) then
+	return 1
+    else
+	return 0
+    end
 end
 
 function onSpellCast(caster, target, spell)

@@ -71,7 +71,7 @@ public:
     CBattleEntity* GetQuaterMaster();                   // узнаем владельца сокровищ
     CBattleEntity* GetMemberByName(const int8* MemberName);   // Returns entity pointer for member name string
 
-	void DisbandParty(bool playerInitiated = true);		// распускаем группу
+    void DisbandParty(bool playerInitiated = true);		// распускаем группу
 	void ReloadParty();                                 // перезагружаем карту группы для всех участников группы
 	void ReloadPartyMembers(CCharEntity* PChar);        // oбновляем статусы участников группы для выбранного персонажа
 	void ReloadTreasurePool(CCharEntity* PChar);

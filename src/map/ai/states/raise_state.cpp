@@ -25,6 +25,7 @@ This file is part of DarkStar-server source code.
 
 #include "../../entities/battleentity.h"
 #include "../../entities/charentity.h"
+#include "death_state.h"
 
 CRaiseState::CRaiseState(CBattleEntity* PEntity) :
     CState(PEntity, PEntity->targid),
@@ -43,6 +44,7 @@ bool CRaiseState::Update(time_point tick)
     {
         m_PEntity->animation = ANIMATION_NONE;
         m_PEntity->updatemask |= UPDATE_HP;
+
         return true;
     }
     return false;

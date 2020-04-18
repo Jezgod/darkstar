@@ -58,6 +58,12 @@ dsp.battlefield.leaveCode =
     LOST = 4
 }
 
+-------------------------------------------------
+-- elemental ores. do not change this order!
+-------------------------------------------------
+
+local ores = {1255,1258,1260,1257,1256,1259,1261,1262}
+
 function dsp.battlefield.onBattlefieldTick(battlefield, timeinside, players)
     local killedallmobs = true
     local mobs = battlefield:getMobs(true, false)
@@ -201,15 +207,18 @@ function dsp.battlefield.HandleLootRolls(battlefield, lootTable, players, npc)
                     max = max - entry.droprate
                     if roll > max then
                         if entry.itemid ~= 0 then
-                            if entry.itemid == 65535 then
-                                local gil = entry.amount/#players
-                                for i = 1, #players, 1 do
-                                    players[i]:addGil(gil)
-                                    players[i]:messageSpecial(zones[players[1]:getZoneID()].text.GIL_OBTAINED, gil)
-                                end
-                                break
+                            if entry.itemid == 1255 then
+                                entry.itemid = ores[VanadielDayElement() + 1]
                             end
-                            players[1]:addTreasure(entry.itemid, npc)
+                                if entry.itemid == 65535 then
+                                    local gil = entry.amount/#players
+                                    for i = 1, #players, 1 do
+                                        players[i]:addGil(gil)
+                                        players[i]:messageSpecial(zones[players[1]:getZoneID()].text.GIL_OBTAINED, gil)
+                                    end
+                                    break
+                                end
+                                players[1]:addTreasure(entry.itemid, npc)
                         end
                         break
                     end

@@ -45,6 +45,10 @@
 #include "../packets/action.h"
 #include "../utils/petutils.h"
 #include "../utils/puppetutils.h"
+#include "../utils/charutils.h"
+#include "../entities/charentity.h"
+#include "../party.h"
+
 
 CBattleEntity::CBattleEntity()
 {
@@ -118,6 +122,11 @@ bool CBattleEntity::isInAssault()
     }
     return false;
 }
+
+//bool CBattleEntity::isInParty()
+//{
+//        return true;
+//}
 
 // return true if the mob has immunity
 bool CBattleEntity::hasImmunity(uint32 imID)
@@ -288,7 +297,7 @@ int16 CBattleEntity::GetWeaponDelay(bool tp)
 
 uint8 CBattleEntity::GetMeleeRange()
 {
-    return m_ModelSize + 3;
+    return m_ModelSize + 4;
 }
 
 int16 CBattleEntity::GetRangedWeaponDelay(bool tp)
@@ -778,7 +787,7 @@ void CBattleEntity::SetMLevel(uint8 mlvl)
 
 void CBattleEntity::SetSLevel(uint8 slvl)
 {
-    m_slvl = (slvl > (m_mlvl >> 1) ? (m_mlvl == 1 ? 1 : (m_mlvl >> 1)) : slvl);
+    m_slvl = (slvl > (m_mlvl) ? (m_mlvl == 1 ? 1 : (m_mlvl)) : slvl); // Sub caps to main.
 
     if (this->objtype & TYPE_PC)
         Sql_Query(SqlHandle, "UPDATE char_stats SET slvl = %u WHERE charid = %u LIMIT 1;", m_slvl, this->id);
@@ -1149,16 +1158,24 @@ void CBattleEntity::delTrait(CTrait* PTrait)
 
 bool CBattleEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
 {
+
     if (targetFlags & TARGET_ENEMY)
     {
         if (!isDead())
         {
-            if (allegiance == (PInitiator->allegiance % 2 == 0 ? PInitiator->allegiance + 1 : PInitiator->allegiance - 1))
+            if ((PInitiator->allegiance == 1)) //Prevent attack from Player Allegiance state
+            {
+                return false;
+            }
+
+            //if (allegiance != (PInitiator->allegiance % 2 == 0 ? PInitiator->allegiance + 1 : PInitiator->allegiance - 1))
+            if (allegiance != (PInitiator->allegiance))
             {
                 return true;
             }
         }
     }
+
     if ((targetFlags & TARGET_SELF) && (this == PInitiator || (PInitiator->objtype == TYPE_PET &&
         static_cast<CPetEntity*>(PInitiator)->getPetType() == PETTYPE_AUTOMATON && this == PInitiator->PMaster)))
     {
@@ -1198,6 +1215,7 @@ void CBattleEntity::OnCastFinished(CMagicState& state, action_t& action)
     auto PActionTarget = static_cast<CBattleEntity*>(state.GetTarget());
 
     luautils::OnSpellPrecast(this, PSpell);
+    
 
     state.SpendCost();
 
@@ -1326,12 +1344,20 @@ void CBattleEntity::OnCastFinished(CMagicState& state, action_t& action)
         }
     }
 
-    // TODO: Pixies will probably break here, once they're added.
-    if (this->allegiance != PActionTarget->allegiance)
+    // TODO: Pixies will probably break here, once they're added.  Fixed Sneak/Invis/Deo not applying to party members of different allegiances.
+    if (this->objtype == TYPE_PC && PActionTarget->objtype == TYPE_PC)
+    {
+        if ((this->allegiance != PActionTarget->allegiance))
+        {
+        }
+    }
+    else
     {
         // Should not be removed by AoE effects that don't target the player or
-        // buffs cast by other players or mobs.
-        PActionTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);
+           // buffs cast by other players or mobs.
+            /*this->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);*/
+        if ((this->allegiance != PActionTarget->allegiance))
+            PActionTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);
     }
 
     this->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);
@@ -1385,6 +1411,17 @@ void CBattleEntity::OnDisengage(CAttackState& s)
         animation = ANIMATION_NONE;
     }
     updatemask |= UPDATE_HP;
+
+    /*auto PChar = dynamic_cast<CCharEntity*>(this);
+    bool m_stylelockedOff = false;
+    bool isStyleLocked = m_stylelockedOff;*/
+
+    if (objtype == TYPE_PC)
+        {
+            speed = 50;                                     //Speed adjustment to normal value                               
+            //PChar->setStyleLocked(isStyleLocked);           //StyleLock ON
+        }
+
     PAI->EventHandler.triggerListener("DISENGAGE", this);
 }
 
@@ -1405,6 +1442,7 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
     {
         // TODO: Should not be removed by AoE effects that don't target the player.
         PTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);
+        PTarget->StatusEffectContainer->DelStatusEffect(EFFECT_MOUNTED);
     }
 
     if (battleutils::IsParalyzed(this))
@@ -1674,6 +1712,19 @@ void CBattleEntity::OnEngage(CAttackState& state)
 {
     animation = ANIMATION_ATTACK;
     updatemask |= UPDATE_HP;
+
+    //LOCKSTYLE
+    auto PChar = dynamic_cast<CCharEntity*>(this);
+    bool m_stylelockedOn = true;
+    bool isStyleLocked = m_stylelockedOn;
+   //LOCKSTYLE
+    
+    if (objtype == TYPE_PC)
+    {
+        speed = 75;                                     //Speed adjustment to increased value
+        PChar->setStyleLocked(isStyleLocked);           //Lockst ON
+    }
+
     PAI->EventHandler.triggerListener("ENGAGE", this, state.GetTarget());
 }
 

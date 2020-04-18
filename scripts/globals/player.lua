@@ -28,12 +28,12 @@ local startingNationInfo =
 
 local startingJobGear =
 {
-    [dsp.job.WAR] = {16534},       -- onion sword
-    [dsp.job.MNK] = {13184},       -- white belt
-    [dsp.job.WHM] = {17068, 4608}, -- onion rod, scroll of cure
-    [dsp.job.BLM] = {17104, 4607}, -- onion staff, scroll of stone
-    [dsp.job.RDM] = {16482, 4606}, -- onion dagger, scroll of dia
-    [dsp.job.THF] = {16483},       -- onion knife
+    [dsp.job.WAR] = {16534},       		-- onion sword
+    [dsp.job.MNK] = {13184},       		-- white belt
+    [dsp.job.WHM] = {17068, 4608, 4899}, 	-- onion rod, scroll of cure, earth spirit
+    [dsp.job.BLM] = {17104, 4607, 4899}, 	-- onion staff, scroll of stone, earth spirit
+    [dsp.job.RDM] = {16482, 4606, 4899}, 	-- onion dagger, scroll of dia, earth spirit
+    [dsp.job.THF] = {16483},       		-- onion knife
 }
 
 -----------------------------------
@@ -118,6 +118,17 @@ local function CharCreate(player)
 
     if player:getGil() < START_GIL then
        player:setGil(START_GIL)
+    end
+
+    if nation == 0 then
+      player:addLSpearl("TheKingdom")
+      player:addLSpearl("Retribution")
+    elseif nation == 1 then
+      player:addLSpearl("TheRepublic")
+      player:addLSpearl("Retribution")
+    else
+     player:addLSpearl("TheFederation")
+     player:addLSpearl("Retribution")
     end
 
     player:addItem(536) -- adventurer coupon

@@ -55,7 +55,7 @@ public:
     void SetInstantCast(const bool bInstantCast) { m_instantCast = bInstantCast; }
 
 protected:
-    bool CanCastSpell(CBattleEntity* PTarget);
+    bool CanCastSpell(CBattleEntity* PTarget, uint8 range);
 
     bool HasCost();
 

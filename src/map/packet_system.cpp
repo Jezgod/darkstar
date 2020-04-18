@@ -65,6 +65,8 @@ This file is part of DarkStar-server source code.
 #include "mob_modifier.h"
 #include "ai/ai_container.h"
 #include "ai/states/death_state.h"
+#include "entities/baseentity.h"
+#include "entities/battleentity.h"
 
 #include "items/item_shop.h"
 
@@ -2557,7 +2559,9 @@ void SmallPacket0x053(map_session_data_t* session, CCharEntity* PChar, CBasicPac
     uint8 count = data.ref<uint8>(0x04);
     uint8 type = data.ref<uint8>(0x05);
 
-    if (type == 0 && PChar->getStyleLocked())
+    /*m_PEntity->allegiance == ALLEGIANCE_PLAYER PChar->m_moghouseID == 1 */
+    auto entity = dynamic_cast<CBattleEntity*>(PChar);
+    if (type == 0 && PChar->getStyleLocked() && entity->allegiance == 1)
     {
         charutils::SetStyleLock(PChar, false);
         charutils::SaveCharLook(PChar);
@@ -2614,6 +2618,11 @@ void SmallPacket0x053(map_session_data_t* session, CCharEntity* PChar, CBasicPac
     {
         charutils::SetStyleLock(PChar, true);
         charutils::SaveCharLook(PChar);
+    }
+
+    else if (type == 0)
+    {
+        return;
     }
 
     if (type != 1 && type != 2)
@@ -2847,6 +2856,8 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, CBasicPac
             }
             PChar->m_moghouseID = 0;
             PChar->loc.destination = prevzone;
+            charutils::SetStyleLock(PChar, true);
+            charutils::SaveCharLook(PChar);
             memset(&PChar->loc.p, 0, sizeof(PChar->loc.p));
         }
         else
@@ -4525,18 +4536,18 @@ void SmallPacket0x0DC(map_session_data_t* session, CCharEntity* PChar, CBasicPac
         if (data.ref<uint8>(0x10) == 2)
             PChar->nameflags.flags &= ~FLAG_AWAY;
         break;
-    case NFLAG_ANON:
-        // /anon [on|off]
-        PChar->nameflags.flags ^= FLAG_ANON;
-        if (PChar->nameflags.flags & FLAG_ANON)
-        {
-            PChar->pushPacket(new CMessageSystemPacket(0, 0, 175));
-        }
-        else
-        {
-            PChar->pushPacket(new CMessageSystemPacket(0, 0, 176));
-        }
-        break;
+    //case NFLAG_ANON:
+    //    // /anon [on|off]
+    //    PChar->nameflags.flags ^= FLAG_ANON;
+    //    if (PChar->nameflags.flags & FLAG_ANON)
+    //    {
+    //        PChar->pushPacket(new CMessageSystemPacket(0, 0, 175));         
+    //    }
+    //    else
+    //    {
+    //        PChar->pushPacket(new CMessageSystemPacket(0, 0, 176));
+    //    }
+    //    break;
     case NFLAG_AUTOTARGET:
         // /autotarget [on|off]
         if (data.ref<uint8>(0x10) == 1)

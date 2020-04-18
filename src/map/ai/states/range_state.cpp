@@ -41,7 +41,7 @@ CRangeState::CRangeState(CCharEntity* PEntity, uint16 targid) :
         throw CStateInitException(std::move(m_errorMsg));
     }
 
-    if (!CanUseRangedAttack(PTarget))
+    if (!CanUseRangedAttack(PTarget, 25))
     {
         throw CStateInitException(std::move(m_errorMsg));
     }
@@ -92,7 +92,14 @@ bool CRangeState::Update(time_point tick)
     {
         auto PTarget = m_PEntity->IsValidTarget(m_targid, TARGET_ENEMY, m_errorMsg);
 
-        CanUseRangedAttack(PTarget);
+        uint8 range = 25;
+
+        if (tick > GetEntryTime()) // after checking for the initial time, the mob can move further away and not cancel our RA
+        {
+            range = 50;
+        }
+
+        CanUseRangedAttack(PTarget, range);
         if (m_startPos.x != m_PEntity->loc.p.x || m_startPos.y != m_PEntity->loc.p.y)
         {
             m_errorMsg = std::make_unique<CMessageBasicPacket>(m_PEntity, m_PEntity, 0, 0, MSGBASIC_MOVE_AND_INTERRUPT);
@@ -133,7 +140,7 @@ void CRangeState::Cleanup(time_point tick)
 
 }
 
-bool CRangeState::CanUseRangedAttack(CBattleEntity* PTarget)
+bool CRangeState::CanUseRangedAttack(CBattleEntity* PTarget, uint8 range)
 {
     if (!PTarget)
     {
@@ -181,11 +188,13 @@ bool CRangeState::CanUseRangedAttack(CBattleEntity* PTarget)
         m_errorMsg = std::make_unique<CMessageBasicPacket>(m_PEntity, PTarget, 0, 0, MSGBASIC_CANNOT_SEE);
         return false;
     }
-    if (distance(m_PEntity->loc.p, PTarget->loc.p) > 25)
+
+    if (distance(m_PEntity->loc.p, PTarget->loc.p) > range)
     {
         m_errorMsg = std::make_unique<CMessageBasicPacket>(m_PEntity, PTarget, 0, 0, MSGBASIC_TOO_FAR_AWAY);
         return false;
     }
+     
     if (!m_PEntity->PAI->TargetFind->canSee(&PTarget->loc.p))
     {
         m_errorMsg = std::make_unique<CMessageBasicPacket>(m_PEntity, PTarget, 0, 0, MSGBASIC_CANNOT_PERFORM_ACTION);

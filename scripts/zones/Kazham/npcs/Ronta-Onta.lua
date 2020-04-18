@@ -12,6 +12,22 @@ local ID = require("scripts/zones/Kazham/IDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)
+    whisper = player:hasKeyItem(dsp.ki.WHISPER_OF_FLAMES);
+    staff = 0
+    chance = 90
+    if (math.random(100) < chance) then
+	staff = 17545
+    else
+	staff = 17546
+    end
+    if (trade:getGil() == 500000 and trade:hasItemQty(1203,1) and whisper == true) then
+    	player:tradeComplete();
+    	player:addItem(staff);
+       	player:delKeyItem(dsp.ki.WHISPER_OF_FLAMES);
+    	player:messageSpecial(ID.text.ITEM_OBTAINED,staff);
+    else
+	player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED,staff);
+    end
 end;
 
 function onTrigger(player,npc)

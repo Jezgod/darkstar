@@ -29,6 +29,7 @@ This file is part of DarkStar-server source code.
 #include "../ai_container.h"
 #include "../../status_effect.h"
 #include "../../status_effect_container.h"
+#include "raise_state.h"
 
 CDeathState::CDeathState(CBattleEntity* PEntity, duration death_time) :
     CState(PEntity, PEntity->targid),
@@ -40,6 +41,13 @@ CDeathState::CDeathState(CBattleEntity* PEntity, duration death_time) :
 
     m_PEntity->animation = ANIMATION_DEATH;
     m_PEntity->updatemask |= UPDATE_HP;
+
+    if (m_PEntity->objtype == TYPE_PC)
+    {
+        m_PEntity->allegiance = ALLEGIANCE_PLAYER;
+        m_PEntity->speed = 50;
+    }
+
     if (m_PEntity->PAI->PathFind)
     {
         m_PEntity->PAI->PathFind->Clear();
