@@ -952,11 +952,7 @@ void CZone::CharZoneOut(CCharEntity* PChar)
 
     if (PChar->status == STATUS_SHUTDOWN)       
     {
-        PChar->loc.destination = m_zoneID;
-            if (PChar->loc.destination == ZONE_THE_COLOSSEUM)
-            {
-                PChar->loc.destination = ZONE_MORDION_GAOL;
-            }
+        PChar->loc.destination = m_zoneID;      
     }
     else
     {
