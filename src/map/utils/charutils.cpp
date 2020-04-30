@@ -2712,6 +2712,10 @@ namespace charutils
             }
         }
 
+        if (PChar->GetMJob() != JOB_NON || JOB_WAR) {
+            addAbility(PChar, ABILITY_PROVOKE);
+        }
+
         //To stop a character with no SJob to receive the traits with job = 0 in the DB.
         if (PChar->GetSJob() == JOB_NON) {
             return;

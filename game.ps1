@@ -2,7 +2,7 @@ $date = Get-Date -Format G
 
 while ($true)
 {
-    if ((Get-Process -Name DSSearch-server -ErrorAction SilentlyContinue) -eq $null)
+    if ((Get-Process -Name DSGame-server -ErrorAction SilentlyContinue) -eq $null)
     {
 
         Write-Host -ForegroundColor Red "Server Is Not Running"

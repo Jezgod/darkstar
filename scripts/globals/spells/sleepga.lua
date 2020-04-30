@@ -7,16 +7,34 @@ require("scripts/globals/status")
 -----------------------------------------
 
 function onMagicCastingCheck(caster,target,spell)
-    local cpid = caster:getPartyTID()
-    local tpid = target:getPartyTID()
+    local leaderid = caster:getLeaderID()
+    local targetid = target:getLeaderID()
     local master = target:getMaster()
-    if (cpid == tpid and cpid ~= nil) then
-	return 1
-    elseif (master ~= nil and cpid == master:getPartyTID()) then
-	return 1
-    else
+
+    if (leaderid ~= targetid and master == nil) then
+        printf("Match 1")
 	return 0
+
+    elseif (leaderid == targetid) then
+        printf("CasterID : %s",leaderid)	
+        printf("TargetID : %s",targetid)	
+        --printf("MasterID : %s",master:getLeaderID())
+        printf("Match 2")
+	return 1
+
+    elseif (leaderid == master:getLeaderID()) then
+	printf("CasterID : %s",leaderid)	
+        printf("TargetID : %s",targetid)	
+        printf("MasterID : %s",master:getLeaderID())
+        printf("Match 3")
+	return 1
+
+    else
+	printf("Match 4")       
+        return 0 
+
     end
+
 end
 
 function onSpellCast(caster, target, spell)

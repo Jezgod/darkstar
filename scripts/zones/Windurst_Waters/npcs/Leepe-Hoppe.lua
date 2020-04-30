@@ -11,9 +11,20 @@ local ID = require("scripts/zones/Windurst_Waters/IDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)
-    whisper = player:hasKeyItem(dsp.ki.WHISPER_OF_THE_MOON);
-    staff = 18633
+    local whisper = player:hasKeyItem(dsp.ki.WHISPER_OF_THE_MOON);
+    local staff = 0
     if (trade:getGil() == 1000000 and 
+	trade:hasItemQty(18632,1) and  
+	whisper == true and
+	trade:getItemCount() == 2) then
+
+	staff = 18633
+    	player:tradeComplete();
+    	player:addItem(staff);
+       	player:delKeyItem(dsp.ki.WHISPER_OF_THE_MOON);
+    	player:messageSpecial(ID.text.ITEM_OBTAINED,staff);    
+
+    elseif (trade:getGil() == 1000000 and 
 	trade:hasItemQty(17546,1) and 
 	trade:hasItemQty(17548,1) and 
 	trade:hasItemQty(17550,1) and 
@@ -25,10 +36,30 @@ function onTrade(player,npc,trade)
 	whisper == true and
 	trade:getItemCount() == 9) then
 
+	staff = 18633
     	player:tradeComplete();
     	player:addItem(staff);
        	player:delKeyItem(dsp.ki.WHISPER_OF_THE_MOON);
     	player:messageSpecial(ID.text.ITEM_OBTAINED,staff);
+    
+    elseif (trade:getGil() == 500000 and 
+	trade:hasItemQty(17545,1) and 
+	trade:hasItemQty(17547,1) and 
+	trade:hasItemQty(17549,1) and 
+	trade:hasItemQty(17551,1) and 
+	trade:hasItemQty(17553,1) and 
+	trade:hasItemQty(17555,1) and 
+	trade:hasItemQty(17557,1) and 
+	trade:hasItemQty(17559,1) and 
+	whisper == true and
+	trade:getItemCount() == 9) then
+
+        staff = 18632
+    	player:tradeComplete();
+    	player:addItem(staff);
+       	player:delKeyItem(dsp.ki.WHISPER_OF_THE_MOON);
+    	player:messageSpecial(ID.text.ITEM_OBTAINED,staff);
+
     else
 	player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED,staff);
     end

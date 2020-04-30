@@ -1416,7 +1416,7 @@ void CBattleEntity::OnDisengage(CAttackState& s)
     bool m_stylelockedOff = false;
     bool isStyleLocked = m_stylelockedOff;*/
 
-    if (objtype == TYPE_PC)
+    if (objtype == TYPE_PC && speed >= 50)
         {
             speed = 50;                                     //Speed adjustment to normal value                               
             //PChar->setStyleLocked(isStyleLocked);           //StyleLock ON
@@ -1719,9 +1719,9 @@ void CBattleEntity::OnEngage(CAttackState& state)
     bool isStyleLocked = m_stylelockedOn;
    //LOCKSTYLE
     
-    if (objtype == TYPE_PC)
+    if (objtype == TYPE_PC && speed >= 50)
     {
-        speed = 75;                                     //Speed adjustment to increased value
+        speed = 65;                                     //Speed adjustment to increased value
         PChar->setStyleLocked(isStyleLocked);           //Lockst ON
     }
 

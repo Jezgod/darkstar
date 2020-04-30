@@ -40,6 +40,7 @@
 #include "../ability.h"
 #include "../alliance.h"
 #include "../battlefield.h"
+#include "../conquest_system.h"
 #include "../enmity_container.h"
 #include "../guild.h"
 #include "../instance.h"
@@ -4981,7 +4982,33 @@ inline int32 CLuaBaseEntity::lockstyleOn(lua_State* L)
 
     return 0;
 }
-//LOCKSTYLE
+
+//GET CONQUEST POINT RATION
+inline int32 CLuaBaseEntity::getConquestPointRatio(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+
+    auto nation = lua_tointeger(L, 1);
+
+    switch (nation)
+    {
+    case 0:
+        lua_pushinteger(L, conquest::GetConquestRatio(0));
+        break;
+    case 1:
+        lua_pushinteger(L, conquest::GetConquestRatio(1));
+        break;
+    case 2:
+        lua_pushinteger(L, conquest::GetConquestRatio(2));
+        break;
+    default:
+        lua_pushinteger(L, 0);
+    }
+    return 1;
+}
 
 /************************************************************************
 *  Function: getNewPlayer()
@@ -8579,7 +8606,7 @@ inline int32 CLuaBaseEntity::getPartySize(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+    /*DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));*/
 
     uint8 allianceparty = (uint8)lua_tonumber(L, 1);
     uint8 partysize = 1;
@@ -8914,7 +8941,7 @@ inline int32 CLuaBaseEntity::getAllianceSize(lua_State* L)
 inline int32 CLuaBaseEntity::getLeaderID(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    /*DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);*/
 
     if (const CCharEntity* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
@@ -14078,7 +14105,7 @@ const char CLuaBaseEntity::className[] = "CBaseEntity";
 Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 {
 
-    // Messaging System
+// Messaging System
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,showText),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,messageText),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,PrintToPlayer),
@@ -14174,106 +14201,107 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     // Location and Positioning
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,isBehind),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,isFacing),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getAngle),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getAngle),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getZone),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getZoneID),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getZoneName),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,isZoneVisited),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPreviousZone),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCurrentRegion),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getContinentID),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,isInMogHouse),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getZone),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getZoneID),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getZoneName),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, isZoneVisited),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getPreviousZone),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getCurrentRegion),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getContinentID),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, isInMogHouse),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPos),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,showPosition),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getXPos),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getYPos),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getZPos),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getRotPos),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setPos),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getPos),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, showPosition),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getXPos),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getYPos),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getZPos),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getRotPos),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, setPos),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,warp),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,teleport),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addTeleport),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getTeleport),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,hasTeleport),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setTeleportMenu),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getTeleportMenu),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setHomePoint),    
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,resetPlayer),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, warp),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, teleport),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, addTeleport),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getTeleport),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, hasTeleport),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, setTeleportMenu),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getTeleportMenu),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, setHomePoint),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, resetPlayer),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,goToEntity),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,gotoPlayer),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,bringPlayer),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, goToEntity),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, gotoPlayer),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, bringPlayer),
 
     // Items
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getEquipID),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getEquipID),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,hasItem),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addItem),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,delItem),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addUsedItem),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addTempItem),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,hasWornItem),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,createWornItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, hasItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, addItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, delItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, addUsedItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, addTempItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, hasWornItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, createWornItem),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,createShop),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addShopItem),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCurrentGPItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, createShop),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, addShopItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getCurrentGPItem),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity, addLSpearl),
 
     // Trading
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getContainerSize),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,changeContainerSize),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getFreeSlotsCount),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,confirmTrade),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,tradeComplete),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getContainerSize),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, changeContainerSize),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getFreeSlotsCount),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, confirmTrade),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, tradeComplete),
 
     // Equipping
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,canEquipItem),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,equipItem),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,unequipItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, canEquipItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, equipItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, unequipItem),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setEquipBlock),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,lockEquipSlot),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,unlockEquipSlot),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, setEquipBlock),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, lockEquipSlot),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, unlockEquipSlot),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getShieldSize),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getShieldSize),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,hasGearSetMod),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,addGearSetMod),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,clearGearSetMods),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, hasGearSetMod),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, addGearSetMod),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, clearGearSetMods),
 
     // Storing
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getStorageItem),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,storeWithPorterMoogle),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getRetrievableItemsForSlip),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,retrieveItemFromSlip),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getStorageItem),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, storeWithPorterMoogle),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getRetrievableItemsForSlip),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, retrieveItemFromSlip),
 
     // Player Appearance
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getRace),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getGender),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getName),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,hideName),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,checkNameFlags),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getModelId),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setModelId),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,costume),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,costume2),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getRace),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getGender),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getName),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, hideName),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, checkNameFlags),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getModelId),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, setModelId),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, costume),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, costume2),
 
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getAnimation),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setAnimation),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,AnimationSub),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getAnimation),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, setAnimation),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, AnimationSub),
 
     // Player Status
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getNation),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setNation),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getAllegiance),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setAllegiance),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,getCampaignAllegiance),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setCampaignAllegiance),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getNation),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, setNation),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getAllegiance),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, setAllegiance),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getCampaignAllegiance),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, setCampaignAllegiance),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity, lockstyleOn),    //FORCE LOCKSTYLE ON
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getConquestPointRatio),
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getNewPlayer),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setNewPlayer),

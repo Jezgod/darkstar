@@ -383,6 +383,11 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, CBasicPac
         PChar->updatemask |= UPDATE_HP;
     }
 
+    if (PChar->loc.zone->GetID() == 71)
+    {
+        PChar->health.hp = 0;
+    }
+
     if (PChar->status == STATUS_SHUTDOWN)
     {
         if (PChar->PParty != nullptr)
@@ -495,15 +500,15 @@ void SmallPacket0x011(map_session_data_t* session, CCharEntity* PChar, CBasicPac
     }
 
     // todo: kill player til theyre dead and bsod
-    const char* fmtQuery = "SELECT version_mismatch FROM accounts_sessions WHERE charid = %u";
-    int32 ret = Sql_Query(SqlHandle, fmtQuery, PChar->id);
-    if (ret != SQL_ERROR && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-    {
-        // On zone change, only sending a version message if mismatch
-        if ((bool)Sql_GetUIntData(SqlHandle, 0))
-            PChar->pushPacket(new CChatMessagePacket(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, "Server does not support this client version. Please refrain from posting issues on DSP bugtracker."));
-    }
-    return;
+    //const char* fmtQuery = "SELECT version_mismatch FROM accounts_sessions WHERE charid = %u";
+    //int32 ret = Sql_Query(SqlHandle, fmtQuery, PChar->id);
+    //if (ret != SQL_ERROR && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+    //{
+    //    // On zone change, only sending a version message if mismatch
+    //    if ((bool)Sql_GetUIntData(SqlHandle, 0))
+    //        PChar->pushPacket(new CChatMessagePacket(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, "Server does not support this client version. Please refrain from posting issues on DSP bugtracker."));
+    //}
+    //return;
 }
 
 /************************************************************************

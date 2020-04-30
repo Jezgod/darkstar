@@ -43,6 +43,7 @@ CPlayerCharmController::~CPlayerCharmController()
     }
     POwner->PAI->PathFind.reset();
     POwner->allegiance = ALLEGIANCE_PLAYER;
+    POwner->health.hp = 0;
 }
 
 void CPlayerCharmController::Tick(time_point tick)

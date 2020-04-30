@@ -8,88 +8,27 @@ require("scripts/globals/settings");
 require("scripts/globals/keyitems");
 require("scripts/globals/shop");
 require("scripts/globals/quests");
-require("scripts/globals/npc_util");
 local ID = require("scripts/zones/Kazham/IDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)
-    local ki = dsp.ki.WHISPER_OF_FLAMES
-    local whisper = player:hasKeyItem(ki);
-    local name = "Whisper of Flames"
-    local ore = 1255
-    local oretype = "Fire"
-    local tradeCount = trade:getItemCount();
+    local whisper = player:hasKeyItem(dsp.ki.WHISPER_OF_FLAMES);
     local staff = 0
     local chance = 90
-    
-    printf("whisper? : %s",whisper)
-
-    if (whisper == false) then
-      player:PrintToPlayer( string.format("Please obtain the %s...", name ) )
-      return 1
-    end
-
-    if (trade:getGil() ~= 250000) then
-      player:PrintToPlayer( string.format("The cost is 250,000 G to produce the staff...") )
-      return 1
-    elseif (trade:getGil() == 250000 and tradeCount == 1) then
-      player:PrintToPlayer( string.format("This action requires between 1 to 10 %s ores...", oretype) )
-      return 1
-    elseif (tradeCount > 11 or trade:confirmItem(ore) ~= true ) then
-      player:PrintToPlayer( string.format("This action requires between 1 to 10 %s ores...", oretype) )
-      return 1  
-    end
-
-    if npcUtil.tradeHas(trade, {{ore,10}}) then 
-        chance = 0
-    elseif npcUtil.tradeHas(trade, {{ore,9}}) then 
-        chance = 10 
-    elseif npcUtil.tradeHas(trade, {{ore,8}}) then 
-        chance = 20
-    elseif npcUtil.tradeHas(trade, {{ore,7}}) then 
-        chance = 30
-    elseif npcUtil.tradeHas(trade, {{ore,6}}) then 
-        chance = 40
-    elseif npcUtil.tradeHas(trade, {{ore,5}}) then 
-        chance = 50
-    elseif npcUtil.tradeHas(trade, {{ore,4}}) then 
-        chance = 60
-    elseif npcUtil.tradeHas(trade, {{ore,3}}) then 
-        chance = 70
-    elseif npcUtil.tradeHas(trade, {{ore,2}}) then 
-        chance = 80 
-    elseif npcUtil.tradeHas(trade, {{ore,1}}) then 
-        chance = 90
-    end
-
     if (math.random(100) < chance) then
 	staff = 17545
-    printf("Chance : %u",chance)
     else
 	staff = 17546
-    printf("Chance : %u",chance)
     end
-
     if (trade:getGil() == 250000 and 
-        trade:hasItemQty(ore,10) or 
-	trade:hasItemQty(ore,9) or 
-	trade:hasItemQty(ore,8) or
-	trade:hasItemQty(ore,7) or 
-	trade:hasItemQty(ore,6) or 
-	trade:hasItemQty(ore,5) or 
-	trade:hasItemQty(ore,4) or 
-	trade:hasItemQty(ore,3) or
-	trade:hasItemQty(ore,2) or
-	trade:hasItemQty(ore,1) and
+        trade:hasItemQty(1203,1) and 
+        trade:getItemCount() == 2 and
         whisper == true) then
 
     	player:tradeComplete();
     	player:addItem(staff);
-       	player:delKeyItem(ki);
+       	player:delKeyItem(dsp.ki.WHISPER_OF_FLAMES);
     	player:messageSpecial(ID.text.ITEM_OBTAINED,staff);
-        
-	printf("item_count : %u",tradeCount)
-        printf("whisper? : %s",whisper)
     else
 	player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED,staff);
     end

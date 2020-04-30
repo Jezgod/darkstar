@@ -16,15 +16,26 @@ function onAbilityCheck(player,target,ability)
 end
 
 function onUseAbility(user,target,ability)
-	local duration = 1
+	local bindduration = 2
+        local stunduration = 1
+        local amnesiaduration = 10
 	local TPGain = 1000
+        local pet = target:getPet()
 
         --leave blank please! This file will be deleted when the core is updated.
 	if (target:getObjType() == 1 or target:getObjType() == 8) then
 		
 		user:setCursorTarget();
-                target:addStatusEffect(dsp.effect.STUN,1,0,duration);
+                target:addStatusEffect(dsp.effect.BIND,1,0,bindduration);
+                target:addStatusEffect(dsp.effect.STUN,1,0,stunduration);
+                target:addStatusEffect(dsp.effect.AMNESIA,1,0,amnesiaduration);
                 target:addTP(TPGain);
+
+		if (target:hasPet() == false) then
+			return 0;
+		else
+			pet:wait(15000);
+                end
 	
 	else
 	

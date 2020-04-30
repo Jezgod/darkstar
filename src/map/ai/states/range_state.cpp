@@ -96,7 +96,7 @@ bool CRangeState::Update(time_point tick)
 
         if (tick > GetEntryTime()) // after checking for the initial time, the mob can move further away and not cancel our RA
         {
-            range = 50;
+            range = 40;
         }
 
         CanUseRangedAttack(PTarget, range);

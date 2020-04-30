@@ -19,7 +19,24 @@ require("scripts/globals/msg")
 -----------------------------------------
 
 function onMagicCastingCheck(caster,target,spell)
-    return 0
+    local leaderid = caster:getLeaderID()
+    local targetid = target:getLeaderID()
+    local master = target:getMaster()
+
+    if (leaderid ~= targetid and master == nil) then
+	return 0
+
+    elseif (leaderid == targetid) then
+	return 1
+
+     elseif (leaderid == master:getLeaderID()) then
+	return 1
+
+     else     
+        return 0 
+
+    end
+
 end
 
 function onSpellCast(caster,target,spell)

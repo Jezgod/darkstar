@@ -283,6 +283,7 @@ dsp.shop =
                  915,    3600,   dsp.craftRank.JOURNEYMAN,      -- Toad Oil
                  931,    5000,    dsp.craftRank.CRAFTSMAN,      -- Cermet Chunk
                  944,    1035,    dsp.craftRank.CRAFTSMAN,      -- Venom Dust
+                4213,   30000,      dsp.craftRank.AMATEUR,      -- Icarus Wing
                 8889,    3000,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 5
                 8890,    4000,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 10
                 8891,    6500,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 15

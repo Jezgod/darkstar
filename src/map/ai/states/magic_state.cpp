@@ -105,13 +105,11 @@ bool CMagicState::Update(time_point tick)
 
         if (range > 19)
         {
-
             if (tick > GetEntryTime()) // after checking for the initial time, the mob can move further away and not cancel our cast
             {
-                range = 40; //m_PSpell->getRange() + 10
+                range = 30; //m_PSpell->getRange() + 10
             }
         }
-
         else
         {
             if (tick > GetEntryTime()) // after checking for the initial time, the mob can move further away and not cancel our cast

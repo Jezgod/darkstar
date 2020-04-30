@@ -19,16 +19,24 @@ require("scripts/globals/msg")
 -----------------------------------------
 
 function onMagicCastingCheck(caster,target,spell)
-    local cpid = caster:getPartyTID()
-    local tpid = target:getPartyTID()
+    local leaderid = caster:getLeaderID()
+    local targetid = target:getLeaderID()
     local master = target:getMaster()
-    if (cpid == tpid and cpid ~= nil) then
-	return 1
-    elseif (master ~= nil and cpid == master:getPartyTID()) then
-	return 1
-    else
+
+    if (leaderid ~= targetid and master == nil) then
 	return 0
+
+    elseif (leaderid == targetid) then
+	return 1
+
+     elseif (leaderid == master:getLeaderID()) then
+	return 1
+
+     else     
+        return 0 
+
     end
+
 end
 
 function onSpellCast(caster,target,spell)

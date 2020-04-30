@@ -349,20 +349,28 @@ bool CTargetFind::validEntity(CBattleEntity* PTarget)
         return true;
     }
 
-    //Allow -ras cross allegiance in a party
     if ((m_PTarget->objtype == TYPE_PC || TYPE_PET) && PTarget->objtype == TYPE_PC)
     {
-        if (m_PTarget->allegiance != PTarget->allegiance)
+        if (m_conal)
         {
-            return true;
+            if (isWithinCone(&PTarget->loc.p))
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if ((m_findFlags & FINDFLAGS_UNLIMITED) || isWithinArea(&PTarget->loc.p))
+            {
+                return true;
+            }
         }
     }
-    else
+
+   /* Allow -ras cross allegiance in a party*/
+    if (m_PTarget->allegiance != PTarget->allegiance)
     {
-        if (m_PTarget->allegiance != PTarget->allegiance)
-        {
-            return false;
-        }
+        return false;
     }
 
     // shouldn't add if target is charmed by the enemy

@@ -806,14 +806,14 @@ search_req _HandleSearchRequest(CTCPRequestPacket& PTCPRequest)
         {
             if (isPresent == 0) //no more Area entries
             {
-                //printf("SEARCH::Area List End found.\n");
+                printf("SEARCH::Area List End found.\n");
             }
             else // 8 Bit = 1 Byte per Area Code
             {
-                areas[areaCount] = (uint16)unpackBitsLE(&data[0x11], bitOffset, 10);
+                /*areas[areaCount] = (uint16)unpackBitsLE(&data[0x11], bitOffset, 10);
                 areaCount++;
                 bitOffset += 10;
-                //  printf("SEARCH::Area List Entry found(%2X)!\n",areas[areaCount-1]);
+                  printf("SEARCH::Area List Entry found(%2X)!\n",areas[areaCount-1]);*/
             }
             break;
         }

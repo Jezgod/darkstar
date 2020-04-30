@@ -60,7 +60,7 @@ bool CAttackState::Update(time_point tick)
 
         if (tick > GetEntryTime()) // after checking for the initial time, the mob can move further away and not cancel our RA
         {
-            range = 10;
+            range = 12;
         }
 
         if (CanAttack(PTarget, range))
