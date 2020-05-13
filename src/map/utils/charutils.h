@@ -78,8 +78,10 @@ namespace charutils
     void	DelExperiencePoints(CCharEntity* PChar, float retainpct, uint16 forcedXpLoss);
     void	PvPExpLostCPGain(CCharEntity* PChar, CBattleEntity* PLastAttacker, uint16 pvpexp);           //xp lost for conquest gain
     uint32  PvPExpLostISGain(CCharEntity* PChar, CBattleEntity* PLastAttacker, uint16 pvpexp);           //xp lost for imp standing gain
+    uint32  PvPExpLostANGain(CCharEntity* PChar, CBattleEntity* PLastAttacker, uint16 pvpexp);           //xp lost for allied notes gain
     uint32  SaveConquestPointsPVP(CBattleEntity* PLastAttacker, uint32 exp);                             //save conquest points to char_vars
     uint32  SaveImperialStandingPVP(CBattleEntity* PLastAttacker, uint32 exp);                           //save imperial standing to char_vars
+    uint32  SaveAlliedNotesPVP(CBattleEntity* PLastAttacker, uint32 exp);                                //save allied notes to char_vars
     void	DistributeExperiencePoints(CCharEntity* PChar, CMobEntity* PMob);
     void	DistributeGil(CCharEntity* PChar, CMobEntity* PMob);
     void	DistributeItem(CCharEntity* PChar, CBaseEntity* PEntity, uint16 itemid, uint16 droprate);

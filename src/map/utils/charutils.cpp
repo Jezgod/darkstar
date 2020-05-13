@@ -3444,6 +3444,14 @@ namespace charutils
                         PMember->pushPacket(new CMessageBasicPacket(PMember, PMember, (int32)gilPerPersonR, 0, 565));
                     }
 
+                    else if (region >= 33 && region <= 40)
+                    {
+                        gilPerPerson += gilPerPerson * PMember->getMod(Mod::GILFINDER) / 100;
+                        float gilPerPersonR = gilPerPerson * (1 + (conquest::GetAlliedRatio(gnation) / 100.f));
+                        UpdateItem(PMember, LOC_INVENTORY, 0, (int32)gilPerPersonR);
+                        PMember->pushPacket(new CMessageBasicPacket(PMember, PMember, (int32)gilPerPersonR, 0, 565));
+                    }
+
                     else
                     {
                         gilPerPerson += gilPerPerson * PMember->getMod(Mod::GILFINDER) / 100;
@@ -3468,6 +3476,14 @@ namespace charutils
             {
                 gil += gil * PChar->getMod(Mod::GILFINDER) / 100;
                 float gilR = gil * (1 + (conquest::GetImperialRatio(snation) / 100.f));
+                UpdateItem(PChar, LOC_INVENTORY, 0, static_cast<int32>(gilR));
+                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, static_cast<int32>(gilR), 0, 565));
+            }
+
+            else if (region >= 33 && region <= 40)
+            {
+                gil += gil * PChar->getMod(Mod::GILFINDER) / 100;
+                float gilR = gil * (1 + (conquest::GetAlliedRatio(snation) / 100.f));
                 UpdateItem(PChar, LOC_INVENTORY, 0, static_cast<int32>(gilR));
                 PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, static_cast<int32>(gilR), 0, 565));
             }
@@ -3791,6 +3807,13 @@ namespace charutils
                         charutils::AddExperiencePoints(false, PMember, PMob, (uint32)expR, mobCheck, chainactive);
                     }
 
+                    else if (region >= 33 && region <= 40)
+                    {
+                        exp = charutils::AddExpBonus(PMember, exp);
+                        float expR = exp * (1 + (conquest::GetAlliedRatio(nation) / 100.f));
+                        charutils::AddExperiencePoints(false, PMember, PMob, (uint32)expR, mobCheck, chainactive);
+                    }
+
                     else
                     {
                         exp = charutils::AddExpBonus(PMember, exp);
@@ -3992,7 +4015,7 @@ namespace charutils
         CCharEntity* PChar = dynamic_cast<CCharEntity*>(PLastAttacker);
         if (PChar)
         {
-            const char* varcp = "imperialpvppoints";
+            const char* varip = "imperialpvppoints";
             const char* Query =
                 "INSERT INTO char_vars "
                 "SET charid = %u, varname = '%s', value = %i "
@@ -4000,7 +4023,65 @@ namespace charutils
 
             Sql_Query(SqlHandle, Query,
                 PChar->id,
-                varcp,
+                varip,
+                exp,
+                exp);
+
+            return 0;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    /************************************************************************
+    *                                                                       *
+    *  PvP EXP LOST FOR ALIIED NOTES GAIN                                   *
+    *                                                                       *
+    ************************************************************************/
+    uint32 PvPExpLostANGain(CCharEntity* PChar, CBattleEntity* PLastAttacker, uint16 pvpexp)
+    {
+
+        uint8 mLevel = (PChar->m_LevelRestriction != 0 && PChar->m_LevelRestriction < PChar->GetMLevel()) ? PChar->m_LevelRestriction : PChar->GetMLevel();
+        pvpexp = mLevel <= 67 ? (GetExpNEXTLevel(mLevel) * 8) / 100 : 2400;
+        pvpexp = pvpexp * 10;
+
+        CCharEntity* PCharL = dynamic_cast<CCharEntity*>(PLastAttacker);
+
+        if (PCharL)
+        {
+            charutils::SaveAlliedNotesPVP(PCharL, (int32)(pvpexp * 0.5f));
+            charutils::AddPoints(PCharL, "allied_notes", (int32)(pvpexp * 0.5f));
+            PCharL->pushPacket(new CConquestPacket(PCharL));
+            return 0;
+        }
+
+        else
+        {
+            return 0;
+        }
+    }
+
+    /************************************************************************
+    *                                                                       *
+    *  SAVE PvP ALLIED NOTES                                                *
+    *                                                                       *
+    ************************************************************************/
+    uint32 SaveAlliedNotesPVP(CBattleEntity* PLastAttacker, uint32 exp)
+    {
+        CCharEntity* PChar = dynamic_cast<CCharEntity*>(PLastAttacker);
+        if (PChar)
+        {
+            const char* varan = "alliednotespvppoints";
+            const char* Query =
+                "INSERT INTO char_vars "
+                "SET charid = %u, varname = '%s', value = %i "
+                "ON DUPLICATE KEY UPDATE value = value + %i;";
+
+            Sql_Query(SqlHandle, Query,
+                PChar->id,
+                varan,
                 exp,
                 exp);
 

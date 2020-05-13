@@ -59,7 +59,7 @@ local atmaMods =
     [dsp.ki.ATMA_OF_THE_GNARLED_HORN]           = {dsp.mod.AGI, 50, dsp.mod.CRITHITRATE, 20, dsp.mod.COUNTER, 10},
     [dsp.ki.ATMA_OF_THE_STRANGLING_WIND]        = {dsp.mod.STR, 20, dsp.mod.VIT, 20, dsp.mod.AGI, 30},
     [dsp.ki.ATMA_OF_THE_DEEP_DEVOURER]          = {dsp.mod.SUBTLE_BLOW, 5, dsp.mod.STORETP, 5, dsp.mod.SONG_SPELLCASTING_TIME, 20},
-    [dsp.ki.ATMA_OF_THE_MOUNTED_CHAMPION]       = {dsp.mod.VIT, 50, dsp.mod.REGEN, 20, dsp.mod.ENMITY_REDUCTION_PHYSICAL, -20},
+    [dsp.ki.ATMA_OF_THE_MOUNTED_CHAMPION]       = {dsp.mod.VIT, 50, dsp.mod.REGEN, 20, dsp.mod.ENMITY_LOSS_REDUCTION, -20},
     [dsp.ki.ATMA_OF_THE_RAZED_RUINS]            = {dsp.mod.DEX, 50, dsp.mod.CRITHITRATE, 30, dsp.mod.CRIT_DMG_INCREASE, 30},
     [dsp.ki.ATMA_OF_THE_BLUDGEONING_BRUTE]      = {dsp.mod.REGAIN, 10, dsp.mod.THUNDERRES, 50, dsp.mod.WATERRES, 50},
     [dsp.ki.ATMA_OF_THE_RAPID_REPTILIAN]        = {dsp.mod.TRIPLE_ATTACK, 5, dsp.mod.DMGBREATH, -40},
@@ -165,22 +165,40 @@ local atmaMods =
     [dsp.ki.ATMA_OF_THE_SAVIOR]                 = {},
 }
 
-dsp.atma.onEffectGain = function(target, effect)
+--dsp.atma.onEffectGain = function(target, effect)
+function dsp.atma.onEffectGain(target, effect)
     local atma = ATMA_OFFSET + effect:getPower()
     local mods = atmaMods[atma]
-    if mods ~= nil then
-        for i = 1, #mods, 2 do
-            target:addMod(i, i + 1)
-        end
+    local count = #mods
+    if count == 2 then
+	target:addMod(mods[1],mods[2])
+        printf("Count: %i", count)
+    elseif count == 4 then
+    	target:addMod(mods[1],mods[2])
+    	target:addMod(mods[3],mods[4])
+        printf("Count: %i", count)
+    elseif count == 6 then
+ 	target:addMod(mods[1],mods[2])
+    	target:addMod(mods[3],mods[4])
+    	target:addMod(mods[5],mods[6])
+    	printf("Count: %i", count)
     end
 end
 
-dsp.atma.onEffectLose = function(target, effect)
+--dsp.atma.onEffectLose = function(target, effect)
+function dsp.atma.onEffectLose(target, effect)
     local atma = ATMA_OFFSET + effect:getPower()
     local mods = atmaMods[atma]
-    if mods ~= nil then
-        for i = 1, #mods, 2 do
-            target:delMod(i, i + 1)
-        end
+    local count = #mods
+    if count == 2 then
+	target:delMod(mods[1],mods[2])
+    elseif count == 4 then
+    printf("Count: %i", count)
+    	target:delMod(mods[1],mods[2])
+    	target:delMod(mods[3],mods[4])
+    elseif count == 6 then
+ 	target:delMod(mods[1],mods[2])
+    	target:delMod(mods[3],mods[4])
+    	target:delMod(mods[5],mods[6])
     end
 end

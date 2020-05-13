@@ -42,8 +42,11 @@ CPlayerCharmController::~CPlayerCharmController()
         POwner->PAI->Internal_Disengage();
     }
     POwner->PAI->PathFind.reset();
-    POwner->allegiance = ALLEGIANCE_PLAYER;
-    POwner->health.hp = 0;
+    //POwner->allegiance = ALLEGIANCE_PLAYER;
+    //POwner->health.hp = 0;
+    uint8 weaknessLvl = 1;
+    CStatusEffect* PWeaknessEffect = new CStatusEffect(EFFECT_WEAKNESS, EFFECT_WEAKNESS, weaknessLvl, 0, 10);
+    POwner->StatusEffectContainer->AddStatusEffect(PWeaknessEffect);
 }
 
 void CPlayerCharmController::Tick(time_point tick)

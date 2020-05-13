@@ -13,6 +13,11 @@ require("scripts/globals/shop");
 function onTrade(player,npc,trade)
     -- "Flyers for Regine" conditional script
     local FlyerForRegine = player:getQuestStatus(SANDORIA,dsp.quest.id.sandoria.FLYERS_FOR_REGINE);
+    local pLevel = player:getMainLvl()
+    local cost = 500000
+    local pCP = player:getCP()
+    local rCP = 250000
+    local item = 1474
 
     if (FlyerForRegine == 1) then
         local count = trade:getItemCount();
@@ -20,6 +25,16 @@ function onTrade(player,npc,trade)
         if (MagicFlyer == true and count == 1) then
             player:messageSpecial(ID.text.FLYER_REFUSED);
         end
+    end
+
+    if (trade:getGil() == cost and pLevel >= 70 and pCP >= rCP and
+        trade:getItemCount() == 1) then
+	player:tradeComplete();
+    	player:addItem(item);
+        player:delCP(rCP);
+        player:messageSpecial(ID.text.ITEM_OBTAINED,item);
+    else
+	player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED,item);
     end
 end;
 

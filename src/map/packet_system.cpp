@@ -383,11 +383,6 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, CBasicPac
         PChar->updatemask |= UPDATE_HP;
     }
 
-    if (PChar->loc.zone->GetID() == 71)
-    {
-        PChar->health.hp = 0;
-    }
-
     if (PChar->status == STATUS_SHUTDOWN)
     {
         if (PChar->PParty != nullptr)
@@ -427,6 +422,11 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, CBasicPac
         if (PChar->PPet != nullptr)
         {
             PChar->setPetZoningInfo();
+        }
+
+        if (PChar->loc.zone->GetID() == 71)
+        {
+            PChar->health.hp = 0;
         }
 
         session->shuttingDown = 1;

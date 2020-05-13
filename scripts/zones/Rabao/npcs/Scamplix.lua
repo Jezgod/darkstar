@@ -25,6 +25,7 @@ function onTrigger(player,npc)
         13328, 4050,    -- Mythril Earring
         107,    180,    -- Water Jug
         2868,  9000,    -- Rabao Waystone
+       4541, 100000,    -- Goblin Drink
     }
 
     player:showText(npc, ID.text.SCAMPLIX_SHOP_DIALOG)

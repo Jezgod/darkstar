@@ -81,6 +81,8 @@ namespace conquest
     uint8   GetConquestRatio(uint8 nation);
     uint32  GetImperialRatio(uint32 nationNum, uint32 sandoria, uint32 bastok, uint32 windurst);
     uint8   GetImperialRatio(uint8 nation);
+    uint32  GetAlliedRatio(uint32 nationNum, uint32 sandoria, uint32 bastok, uint32 windurst);
+    uint8   GetAlliedRatio(uint8 nation);
 };
 
 #endif

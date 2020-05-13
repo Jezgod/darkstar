@@ -81,6 +81,7 @@
 #include "../packets/status_effects.h"
 #include "../mobskill.h"
 #include "../zone.h"
+#include "../message.h"
 
 
 CCharEntity::CCharEntity()
@@ -1697,9 +1698,20 @@ void CCharEntity::Die()
         {
             PLastAttacker = PLastAttacker->PMaster;
         }
-       
-        loc.zone->PushPacket(this, CHAR_INRANGE_SELF, new CMessageBasicPacket(PLastAttacker, this, 0, 0, MSGBASIC_PLAYER_DEFEATED_BY));
-        //charutils::PvPExpLostCPGain(this, PLastAttacker, 0); //PVP XP LOSS IS CP GAIN
+
+        uint8 LMlvl = PLastAttacker->GetMLevel();
+        uint8 TMlvl = this->GetMLevel();
+        std::string M1 = "~~~~~~~~~ PVP RESULT ~~~~~~~~~";
+        std::string M2 = "";
+        std::string M3 = PLastAttacker->name + " (Lv. " + std::to_string(LMlvl) + ") defeated " + this->name + " (Lv. " + std::to_string(TMlvl) + ") in combat.";
+        std::string M4 = "";
+        std::string M5 = "~~~~~~~~~ PVP RESULT ~~~~~~~~~";
+        message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(this, MESSAGE_NS_LINKSHELL3, M1));
+        message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(this, MESSAGE_NS_LINKSHELL3, M2));
+        message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(this, MESSAGE_NS_LINKSHELL3, M3));
+        message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(this, MESSAGE_NS_LINKSHELL3, M4));
+        message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(this, MESSAGE_NS_LINKSHELL3, M5));
+
         REGIONTYPE region = PLastAttacker->loc.zone->GetRegionID();
 
         if (PLastAttacker->StatusEffectContainer->HasStatusEffect(EFFECT_SIGNET) &&
@@ -1708,10 +1720,15 @@ void CCharEntity::Die()
             // Add influence for the players region..
             charutils::PvPExpLostCPGain(this, PLastAttacker, 0); //PVP XP LOSS IS CP GAIN
         }
-        if (PLastAttacker->StatusEffectContainer->HasStatusEffect(EFFECT_SANCTION) &&
+        else if (PLastAttacker->StatusEffectContainer->HasStatusEffect(EFFECT_SANCTION) &&
             (region >= 28 && region <= 32))
         {
             charutils::PvPExpLostISGain(this, PLastAttacker, 0); //PVP XP LOSS IS IS GAIN
+        }
+        else if (PLastAttacker->StatusEffectContainer->HasStatusEffect(EFFECT_SIGIL) &&
+            (region >= 33 && region <= 40))
+        {
+            charutils::PvPExpLostANGain(this, PLastAttacker, 0); //PVP XP LOSS IS AN GAIN
         }
     }
     else

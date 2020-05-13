@@ -80,6 +80,9 @@ function onZoneIn(player,prevZone)
     if (player:hasStatusEffect(dsp.effect.SIGNET)) then
     	player:delStatusEffect(dsp.effect.SIGNET)
     	player:addStatusEffect(dsp.effect.SANCTION,0,0,300)
+    elseif (player:hasStatusEffect(dsp.effect.SIGIL)) then
+    	player:delStatusEffect(dsp.effect.SIGIL)
+    	player:addStatusEffect(dsp.effect.SANCTION,0,0,300)
     else
 	player:addStatusEffect(dsp.effect.SANCTION,0,0,300)
     end

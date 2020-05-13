@@ -1083,7 +1083,7 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
             player:showText(player, msgOffset + 2) -- Training regime canceled.
 
         elseif act == "REPATRIATION" then
-            player:addStatusEffectEx(dsp.effect.TELEPORT, 0, dsp.teleport.id.HOME_NATION, 0, 10)
+            player:addStatusEffectEx(dsp.effect.TELEPORT, 0, dsp.teleport.id.HOME_NATION, 0, 15)
 
         elseif act == "CIRCUMSPECTION" then
             player:delStatusEffectSilent(dsp.effect.SNEAK)
@@ -1092,7 +1092,7 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
             player:addStatusEffect(dsp.effect.INVISIBLE, 0, 10, 900 * SNEAK_INVIS_DURATION_MULTIPLIER)
 
         elseif act == "HOMING_INSTINCT" then
-            player:addStatusEffectEx(dsp.effect.TELEPORT, 0, dsp.teleport.id.WARP, 0, 10)
+            player:addStatusEffectEx(dsp.effect.TELEPORT, 0, dsp.teleport.id.WARP, 0, 15)
 
         elseif act == "RERAISE" then
             player:delStatusEffectSilent(dsp.effect.RERAISE)

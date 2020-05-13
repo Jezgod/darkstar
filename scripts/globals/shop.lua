@@ -251,6 +251,7 @@ dsp.shop =
                  700,    4500,   dsp.craftRank.JOURNEYMAN,      -- Mahogany Log
                  702,    5000,    dsp.craftRank.CRAFTSMAN,      -- Ebony Log
                 2761,    5500,    dsp.craftRank.CRAFTSMAN,      -- Feyweald Log
+		 717,   15000,	    dsp.craftRank.AMATEUR,      -- Mahogany Lumber
                 8805,    3000,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 5
                 8806,    4000,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 10
                 8807,    6500,      dsp.craftRank.AMATEUR,      -- Woodworking Kit 15
@@ -283,7 +284,9 @@ dsp.shop =
                  915,    3600,   dsp.craftRank.JOURNEYMAN,      -- Toad Oil
                  931,    5000,    dsp.craftRank.CRAFTSMAN,      -- Cermet Chunk
                  944,    1035,    dsp.craftRank.CRAFTSMAN,      -- Venom Dust
-                4213,   30000,      dsp.craftRank.AMATEUR,      -- Icarus Wing
+                4165,    5000,      dsp.craftRank.AMATEUR,      -- Silent Oil
+                4164,    5000,      dsp.craftRank.AMATEUR,      -- Prism Powder
+                4213,   50000,      dsp.craftRank.AMATEUR,      -- Icarus Wing
                 8889,    3000,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 5
                 8890,    4000,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 10
                 8891,    6500,      dsp.craftRank.AMATEUR,      -- Alchemy Kit 15

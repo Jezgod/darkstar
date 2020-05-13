@@ -8,6 +8,7 @@ require("scripts/globals/atma")
 
 function onEffectGain(target, effect)
     dsp.atma.onEffectGain(target, effect)
+    printf("test1")
 end
 
 function onEffectTick(target, effect)

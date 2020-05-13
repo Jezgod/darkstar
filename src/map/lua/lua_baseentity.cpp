@@ -4983,7 +4983,7 @@ inline int32 CLuaBaseEntity::lockstyleOn(lua_State* L)
     return 0;
 }
 
-//GET CONQUEST POINT RATION
+//GET CONQUEST POINT RATIO
 inline int32 CLuaBaseEntity::getConquestPointRatio(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
@@ -5003,6 +5003,60 @@ inline int32 CLuaBaseEntity::getConquestPointRatio(lua_State* L)
         break;
     case 2:
         lua_pushinteger(L, conquest::GetConquestRatio(2));
+        break;
+    default:
+        lua_pushinteger(L, 0);
+    }
+    return 1;
+}
+
+//GET IMPERIAL STANDING RATIO
+inline int32 CLuaBaseEntity::getImperialPointRatio(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+
+    auto nation = lua_tointeger(L, 1);
+
+    switch (nation)
+    {
+    case 0:
+        lua_pushinteger(L, conquest::GetImperialRatio(0));
+        break;
+    case 1:
+        lua_pushinteger(L, conquest::GetImperialRatio(1));
+        break;
+    case 2:
+        lua_pushinteger(L, conquest::GetImperialRatio(2));
+        break;
+    default:
+        lua_pushinteger(L, 0);
+    }
+    return 1;
+}
+
+//GET ALLIED NOTES RATIO
+inline int32 CLuaBaseEntity::getAlliedPointRatio(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+
+    auto nation = lua_tointeger(L, 1);
+
+    switch (nation)
+    {
+    case 0:
+        lua_pushinteger(L, conquest::GetAlliedRatio(0));
+        break;
+    case 1:
+        lua_pushinteger(L, conquest::GetAlliedRatio(1));
+        break;
+    case 2:
+        lua_pushinteger(L, conquest::GetAlliedRatio(2));
         break;
     default:
         lua_pushinteger(L, 0);
@@ -14300,8 +14354,10 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity, setAllegiance),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity, getCampaignAllegiance),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity, setCampaignAllegiance),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity, lockstyleOn),    //FORCE LOCKSTYLE ON
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getConquestPointRatio),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, lockstyleOn),              //FORCE LOCKSTYLE ON
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getConquestPointRatio),    //CP RATIO
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getImperialPointRatio),    //IS RATIO
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getAlliedPointRatio),      //AN RATIO
 
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getNewPlayer),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setNewPlayer),

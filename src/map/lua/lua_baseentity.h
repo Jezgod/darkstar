@@ -248,6 +248,8 @@ public:
     int32 setCampaignAllegiance(lua_State*); // Sets Campaign Allegiance of Entity
     int32 lockstyleOn(lua_State*);           // Turns lockstyle on
     int32 getConquestPointRatio(lua_State*); // CP Ratio
+    int32 getImperialPointRatio(lua_State*); // IS Ratio
+    int32 getAlliedPointRatio(lua_State*);   // AN Ratio
 
     int32 getNewPlayer(lua_State* L);
     int32 setNewPlayer(lua_State* L);
