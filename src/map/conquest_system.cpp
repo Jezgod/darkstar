@@ -26,8 +26,13 @@
 #include "vana_time.h"
 #include "utils/zoneutils.h"
 #include "utils/charutils.h"
+#include "message.h"
+
+#include <string.h>
 
 #include "packets/conquest_map.h"
+#include "packets/chat_message.h"
+#include "packets/message_system.h"
 
 #include "lua/luautils.h"
 #include "latent_effect_container.h"
@@ -595,29 +600,66 @@ namespace conquest
     }
 
 
-    uint32 AddConquestPointsPVP(CBattleEntity* PLastAttacker, uint32 exp)
+    uint32 AddConquestPointsPVP(CCharEntity* PChar, CBattleEntity* PLastAttacker, uint32 exp)
     {
         // ВНИМЕНИЕ: не нужно отправлять персонажу CConquestPacket,
         // т.к. клиент сам запрашивает этот пакет через фиксированный промежуток времени
 
         /*auto PChar = static_cast<CBattleEntity*>(PLastAttacker);*/
-        CCharEntity* PChar = dynamic_cast<CCharEntity*>(PLastAttacker);
-        if (PChar) 
+        CCharEntity* PCharL = dynamic_cast<CCharEntity*>(PLastAttacker);
+        if (PCharL) 
         {
-            REGIONTYPE region = PChar->loc.zone->GetRegionID();
+            REGIONTYPE region = PCharL->loc.zone->GetRegionID();
 
             if (region != REGION_UNKNOWN)
             {
                 // 10% if region control is player's nation
                 // 15% otherwise
 
-                double percentage = PChar->profile.nation == GetRegionOwner(region) ? 0.5 : 0.65;
-                percentage += PChar->getMod(Mod::CONQUEST_BONUS) / 100.0;
+                double percentage = PCharL->profile.nation == GetRegionOwner(region) ? 0.5 : 0.65;
+                percentage += PCharL->getMod(Mod::CONQUEST_BONUS) / 100.0;
                 uint32 points = (uint32)(exp * percentage);
 
-                charutils::SaveConquestPointsPVP(PChar, points);
-                charutils::AddPoints(PChar, charutils::GetConquestPointsName(PChar).c_str(), points);
-                GainInfluencePoints(PChar, points / 25);
+                uint32 bountyfactor = charutils::GetCharVar(PChar, "bounty_points");
+                uint8 bountymod = 0;
+                uint8 BMlvl = PChar->GetMLevel();
+                if (BMlvl > bountyfactor)
+                {
+                    bountymod = bountyfactor; 
+                }
+                else
+                {
+                    bountymod = BMlvl;
+                }
+
+                charutils::ModBounty(PChar, bountymod);
+                points = points + ((points * bountyfactor) / 100);
+
+                charutils::SaveConquestPointsPVP(PCharL, points);
+                charutils::AddPoints(PCharL, charutils::GetConquestPointsName(PCharL).c_str(), points);
+                GainInfluencePoints(PCharL, points / 25);
+
+                std::string a;
+                if (PCharL->allegiance == 2)
+                {
+                    a = "San d'Oria";
+                }
+                else if (PCharL->allegiance == 3)
+                {
+                    a = "Bastok";
+                }
+                else if (PCharL->allegiance == 4)
+                {
+                    a = "Windurst";
+                }
+
+                std::string M1 = PCharL->name + " [" + a + "] earned " + std::to_string(points) + " Conquest Points.";
+                std::string M2 = "Use the command '!pvpc' to see the current XP/Gil bonus in Signet areas.";
+                std::string M3 = "~~~~~~~~~ PVP RESULT ~~~~~~~~~";
+                message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PCharL, MESSAGE_NS_LINKSHELL3, M1));
+                message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PCharL, MESSAGE_NS_LINKSHELL3, M2));
+                message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PCharL, MESSAGE_NS_LINKSHELL3, M3));
+
             }
             return 0; // added conquest points (пока не вижу в этом определенного смысла)
         }

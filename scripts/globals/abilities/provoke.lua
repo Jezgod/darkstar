@@ -18,7 +18,7 @@ end
 function onUseAbility(user,target,ability)
 	local bindduration = 2
         local stunduration = 1
-        local amnesiaduration = 10
+        --local amnesiaduration = 3
 	local TPGain = 1000
         local pet = target:getPet()
 
@@ -28,7 +28,7 @@ function onUseAbility(user,target,ability)
 		user:setCursorTarget();
                 target:addStatusEffect(dsp.effect.BIND,1,0,bindduration);
                 target:addStatusEffect(dsp.effect.STUN,1,0,stunduration);
-                target:addStatusEffect(dsp.effect.AMNESIA,1,0,amnesiaduration);
+                --target:addStatusEffect(dsp.effect.AMNESIA,1,0,amnesiaduration);
                 target:addTP(TPGain);
 
 		if (target:hasPet() == false) then

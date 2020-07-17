@@ -67,6 +67,7 @@ This file is part of DarkStar-server source code.
 #include "ai/states/death_state.h"
 #include "entities/baseentity.h"
 #include "entities/battleentity.h"
+#include "retrib/retrib_player.h"
 
 #include "items/item_shop.h"
 
@@ -1245,6 +1246,17 @@ void SmallPacket0x034(map_session_data_t* session, CCharEntity* PChar, CBasicPac
 
     if (PTarget != nullptr && PTarget->id == PChar->TradePending.id)
     {
+        if (!PChar->UContainer->IsSlotEmpty(tradeSlotID))
+        {
+            CItem* PCurrentSlotItem = PChar->UContainer->GetItem(tradeSlotID);
+            if (quantity != 0)
+            {
+                ShowError(CL_RED"SmallPacket0x034: Player %s trying to update trade quantity of a RESERVED item! [Item: %i | Trade Slot: %i] \n" CL_RESET, PChar->GetName(), PCurrentSlotItem->getID(), tradeSlotID);
+            }
+            PCurrentSlotItem->setReserve(0);
+            PChar->UContainer->ClearSlot(tradeSlotID);
+        }
+
         CItem* PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(invSlotID);
         // We used to disable Rare/Ex items being added to the container, but that is handled properly else where now
         if (PItem != nullptr && PItem->getID() == itemID && quantity + PItem->getReserve() <= PItem->getQuantity())
@@ -3976,9 +3988,9 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, CBasicPac
     {
         //this makes sure a command isn't sent to chat
     }
-    else if (data.ref<uint8>(0x06) == '#' && PChar->m_GMlevel > 0)
+    else if (data.ref<uint8>(0x06) == '#' && (PChar->m_GMlevel > 0 || PChar->RPC->HasMessageAuthority()))         // RETRIB
     {
-        message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1, (const char*)data[7]));
+        message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PChar, MESSAGE_TELL, (const char*)data[7])); // RETRIB
     }
     else
     {
@@ -4197,28 +4209,61 @@ void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, CBasicPac
         PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 316));
         return;
     }
-    string_t RecipientName = string_t((const char*)data[5], 15);
 
-    int8 packetData[64];
-    strncpy((char*)packetData + 4, RecipientName.c_str(), RecipientName.length() + 1);
-    ref<uint32>(packetData, 0) = PChar->id;
-    message::send(MSG_CHAT_TELL, packetData, RecipientName.length() + 5, new CChatMessagePacket(PChar, MESSAGE_TELL, (const char*)data[20]));
+    bool ShowMessage = true;
 
-    if (map_config.audit_chat == 1 && map_config.audit_tell == 1)
+    string_t Message = (const char*)data[20];
+
+    if (Message.find("GMTELL") != string_t::npos)
     {
-        char escaped_speaker[16 * 2 + 1];
-        Sql_EscapeString(SqlHandle, escaped_speaker, (const char*)PChar->GetName());
-
-        char escaped_recipient[16 * 2 + 1];
-        Sql_EscapeString(SqlHandle, escaped_recipient, (const char*)data[5]);
-
-        std::string escaped_full_string; escaped_full_string.reserve(strlen((const char*)data[20]) * 2 + 1);
-        Sql_EscapeString(SqlHandle, escaped_full_string.data(), (const char*)data[20]);
-
-        const char* fmtQuery = "INSERT into audit_chat (speaker,type,recipient,message,datetime) VALUES('%s','TELL','%s','%s',current_timestamp())";
-        if (Sql_Query(SqlHandle, fmtQuery, escaped_speaker, escaped_recipient, escaped_full_string.data()) == SQL_ERROR)
+        if (Message.find(": Question(") != string_t::npos)
         {
-            ShowError("packet_system::call: Failed to log MESSAGE_TELL.\n");
+            std::size_t Location = Message.find(": Result (");
+            if (Location != string_t::npos)
+            {
+                ShowMessage = false;
+
+                string_t Choice = Message.substr(Location + 10);
+                Choice.erase(Choice.end() - 1);
+
+                uint32 NPCID = PChar->RPC->Event->GetEventNPC();
+
+                if (!NPCID)
+                {
+                    ShowError("Packet System: No NPC defined for menu selection return.\n");
+                    return;
+                }
+                auto NPC = zoneutils::GetEntity(NPCID, TYPE_NPC);
+                luautils::OnMenuSelection(PChar, NPC, Choice);
+            }
+        }
+    }
+
+    if (ShowMessage) // Retribution
+    {
+        string_t RecipientName = string_t((const char*)data[5], 15);
+
+        int8 packetData[64];
+        strncpy((char*)packetData + 4, RecipientName.c_str(), RecipientName.length() + 1);
+        ref<uint32>(packetData, 0) = PChar->id;
+        message::send(MSG_CHAT_TELL, packetData, RecipientName.length() + 5, new CChatMessagePacket(PChar, MESSAGE_TELL, (const char*)data[20]));
+
+        if (map_config.audit_chat == 1 && map_config.audit_tell == 1)
+        {
+            char escaped_speaker[16 * 2 + 1];
+            Sql_EscapeString(SqlHandle, escaped_speaker, (const char*)PChar->GetName());
+
+            char escaped_recipient[16 * 2 + 1];
+            Sql_EscapeString(SqlHandle, escaped_recipient, (const char*)data[5]);
+
+            std::string escaped_full_string; escaped_full_string.reserve(strlen((const char*)data[20]) * 2 + 1);
+            Sql_EscapeString(SqlHandle, escaped_full_string.data(), (const char*)data[20]);
+
+            const char* fmtQuery = "INSERT into audit_chat (speaker,type,recipient,message,datetime) VALUES('%s','TELL','%s','%s',current_timestamp())";
+            if (Sql_Query(SqlHandle, fmtQuery, escaped_speaker, escaped_recipient, escaped_full_string.data()) == SQL_ERROR)
+            {
+                ShowError("packet_system::call: Failed to log MESSAGE_TELL.\n");
+            }
         }
     }
 }
@@ -5905,6 +5950,12 @@ void SmallPacket0x10A(map_session_data_t* session, CCharEntity* PChar, CBasicPac
     uint32 price = data.ref<uint32>(0x08);
 
     CItem* PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(slotID);
+
+    if (PItem->getReserve() > 0)
+    {
+        ShowError(CL_RED"SmallPacket0x10A: Player %s trying to bazaar a RESERVED item! [Item: %i | Slot ID: %i] \n" CL_RESET, PChar->GetName(), PItem->getID(), slotID);
+        return;
+    }
 
     if ((PItem != nullptr) && !(PItem->getFlag() & ITEM_FLAG_EX) && (!PItem->isSubType(ITEM_LOCKED) || PItem->getCharPrice() != 0))
     {

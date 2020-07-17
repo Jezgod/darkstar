@@ -83,6 +83,8 @@ public:
     CItem(uint16 id);
     virtual ~CItem();
 
+    void        SetCategory(uint8 Category); 	// RETRIB
+    uint8       GetCategory(); 			        // RETRIB
     uint16      getID();
     uint16      getSubID();
     uint16      getFlag();
@@ -132,6 +134,8 @@ protected:
     void        setType(uint8);
 
 private:
+
+    uint8       Category;       			// RETRIB: Category of item for points system
 
     uint16      m_id;
     uint16      m_subid;

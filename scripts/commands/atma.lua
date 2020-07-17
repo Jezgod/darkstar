@@ -123,6 +123,7 @@ local zone_list =
          8,     --BONEYARD GULLY
         10,     --THE SHROUDED MAW
         13,     --MINE SHAFT 2716
+	15, 	--Abyssea-Konschtat
         17,     --SPIRE OF HOLLA
         19,     --SPIRE OF DEM
         21,     --SPIRE OF MEA
@@ -139,17 +140,22 @@ local zone_list =
         40,     --Dynamis-Buburimu
         41,     --Dynamis-Qufim
         42,     --Dynamis-Tavnazia
+        45, 	--Abyssea-Tahrongi
         57,     --TALACCA COVE
         64,     --NAVUKGO EXECUTION CHAMBER
         67,     --JADE SEPULCHER
         78,     --HAZHALM TESTING GROUNDS
+       127,     --Behemoths_Dominion
+       128,     --Valley_of_Sorrows
        130,     --RuAun_Gardens
+       132, 	--Abyssea-La_Theine
        134,     --Dynamis-Beaucedine
        135,     --Dynamis-Xarcabard
        139,     --HORLAIS PEAK
        140,     --GHELSBA OUTPOST
        144,     --WAUGHROON SHRINE
        146,     --BALGA'S DIAS
+       154,     --Dragons_Aery
        156,     --THRONE ROOM [S]
        163,     --SACRIFICIAL CHAMBER
        165,     --THRONE ROOM
@@ -170,7 +176,14 @@ local zone_list =
        206,     --QU'BIA ARENA
        207,     --CLOISTER OF FLAMES
        209,     --CLOISTER OF TREMORS
-       211     --CLOISTER OF TIDES
+       211,     --CLOISTER OF TIDES
+       215, 	--Abyssea-Attohwa
+       216, 	--Abyssea-Misareaux
+       217, 	--Abyssea-Vunkerl
+       218, 	--Abyssea-Altepa
+       253, 	--Abyssea-Uleguerand
+       254, 	--Abyssea-Grauberg
+       255 	--Abyssea-Empyreal_Paradox
 }
 
 local function validZone(zone_list, id)

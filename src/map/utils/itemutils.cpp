@@ -318,7 +318,8 @@ namespace itemutils
                 "f.aura,"           // 36
 
                 "p.slot,"           // 37
-                "p.element "        // 38
+                "p.element, "        // 38
+                "b.Category "       // 39 - Retribution (Points Category)
             "FROM item_basic AS b "
             "LEFT JOIN item_usable AS u USING (itemId) "
             "LEFT JOIN item_equipment  AS a USING (itemId) "
@@ -343,6 +344,7 @@ namespace itemutils
                     PItem->setAHCat(Sql_GetUIntData(SqlHandle,4));
                     PItem->setBasePrice(Sql_GetUIntData(SqlHandle,5));
                     PItem->setSubID(Sql_GetUIntData(SqlHandle,6));
+                    PItem->SetCategory(Sql_GetUIntData(SqlHandle, 39));     // Retribution - Set Item Category
 
                     if (PItem->isType(ITEM_GENERAL))
                     {

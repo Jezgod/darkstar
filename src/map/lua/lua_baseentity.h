@@ -46,7 +46,42 @@ public:
         return m_PBaseEntity;
     }
 
+    // Stats
+    int32 GetRetribStat(lua_State* L);          // Retribution
+    int32 AddRetribStat(lua_State* L);          // Retribution 
+    int32 Has75Job(lua_State* L);               // Retribution
+    int32 GetHighestLevel(lua_State* L);        // Retribution
+    int32 getBounty(lua_State* L);              // RETRIB: Get Bounty List
+    int32 getBountyPoints(lua_State* L);        // RETRIB: Get Bounty Points
+    int32 GetEventNPC(lua_State* L);            // RETRIB:
+    int32 SetEventNPC(lua_State* L);            // RETRIB:
+    int32 SendSelectionMenu(lua_State* L);      // RETRIB:
+    int32 SendServerMessage(lua_State* L);      // RETRIB:
+    int32 InjectNPCActionPacket(lua_State* L);  // RETRIB:
+    int32 SilentRelease(lua_State* L);          // RETRIB:
+
+    // NM Hunts
+    int32 RegisterHunter(lua_State* L);         // RETRIB:
+    int32 HasHunt(lua_State* L);                // RETRIB:
+    int32 DeleteHunt(lua_State* L);             // RETRIB:
+    int32 GetNewHunt(lua_State* L);             // RETRIB:
+    int32 GetHunt(lua_State* L);                // RETRIB:
+    int32 HasKilledHunt(lua_State* L);          // RETRIB:
+
+    // Daily Login Gifts
+    int32 HasDailyGift(lua_State* L);       // RETRIB: 
+    int32 GiveDailyGift(lua_State* L);      // RETRIB: 
+    int32 GetDailyGiftDay(lua_State* L);    // RETRIB: 
+
+    // Strongest Adventurer
+    int32 GetRankings(lua_State* L);        // RETRIB: 
+    int32 GetEventRewards(lua_State* L);    // RETRIB: 
+    int32 GetEventTask(lua_State* L);       // RETRIB:
+    int32 SAEventState(lua_State* L);       // RETRIB:
+    int32 RegisterSA(lua_State* L);         // RETRIB:
+
     // Messaging System
+    int32 PrintToServer(lua_State* L);      // Print to server
     int32 showText(lua_State*);             // Displays Dialog for npc
     int32 messageText(lua_State* L);
     int32 PrintToPlayer(lua_State* L);      // for sending debugging messages/command confirmations to the player's client

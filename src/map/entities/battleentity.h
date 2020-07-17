@@ -486,7 +486,7 @@ class CBattleEntity : public CBaseEntity
 
 public:
     CBattleEntity();						// конструктор
-    virtual ~CBattleEntity();						// деструктор
+    virtual ~CBattleEntity();			    // деструктор
 
     uint16          STR();
     uint16          DEX();

@@ -81,7 +81,7 @@ void CLinkshellListPacket::AddPlayer(SearchEntity* PPlayer)
     }
 
     m_offset = packBitsLE(m_data, 1, m_offset, 5);
-    m_offset = packBitsLE(m_data, PPlayer->zone, m_offset, 10);
+    m_offset = packBitsLE(m_data, PPlayer->prevzone, m_offset, 10);
 
     if (!(PPlayer->flags1 & 0x4000))
     {

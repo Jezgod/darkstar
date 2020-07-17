@@ -22,7 +22,7 @@ function onTrade(player,npc,trade)
 -------- Trading Seals/Crests to Shemo -------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------
     if (bythree ~= 0) then
-	player:PrintToPlayer( string.format("Please trade is quantities of three") )
+	player:PrintToPlayer( string.format("Please trade is quantities of three"), 29 )
 	return 1;
     end
 	
@@ -30,6 +30,12 @@ function onTrade(player,npc,trade)
         player:tradeComplete();
 	player:addItem(1127,Item);
         player:messageSpecial(ID.text.ITEM_OBTAINED,1127);
+        printf("item : %u",Item)
+
+    elseif (trade:hasItemQty(1127,NumberItem) and trade:getItemCount() == NumberItem) then
+        player:tradeComplete();
+	player:addItem(2955,Item);
+        player:messageSpecial(ID.text.ITEM_OBTAINED,2955);
         printf("item : %u",Item)
 
     --elseif (trade:hasItemQty(1127,NumberItem) and trade:getItemCount() == NumberItem) then
@@ -56,5 +62,5 @@ function onTrade(player,npc,trade)
 end;
 
 function onTrigger(player,npc)
-	player:PrintToPlayer( string.format("Trade 3 seals/crests of a lower tier to get 1 higher tier seal/crest") )
+	player:PrintToPlayer( string.format("Trade 3 seals/crests of a lower tier to get 1 higher tier seal/crest"), 29 )
 end;

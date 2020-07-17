@@ -70,7 +70,8 @@ function onTrigger(player,npc)
 
 end;
 
-function onEventUpdate(player,csid,option)
+function onEventUpdate(player,csid,option) 
+    local cost = player:getGil();
 
     if (csid == 10063 or csid == 10064) then
         if (option == 10) then     -- Beginner List
@@ -80,7 +81,11 @@ function onEventUpdate(player,csid,option)
         elseif (option == 13) then -- Advanced List
             player:updateEvent(1692,1693,1694,0,0,0,0,0);
         elseif (option == 14) then -- Gil Option
+            if (cost < 500000) then
+		return 1
+            else
             player:updateEvent(1,1,1,1,1,1,player:getGil(),1);
+            end
         elseif (option == 2 or option == 1073741824) then  -- Let me think about it... / Cancel
 
         end
@@ -96,10 +101,10 @@ function onEventFinish(player,csid,option)
         if (csid == 10063 and option == 1 or csid == 10063 and option == 2) then -- Offically offer quest, Second Dialog.
         player:setCharVar("THE_ROAD_TO_AHT_URHGAN",1);
         elseif (option == 3) then
-            player:delGil(500000);
-            player:setCharVar("THE_ROAD_TO_AHT_URHGAN",2);
-            player:setCharVar("THE_ROAD_TO_AHT_URHGAN_Day",VanadielDayOfTheYear());
-            player:setCharVar("THE_ROAD_TO_AHT_URHGAN_Year",VanadielYear());
+        player:delGil(500000);
+        player:setCharVar("THE_ROAD_TO_AHT_URHGAN",2);
+        player:setCharVar("THE_ROAD_TO_AHT_URHGAN_Day",VanadielDayOfTheYear());
+        player:setCharVar("THE_ROAD_TO_AHT_URHGAN_Year",VanadielYear());
         end
     elseif (csid == 10067) then
         player:addKeyItem(dsp.ki.MAP_OF_WAJAOM_WOODLANDS);

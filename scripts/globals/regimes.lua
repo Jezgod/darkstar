@@ -19,6 +19,9 @@ require("scripts/globals/msg")
 dsp = dsp or {}
 dsp.regime = dsp.regime or {}
 
+local Stats = Retrib.Stat
+local Points = Retrib.StatPoints
+
 dsp.regime.type =
 {
     FIELDS  = 1,
@@ -1339,6 +1342,7 @@ dsp.regime.checkRegime = function(player, mob, regimeId, index, regimeType)
         local tabs = math.floor(reward / 10) * TABS_RATE
         tabs = utils.clamp(tabs, 0, 50000 - player:getCurrency("valor_point")) -- Retail caps players at 50000 tabs
         player:addCurrency("valor_point", tabs)
+        player:AddRetribStat(Stats.Valor, Points.Valor)
         player:messageBasic(dsp.msg.basic.FOV_OBTAINS_TABS, tabs, player:getCurrency("valor_point"))
 
         player:setCharVar("[regime]lastReward", vanadielEpoch)

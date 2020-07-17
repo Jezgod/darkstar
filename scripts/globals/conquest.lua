@@ -1116,7 +1116,8 @@ dsp.conquest.overseerOnEventFinish = function(player, csid, option, guardNation,
         player:setCharVar("supplyQuest_started", 0)
         player:setCharVar("supplyQuest_region", 0)
         player:setCharVar("supplyQuest_fresh", 0)
-
+	-- RETRIB: AVARATI CHALLENGE
+	player:AddRetribStat(Retrib.Stat.Supply, Retrib.StatPoints.Supply)
         if not player:hasTeleport(guardNation, sRegion + 5) then
             player:addTeleport(guardNation, sRegion + 5)
         end

@@ -476,7 +476,7 @@ local loot =
             {itemid = 798, droprate = 23},   -- Turquoise
             {itemid = 4172, droprate = 21},  -- Reraiser
             {itemid = 4174, droprate = 16},  -- Vile Elixir
-            {itemid = 1255, droprate = 40},  -- elemental_ore 
+            {itemid = 1255, droprate = 50},  -- elemental_ore 
         },
         {
             {itemid = 4896, droprate = 116}, -- Fire Spirit Pact

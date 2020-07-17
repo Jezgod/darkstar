@@ -902,6 +902,7 @@ local treasureInfo =
                 gil = {0.793, 7110, 20520},
                 gem = {0.092, 791, 801, 810, 784, 802, 803, 805, 797},
                 item = {0.115, 4447},
+                ore = {0.050, 1259}
             },
             [dsp.zone.TEMPLE_OF_UGGALEPIH] = -- 159
             {
@@ -928,6 +929,7 @@ local treasureInfo =
                 },
                 gil = {0.846, 7320, 14400},
                 gem = {0.154, 797, 801, 810, 802, 805, 803},
+                ore = {0.050, 1261}
             },
             [dsp.zone.DEN_OF_RANCOR] = -- 160
             {
@@ -951,6 +953,7 @@ local treasureInfo =
                 },
                 gil = {0.700, 8000, 16770},
                 gem = {0.300, 797, 805},
+                ore = {0.050, 1262}
             },
             [dsp.zone.CASTLE_ZVAHL_BAILEYS] = -- 161
             {
@@ -985,6 +988,7 @@ local treasureInfo =
                 gil = {0.731, 6300, 26880},
                 gem = {0.080, 791, 801, 810, 784, 802, 797, 803, 805},
                 item = {0.189, 4995},
+                ore = {0.050, 1256}
             },
             [dsp.zone.TORAIMARAI_CANAL] = -- 169
             {
@@ -1062,6 +1066,7 @@ local treasureInfo =
                 },
                 gil = {0.943, 5200, 16100},
                 gem = {0.057, 802, 801, 797, 784, 803, 791, 805, 810},
+                ore = {0.050, 1257}
             },
             [dsp.zone.SEA_SERPENT_GROTTO] = -- 176
             {
@@ -1094,6 +1099,7 @@ local treasureInfo =
                 },
                 gil = {0.550, 6145, 19580},
                 gem = {0.450, 791, 810, 784, 802, 803, 797, 801},
+                ore = {0.050, 1260}
             },
             [dsp.zone.VELUGANNON_PALACE] = -- 177
             {
@@ -1237,6 +1243,7 @@ local treasureInfo =
                 },
                 gil = {0.897, 7200, 21060},
                 gem = {0.103, 802, 797, 803, 801, 810, 791},
+                ore = {0.050, 1255}
             },
             [dsp.zone.QUICKSAND_CAVES] = -- 208
             {
@@ -1262,7 +1269,8 @@ local treasureInfo =
                     { 677.287,    3.220, -581.735, 192},
                 },
                 gil = {0.773, 6160, 16100},
-                gem = {0.227, 791, 801, 810, 784, 797, 803}
+                gem = {0.227, 791, 801, 810, 784, 797, 803},
+                ore = {0.050, 1258}
             },
         },
     },
@@ -1531,6 +1539,9 @@ dsp.treasure.onTrade = function(player, npc, trade, chestType)
     if info.item then
         sum = sum + info.item[1]
     end
+    if info.ore then
+        sum = sum + info.ore[1]
+    end
     sum = sum * 1000
     local roll = math.random(0, sum) / 1000
 
@@ -1557,9 +1568,14 @@ dsp.treasure.onTrade = function(player, npc, trade, chestType)
         player:addTreasure(info.gem[gemIndex], npc)
 
     -- item
-    elseif info.item then
+    elseif info.item and roll <= (info.gil[1] + info.gem[1] + info.item[1]) then
         local itemIndex = math.random(table.getn(info.item) - 1) + 1
         player:addTreasure(info.item[itemIndex], npc)
+
+    -- ore
+    elseif info.ore then
+        local oreIndex = math.random(table.getn(info.ore) - 1) + 1
+        player:addTreasure(info.ore[oreIndex], npc)
     end
 
     player:confirmTrade()

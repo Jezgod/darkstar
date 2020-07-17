@@ -495,6 +495,9 @@ void LoadMOBList()
 
                 PMob->setMobMod(MOBMOD_CHARMABLE, Sql_GetUIntData(SqlHandle, 67));
 
+                PMob->m_levelTier = (int16)PMob->m_minLevel / 10; // RETRIB
+                if (PMob->m_Type & MOBTYPE_NOTORIOUS) PMob->m_levelTier <<= 1;
+
                 // must be here first to define mobmods
                 mobutils::InitializeMob(PMob, GetZone(ZoneID));
 

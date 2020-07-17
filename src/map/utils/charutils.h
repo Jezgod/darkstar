@@ -82,6 +82,8 @@ namespace charutils
     uint32  SaveConquestPointsPVP(CBattleEntity* PLastAttacker, uint32 exp);                             //save conquest points to char_vars
     uint32  SaveImperialStandingPVP(CBattleEntity* PLastAttacker, uint32 exp);                           //save imperial standing to char_vars
     uint32  SaveAlliedNotesPVP(CBattleEntity* PLastAttacker, uint32 exp);                                //save allied notes to char_vars
+    uint8   AddBounty(CBattleEntity* PLastAttacker, uint8 bounty); 		                                 // Add bounty to player if PVP kill is more than 1 level diff
+    uint8   ModBounty(CCharEntity* PChar, uint8 bountymod);                                              // Modify killed player bounty
     void	DistributeExperiencePoints(CCharEntity* PChar, CMobEntity* PMob);
     void	DistributeGil(CCharEntity* PChar, CMobEntity* PMob);
     void	DistributeItem(CCharEntity* PChar, CBaseEntity* PEntity, uint16 itemid, uint16 droprate);

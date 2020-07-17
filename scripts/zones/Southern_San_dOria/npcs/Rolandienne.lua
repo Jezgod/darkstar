@@ -533,9 +533,9 @@ function onTrigger(player,npc)
     local pLevel = player:getMainLvl()
 
     player:showText(npc, ID.text.THANK_YOU)
-    player:PrintToPlayer( string.format("For gear outside of your current tier, please trade the following amounts:") )
-    player:PrintToPlayer( string.format("Lv1-9 - 900g Lv10-19 - 1900g Lv20-29 - 2900g Lv30-39 - 3900g ") )
-    player:PrintToPlayer( string.format("Lv40-50 - 5000g Lv51-59 - 5900g Lv60-69 - 6900g Lv70+ - 7000g") )
+    player:PrintToPlayer( string.format("For gear outside of your current tier, please trade the following amounts:"),29 )
+    player:PrintToPlayer( string.format("Lv1-9 - 900g Lv10-19 - 1900g Lv20-29 - 2900g Lv30-39 - 3900g "),29 )
+    player:PrintToPlayer( string.format("Lv40-50 - 5000g Lv51-59 - 5900g Lv60-69 - 6900g Lv70+ - 7000g"),29 )
     
     if pLevel <= 9 then
 	stock = stockA

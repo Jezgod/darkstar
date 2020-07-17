@@ -158,6 +158,13 @@ void message_server_parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_
             // no op
             break;
         }
+        case MSG_UPDATE_EVENT:
+        {
+            const char* query = "SELECT zoneip, zoneport FROM zone_settings GROUP BY zoneip, zoneport;";
+            ret = Sql_Query(ChatSqlHandle, query);
+            ipstring = true;
+            break;
+        }
         default:
         {
             ShowDebug("Message: unknown type received: %d from %s:%hu\n", type, inet_ntoa(from_ip), from_port);

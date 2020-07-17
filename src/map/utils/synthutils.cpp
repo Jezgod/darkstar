@@ -49,6 +49,12 @@
 #include "synthutils.h"
 #include "zoneutils.h"
 
+// RETRIBUTION
+#include "../zone.h"
+#include "../retrib/retrib_enums.h"
+#include "../retrib/retrib_events.h"
+extern CRetribEvent* ServerEvent;
+
 //#define _DSP_SYNTH_DEBUG_MESSAGES_ // включаем отладочные сообщения
 
 namespace synthutils
@@ -383,6 +389,21 @@ uint8 calcSynthResult(CCharEntity* PChar)
             ShowDebug(CL_CYAN"Success: %g  Random: %g\n" CL_RESET, success, random);
             #endif
 
+            // RETRIBUTION - Special areas give better HQ rate
+            switch (PChar->getZone())
+            {
+            case 165: if (crystalElement == ELEMENT_LIGHT) 	     hqtier += 1; break; //Throne Room
+            case 170: if (crystalElement == ELEMENT_DARK) 		 hqtier += 1; break; //Full Moon Fountain
+            case 201: if (crystalElement == ELEMENT_ICE) 		 hqtier += 1; break; //Cloister of Gales
+            case 202: if (crystalElement == ELEMENT_EARTH) 	     hqtier += 1; break; //Cloister of Storms
+            case 203: if (crystalElement == ELEMENT_FIRE) 		 hqtier += 1; break; //Cloister of Frost
+            case 207: if (crystalElement == ELEMENT_WATER) 	     hqtier += 1; break; //Cloister of Flames
+            case 209: if (crystalElement == ELEMENT_WIND) 		 hqtier += 1; break; //Cloister of Tremors
+            case 211: if (crystalElement == ELEMENT_LIGHTNING)   hqtier += 1; break; //Cloister of Tides
+            default: hqtier = hqtier;  break;
+            }
+            // RETRIBUTION END
+
             if(random < success)
             {
                 if(mainID == skillID)
@@ -506,6 +527,8 @@ uint8 calcSynthResult(CCharEntity* PChar)
 
 int32 doSynthSkillUp(CCharEntity* PChar)
 {
+    int32 exp = 0; // Retribution
+
     for(uint8 skillID = 49; skillID < 57; ++skillID)
     {
         if (PChar->CraftContainer->getQuantity(skillID-40) == 0)    // получаем необходимый уровень умения рецепта
@@ -595,6 +618,16 @@ int32 doSynthSkillUp(CCharEntity* PChar)
                     skillAmount = maxSkill - charSkill;
                 }
 
+                // RETRIBUTION
+                auto Level = PChar->GetMLevel();
+
+                if (Level < 25)
+                    exp = skillAmount * 25;
+                else if (Level < 50)
+                    exp = skillAmount * 50;
+                else
+                    exp = skillAmount * 75;
+
                 PChar->RealSkills.skill[skillID] += skillAmount;
                 PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, skillID, skillAmount, 38));
 
@@ -610,7 +643,7 @@ int32 doSynthSkillUp(CCharEntity* PChar)
             }
         }
     }
-    return 0;
+    return exp; // RETRIBUTION - Return Experience Points
 }
 
 /************************************************************************
@@ -872,79 +905,95 @@ int32 doSynthResult(CCharEntity* PChar)
     if (m_synthResult == SYNTHESIS_FAIL)
     {
         doSynthFail(PChar);
+        return 0;
+    }
+
+    // Retribution - Add Synthesis Points
+    if (m_synthResult == SYNTHESIS_SUCCESS)
+    {
+        PChar->RPC->AddStat(Retrib::Stat::STAT_NQ_SYNTH, Retrib::StatPoints::SP_NQ_SYNTH);
     }
     else
     {
-        uint16 itemID   = PChar->CraftContainer->getItemID(10 + m_synthResult);
-        uint8  quantity = PChar->CraftContainer->getInvSlotID(10 + m_synthResult); // к сожалению поле quantity занято
+        PChar->RPC->AddStat(Retrib::Stat::STAT_HQ_SYNTH, Retrib::StatPoints::SP_HQ_SYNTH);
+    }
 
-        uint8 invSlotID   = 0;
-        uint8 nextSlotID  = 0;
-        uint8 removeCount = 0;
+    uint16 itemID   = PChar->CraftContainer->getItemID(10 + m_synthResult);
+    uint8  quantity = PChar->CraftContainer->getInvSlotID(10 + m_synthResult); // к сожалению поле quantity занято
 
-        invSlotID = PChar->CraftContainer->getInvSlotID(1);
+    uint8 invSlotID   = 0;
+    uint8 nextSlotID  = 0;
+    uint8 removeCount = 0;
 
-        for(uint8 slotID = 1; slotID <= 8; ++slotID)
+    invSlotID = PChar->CraftContainer->getInvSlotID(1);
+
+    for (uint8 slotID = 1; slotID <= 8; ++slotID)
+    {
+        nextSlotID = (slotID != 8 ? PChar->CraftContainer->getInvSlotID(slotID + 1) : 0);
+
+        // RETRIBUTION - Chance to keep materials from HQ
+        if (m_synthResult != SYNTHESIS_SUCCESS && dsprand::GetRandomNumber(100) > 95)
         {
-            nextSlotID = (slotID != 8 ? PChar->CraftContainer->getInvSlotID(slotID+1) : 0);
-            removeCount++;
-
-            if (invSlotID != nextSlotID)
-            {
-                if (invSlotID != 0xFF)
-                {
-                    #ifdef _DSP_SYNTH_DEBUG_MESSAGES_
-                    ShowDebug(CL_CYAN"Removing quantity %u from inventory slot %u\n" CL_RESET,removeCount,invSlotID);
-                    #endif
-                    auto PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(invSlotID);
-                    PItem->setSubType(ITEM_UNLOCKED);
-                    PItem->setReserve(PItem->getReserve() - removeCount);
-                    charutils::UpdateItem(PChar, LOC_INVENTORY, invSlotID, -(int32)removeCount);
-                }
-                invSlotID   = nextSlotID;
-                nextSlotID  = 0;
-                removeCount = 0;
-            }
-        }
-
-        // TODO: перейти на новую функцию AddItem, чтобы не обновлять signature ручками
-
-        invSlotID = charutils::AddItem(PChar, LOC_INVENTORY, itemID, quantity);
-
-        CItem* PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(invSlotID);
-
-        if (PItem != nullptr)
-        {
-            if ((PItem->getFlag() & ITEM_FLAG_INSCRIBABLE) && (PChar->CraftContainer->getItemID(0) > 0x1080))
-            {
-                int8 encodedSignature [12];
-                PItem->setSignature(EncodeStringSignature((int8*)PChar->name.c_str(), encodedSignature));
-
-                char signature_esc[31]; //max charname: 15 chars * 2 + 1
-                Sql_EscapeStringLen(SqlHandle,signature_esc,PChar->name.c_str(),strlen(PChar->name.c_str()));
-
-                char fmtQuery[] = "UPDATE char_inventory SET signature = '%s' WHERE charid = %u AND location = 0 AND slot = %u;\0";
-
-                Sql_Query(SqlHandle,fmtQuery,signature_esc,PChar->id, invSlotID);
-            }
-            PChar->pushPacket(new CInventoryItemPacket(PItem, LOC_INVENTORY, invSlotID));
-        }
-
-        PChar->pushPacket(new CInventoryFinishPacket());
-        if(PChar->loc.zone->GetID() != 255 && PChar->loc.zone->GetID() != 0)
-        {
-            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CSynthResultMessagePacket(PChar, SYNTH_SUCCESS, itemID, quantity));
-            PChar->pushPacket(new CSynthMessagePacket(PChar, SYNTH_SUCCESS, itemID, quantity));
+            //Don't remove item
         }
         else
         {
-            PChar->pushPacket(new CSynthMessagePacket(PChar, SYNTH_SUCCESS, itemID, quantity));
+            removeCount++;
+        }
+
+        if (invSlotID != nextSlotID)
+        {
+            if (invSlotID != 0xFF)
+            {
+                #ifdef _DSP_SYNTH_DEBUG_MESSAGES_
+                ShowDebug(CL_CYAN"Removing quantity %u from inventory slot %u\n" CL_RESET, removeCount, invSlotID);
+                #endif
+                auto PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(invSlotID);
+                PItem->setSubType(ITEM_UNLOCKED);
+                PItem->setReserve(PItem->getReserve() - removeCount);
+                charutils::UpdateItem(PChar, LOC_INVENTORY, invSlotID, -(int32)removeCount);
+            }
+            invSlotID = nextSlotID;
+            nextSlotID = 0;
+            removeCount = 0;
         }
     }
 
-    doSynthSkillUp(PChar);
+    // TODO: перейти на новую функцию AddItem, чтобы не обновлять signature ручками
 
-    return 0;
+    invSlotID = charutils::AddItem(PChar, LOC_INVENTORY, itemID, quantity);
+
+    CItem* PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(invSlotID);
+
+    if (PItem != nullptr)
+    {
+        if ((PItem->getFlag() & ITEM_FLAG_INSCRIBABLE) && (PChar->CraftContainer->getItemID(0) > 0x1080))
+        {
+            int8 encodedSignature [12];
+            PItem->setSignature(EncodeStringSignature((int8*)PChar->name.c_str(), encodedSignature));
+
+            char signature_esc[31]; //max charname: 15 chars * 2 + 1
+            Sql_EscapeStringLen(SqlHandle,signature_esc,PChar->name.c_str(),strlen(PChar->name.c_str()));
+
+            char fmtQuery[] = "UPDATE char_inventory SET signature = '%s' WHERE charid = %u AND location = 0 AND slot = %u;\0";
+
+            Sql_Query(SqlHandle,fmtQuery,signature_esc,PChar->id, invSlotID);
+        }
+        PChar->pushPacket(new CInventoryItemPacket(PItem, LOC_INVENTORY, invSlotID));
+    }
+
+    PChar->pushPacket(new CInventoryFinishPacket());
+    if(PChar->loc.zone->GetID() != 255 && PChar->loc.zone->GetID() != 0)
+    {
+        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CSynthResultMessagePacket(PChar, SYNTH_SUCCESS, itemID, quantity));
+        PChar->pushPacket(new CSynthMessagePacket(PChar, SYNTH_SUCCESS, itemID, quantity));
+    }
+    else
+    {
+        PChar->pushPacket(new CSynthMessagePacket(PChar, SYNTH_SUCCESS, itemID, quantity));
+    }
+
+    return (doSynthSkillUp(PChar)); // RETRIBUTION
 }
 
 /************************************************************************
@@ -955,7 +1004,8 @@ int32 doSynthResult(CCharEntity* PChar)
 
 int32 sendSynthDone(CCharEntity* PChar)
 {
-    doSynthResult(PChar);
+    int32 finalXP = doSynthResult(PChar); // RETRIB
+    if (finalXP) charutils::AddExperiencePoints(false, PChar, PChar, finalXP, EMobDifficulty::TooWeak, false);
 
     PChar->animation = ANIMATION_NONE;
     PChar->updatemask |= UPDATE_HP;

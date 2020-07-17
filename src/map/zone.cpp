@@ -72,6 +72,13 @@
 #include "utils/petutils.h"
 #include "utils/zoneutils.h"
 
+// RETRIB
+#include "retrib/retrib_enums.h"
+#include "retrib/retrib_player.h"
+#include "retrib/retrib_events.h"
+#include "retrib/retrib_player_event.h"
+extern CRetribEvent* ServerEvent;
+
 
 /************************************************************************
 *                                                                       *
@@ -887,6 +894,16 @@ void CZone::CharZoneIn(CCharEntity* PChar)
             PBattlefield->InsertEntity(PChar, true);
 
     PChar->PLatentEffectContainer->CheckLatentsZone();
+
+    // RETRIB - Avarati Challenge
+    /*if (ServerEvent->SA->IsActive() && ServerEvent->SA->GetTask() == Retrib::Stat::STAT_AREA)
+    {
+        if (!PChar->RPC->Event->HasVisitedArea(m_regionID, m_zoneID))
+        {
+            PChar->RPC->Event->AddArea(m_regionID, m_zoneID);
+            ServerEvent->SA->AddPoints(PChar->id, Retrib::StatPoints::SP_AREA);
+        }
+    }*/
 }
 
 void CZone::CharZoneOut(CCharEntity* PChar)

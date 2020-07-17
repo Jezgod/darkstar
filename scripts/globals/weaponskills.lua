@@ -100,14 +100,15 @@ function calculateRawWSDmg(attacker, target, wsID, tp, action, wsParams, calcPar
 
     -- Calculate critrates
     local critRate = 0
-    
+    local nativecrit = 0
+
     if (wsParams.canCrit) then -- Work out critical hit ratios
-        local nativecrit = 0
         critrate = fTP(tp,wsParams.crit100,wsParams.crit200,wsParams.crit300)
+        local flourisheffect = attacker:getStatusEffect(dsp.effect.BUILDING_FLOURISH)
 
         if calcParams.flourishEffect then
-            if calcParams.flourisheffect:getPower() > 1 then
-                critrate = critrate + (10 + calcParams.flourisheffect:getSubPower()/2)/100
+            if flourisheffect ~= nil and flourisheffect:getPower() > 1 then
+                critrate = critrate + (10 + flourisheffect:getSubPower()/2)/100
             end
         end
 
@@ -266,7 +267,7 @@ function doPhysicalWeaponskill(attacker, target, wsID, wsParams, tp, action, pri
     -- Delete statuses that may have been spent by the WS
     attacker:delStatusEffectsByFlag(dsp.effectFlag.DETECTABLE)
     attacker:delStatusEffect(dsp.effect.SNEAK_ATTACK)
-    attacker:delStatusEffectSilent(dsp.effect.BUILDING_FLOURISH)
+    attacker:delStatusEffect(dsp.effect.BUILDING_FLOURISH)
 
     -- Calculate reductions
     if not wsParams.formless then

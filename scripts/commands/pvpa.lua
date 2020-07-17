@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
--- func: getNation
--- desc: Prints the nation of the currently selected target under the cursor
+-- func: pvpa
+-- desc: Prints the current status of the allied notes bonus ratio
 ---------------------------------------------------------------------------------------------------
 
 cmdprops =
@@ -14,6 +14,6 @@ function onTrigger(player)
  	local basty = player:getAlliedPointRatio(1)
 	local windy = player:getAlliedPointRatio(2)
 
-	player:PrintToPlayer(string.format("Current state of global PVP Allied Notes bonus is: San d'Oria %u%% / Bastok %u%% / Windurst %u%%",sandy, basty, windy)) --/ Bastok 'u%' / Windurst '%u'",sandy, basty, windy));
+	player:PrintToPlayer(string.format("Current state of global PVP Allied Notes bonus is: San d'Oria %u%% / Bastok %u%% / Windurst %u%%",sandy, basty, windy), 29)
     
 end;

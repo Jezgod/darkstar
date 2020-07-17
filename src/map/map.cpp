@@ -64,7 +64,14 @@ This file is part of DarkStar-server source code.
 #include "packets/basic.h"
 #include "packets/char_update.h"
 #include "message.h"
+#include "retrib/retrib_player.h"               // RETRIB
+#include "retrib/retrib_events.h"               // RETRIB
 
+std::string Server = "No log defined!";         // RETRIB
+CRetribEvent* ServerEvent = new CRetribEvent(); // RETRIB
+bool EVENT_SERVER = false;                      // RETRIB
+uint8 SERVER_DAY = 0;                           // RETRIB
+uint8 SERVER_WEEK = 0;                          // RETRIB
 
 const char* MAP_CONF_FILENAME = nullptr;
 
@@ -157,6 +164,20 @@ int32 do_init(int32 argc, char** argv)
             map_port = std::stoi(argv[i + 1]);
     }
 
+    // RETRIB
+    //if (map_config.usMapPort == 54230)
+    EVENT_SERVER = true;
+
+    //SERVER_DAY = CVanaTime::getInstance()->getSysMonthDay();
+    SERVER_DAY = CVanaTime::getInstance()->getSysWeekDay();
+    SERVER_WEEK = CVanaTime::getInstance()->getSysYearDay() / 7;
+
+    //Server.erase(Server.length() - 4, Server.length());
+    ShowMessage(CL_GREEN"========================================================================\n" CL_RESET);
+    ShowMessage(CL_GREEN"Retribution | " + Server + "\n");
+    ShowMessage(CL_GREEN"========================================================================\n\n" CL_RESET);
+    // RETRIB END
+
     MAP_CONF_FILENAME = "./conf/map_darkstar.conf";
 
     srand((uint32)time(nullptr));
@@ -227,7 +248,8 @@ int32 do_init(int32 argc, char** argv)
 
     fishingutils::LoadFishingMessages();
 
-    ShowStatus("do_init: server is binding with port %u", map_port == 0 ? map_config.usMapPort : map_port);
+    ShowStatus("%s " CL_GREEN"Online " CL_RESET"| Port: " CL_GREEN"%u" CL_RESET"\n\n", Server, map_port == 0 ? map_config.usMapPort : map_port);	// RETRIB
+    //ShowStatus("do_init: server is binding with port %u", map_port == 0 ? map_config.usMapPort : map_port);
     map_fd = makeBind_udp(map_config.uiMapIp, map_port == 0 ? map_config.usMapPort : map_port);
     ShowMessage("\t - " CL_GREEN"[OK]" CL_RESET"\n");
 
@@ -244,8 +266,11 @@ int32 do_init(int32 argc, char** argv)
     g_PBuff = new int8[map_config.buffer_size + 20];
     PTempBuff = new int8[map_config.buffer_size + 20];
 
-    ShowStatus("The map-server is " CL_GREEN"ready" CL_RESET" to work...\n");
-    ShowMessage("=======================================================================\n");
+    //ShowStatus("The map-server is " CL_GREEN"ready" CL_RESET" to work...\n");
+    //ShowMessage("=======================================================================\n");
+
+    ServerEvent->InitializeEvents(); // RETRIB
+
     return 0;
 }
 
@@ -507,6 +532,7 @@ int32 recv_parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_da
             // наверное создание персонажа лучше вынести в метод charutils::LoadChar() и загрузку инвентаря туда же сунуть
             CCharEntity* PChar = new CCharEntity();
             PChar->id = CharID;
+            PChar->RPC->Initialize(PChar->id); // RETRIB
 
             charutils::LoadChar(PChar);
 

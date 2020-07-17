@@ -13,8 +13,11 @@ dsp = dsp or {}
 dsp.besieged = dsp.besieged or {}
 
 dsp.besieged.onTrigger = function(player, npc, eventBase)
-    local mercRank = dsp.besieged.getMercenaryRank(player)
-    if mercRank == 0 then
+    --local mercRank = dsp.besieged.getMercenaryRank(player)
+    local hasTAG = player:hasKeyItem(dsp.ki.IMPERIAL_ARMY_ID_TAG)
+    local mercRank = 12
+
+    if mercRank == 0 or not hasTAG then
         player:startEvent(eventBase + 1, npc)
     else
         local maps = getMapBitmask(player)
@@ -146,7 +149,8 @@ end
 -- I decided to use the formula duration (with AC) = 3 hours + (mercenary rank - 1) * 20 minutes.
 -----------------------------------------------------------------------------------
 function getSanctionDuration(player)
-    local duration = 10800 + 1200 * (dsp.besieged.getMercenaryRank(player) - 1)
+    --local duration = 10800 + 1200 * (dsp.besieged.getMercenaryRank(player) - 1)
+    local duration = 10800 + 1200 * (12 - 1)
 
     if dsp.besieged.getAstralCandescence() == 0 then
         duration = duration / 2

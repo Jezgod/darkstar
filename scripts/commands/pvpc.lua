@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
--- func: getNation
--- desc: Prints the nation of the currently selected target under the cursor
+-- func: pvpc
+-- desc: Prints the current status of the conquest point bonus ratio
 ---------------------------------------------------------------------------------------------------
 
 cmdprops =
@@ -14,6 +14,5 @@ function onTrigger(player)
  	local basty = player:getConquestPointRatio(1)
 	local windy = player:getConquestPointRatio(2)
 
-	player:PrintToPlayer(string.format("Current state of global PVP Conquest Point bonus is: San d'Oria %u%% / Bastok %u%% / Windurst %u%%",sandy, basty, windy)) --/ Bastok 'u%' / Windurst '%u'",player:getConquestPointRatio(0), player:getConquestPointRatio(1), player:getConquestPointRatio(2)));
-    
+	player:PrintToPlayer(string.format("Current state of global PVP Conquest Point bonus is: San d'Oria %u%% / Bastok %u%% / Windurst %u%%",sandy, basty, windy), 29)
 end;

@@ -49,6 +49,7 @@ This file is part of DarkStar-server source code.
 #include "../packets/char_stats.h"
 #include "../packets/char_sync.h"
 #include "../packets/char_update.h"
+#include "../packets/chat_message.h"        // RETRIB
 #include "../packets/conquest_map.h"
 #include "../packets/delivery_box.h"
 #include "../packets/inventory_item.h"
@@ -64,6 +65,8 @@ This file is part of DarkStar-server source code.
 #include "../packets/message_standard.h"
 #include "../packets/quest_mission_log.h"
 #include "../packets/server_ip.h"
+#include "../packets/chat_message.h"
+#include "../packets/message_system.h"
 
 #include "../ability.h"
 #include "../alliance.h"
@@ -82,6 +85,7 @@ This file is part of DarkStar-server source code.
 #include "../latent_effect_container.h"
 #include "../treasure_pool.h"
 #include "../mob_modifier.h"
+#include "../message.h"
 
 #include "../entities/charentity.h"
 #include "../entities/petentity.h"
@@ -95,6 +99,9 @@ This file is part of DarkStar-server source code.
 #include "puppetutils.h"
 #include "petutils.h"
 #include "zoneutils.h"
+#include "../retrib/retrib_enums.h"         // RETRIB
+#include "../retrib/retrib_events.h"
+extern CRetribEvent* ServerEvent;           // RETRIB
 
 /************************************************************************
 *                                                                       *
@@ -1205,6 +1212,16 @@ namespace charutils
                     PChar->pushPacket(new CMessageStandardPacket(PChar, PItem->getID(), 0, MsgStd::ItemEx));
                 delete PItem;
                 return ERROR_SLOTID;
+            }
+        }
+
+        // RETRIB - Store record of obtaining item if special
+            if (PItem->getFlag() & ITEM_FLAG_CANEQUIP)
+        {
+            uint8 Special = PItem->GetCategory();
+            if (Special)
+            {
+                PChar->RPC->ObtainGear(Special, PItem->getID());
             }
         }
 
@@ -2635,7 +2652,14 @@ namespace charutils
 
             if (PetID == 47) // AMIGO SABOTENDER
             {
-                ab1 = 682;
+                ab1 = 683;
+                ab2 = 682;
+            }
+
+            if (PetID == 68) // TURBID TOLOI
+            {
+                ab1 = 743;
+                ab2 = 742;
             }
 
             if (ab1 != -1) { abilityidindex = ab1; }
@@ -3010,6 +3034,12 @@ namespace charutils
                 PChar->RealSkills.skill[SkillID] += SkillAmount;
                 PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, SkillID, SkillAmount, 38));
 
+                 /*RETRIB - Avarati Challenge*/
+                if (ServerEvent->SA->IsActive() && ServerEvent->SA->GetTask() == Retrib::Stat::STAT_SKILL)
+                {
+                   ServerEvent->SA->AddPoints(PChar->id, SkillAmount);
+                }
+
                 if ((CurSkill / 10) < (CurSkill + SkillAmount) / 10) //if gone up a level
                 {
                     PChar->WorkingSkills.skill[SkillID] += 1;
@@ -3106,8 +3136,10 @@ namespace charutils
 
     int32 addSpell(CCharEntity* PChar, uint16 SpellID)
     {
-        if (!hasSpell(PChar, SpellID)) {
+        if (!hasSpell(PChar, SpellID))
+        {
             PChar->m_SpellList[SpellID] = true;
+            PChar->RPC->AddStat(Retrib::Stat::STAT_SPELL, Retrib::StatPoints::SP_SPELL); // RETRIB
             return 1;
         }
         return 0;
@@ -3792,6 +3824,27 @@ namespace charutils
                         return;
                     }
 
+                    // RETRIB - STAT POINTS (MOB / NM)
+                    if (PMob->m_Type & MOBTYPE_NOTORIOUS)
+                    {
+                        PMember->RPC->AddStat(Retrib::Stat::STAT_NM_KILL, PMob->m_levelTier);
+                        auto Hunter = PMember->RPC->Hunter;
+                        if (PMember->RPC->IsHunter && Hunter->HasHunt() && !Hunter->HasKilledTarget())
+                        {
+                            auto Hunter = PMember->RPC->Hunter;
+                            if (PMob->id == Hunter->Hunt.MID || (PMob->name.compare(Hunter->Hunt.DBName) == 0 && PMob->loc.zone->GetID() == Hunter->Hunt.Zone))
+                            {
+                                exp += Hunter->KillHuntTarget();
+                                std::string Message = "You have slayed your target! The bounty can be collected from the M.T.F. Administrator.";
+                                PMember->pushPacket(new CChatMessagePacket(PMember, MESSAGE_NS_LINKSHELL2, Message));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        PMember->RPC->AddStat(Retrib::Stat::STAT_MOB_KILL, PMob->m_levelTier);
+                    }
+
                     uint8 nation = PMember->profile.nation;
                     if (region >= 0 && region <= 22)
                     {
@@ -3818,6 +3871,23 @@ namespace charutils
                     {
                         exp = charutils::AddExpBonus(PMember, exp);
                         charutils::AddExperiencePoints(false, PMember, PMob, (uint32)exp, mobCheck, chainactive);
+                    }
+                }
+            }
+
+            else if (mobCheck == EMobDifficulty::TooWeak && PMob->m_Type & MOBTYPE_NOTORIOUS) // AVARATI - NM Hunts
+            {
+                PMember->RPC->AddStat(Retrib::Stat::STAT_NM_KILL, PMob->m_levelTier);
+                auto Hunter = PMember->RPC->Hunter;
+                if (PMember->RPC->IsHunter && Hunter->HasHunt() && !Hunter->HasKilledTarget())
+                {
+                    auto Hunter = PMember->RPC->Hunter;
+                    if (PMob->id == Hunter->Hunt.MID || (PMob->name.compare(Hunter->Hunt.DBName) == 0 && PMob->loc.zone->GetID() == Hunter->Hunt.Zone))
+                    {
+                        uint32 xp = Hunter->KillHuntTarget();
+                        charutils::AddExperiencePoints(false, PMember, PMob, xp, mobCheck, chainactive);
+                        std::string Message = "You have slayed your target! The bounty can be collected from the M.T.F. Administrator.";
+                        PMember->pushPacket(new CChatMessagePacket(PMember, MESSAGE_NS_LINKSHELL2, Message));
                     }
                 }
             }
@@ -3943,7 +4013,7 @@ namespace charutils
         pvpexp = mLevel <= 67 ? (GetExpNEXTLevel(mLevel) * 8) / 100 : 2400;
         pvpexp = pvpexp * 10;
 
-        conquest::AddConquestPointsPVP(PLastAttacker, pvpexp);
+        conquest::AddConquestPointsPVP(PChar, PLastAttacker, pvpexp);
 
     }
 
@@ -3993,9 +4063,46 @@ namespace charutils
 
         if (PCharL)
         {
-            charutils::SaveImperialStandingPVP(PCharL, (int32)(pvpexp * 0.5f));
-            charutils::AddPoints(PCharL, "imperial_standing", (int32)(pvpexp * 0.5f));
+            uint32 points = (uint32)(pvpexp * 0.5f);
+            uint32 bountyfactor = charutils::GetCharVar(PChar, "bounty_points");
+            uint8 bountymod = 0;
+            uint8 BMlvl = PChar->GetMLevel();
+            if (BMlvl > bountyfactor)
+            {
+                bountymod = bountyfactor;
+            }
+            else
+            {
+                bountymod = BMlvl;
+            }
+
+            charutils::ModBounty(PChar, bountymod);
+            points = points + ((points * bountyfactor) / 100);
+
+            charutils::SaveImperialStandingPVP(PCharL, points);
+            charutils::AddPoints(PCharL, "imperial_standing", points);
             PCharL->pushPacket(new CConquestPacket(PCharL));
+
+            std::string a;
+            if (PCharL->allegiance == 2)
+            {
+                a = "San d'Oria";
+            }
+            else if (PCharL->allegiance == 3)
+            {
+                a = "Bastok";
+            }
+            else if (PCharL->allegiance == 4)
+            {
+                a = "Windurst";
+            }
+
+            std::string M1 = PCharL->name + " [" + a + "] earned " + std::to_string(points) + " Imperial Standing.";
+            std::string M2 = "Use the command '!pvpi' to see the current XP/Gil bonus in Sanction areas.";
+            std::string M3 = "~~~~~~~~~ PVP RESULT ~~~~~~~~~";
+            message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PCharL, MESSAGE_NS_LINKSHELL3, M1));
+            message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PCharL, MESSAGE_NS_LINKSHELL3, M2));
+            message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PCharL, MESSAGE_NS_LINKSHELL3, M3));
             return 0;
         }
 
@@ -4051,9 +4158,46 @@ namespace charutils
 
         if (PCharL)
         {
-            charutils::SaveAlliedNotesPVP(PCharL, (int32)(pvpexp * 0.5f));
-            charutils::AddPoints(PCharL, "allied_notes", (int32)(pvpexp * 0.5f));
+            uint32 points = (uint32)(pvpexp * 0.5f);
+            uint32 bountyfactor = charutils::GetCharVar(PChar, "bounty_points");
+            uint8 bountymod = 0;
+            uint8 BMlvl = PChar->GetMLevel();
+            if (BMlvl > bountyfactor)
+            {
+                bountymod = bountyfactor;
+            }
+            else
+            {
+                bountymod = BMlvl;
+            }
+
+            charutils::ModBounty(PChar, bountymod);
+            points = points + ((points * bountyfactor) / 100);
+
+            charutils::SaveAlliedNotesPVP(PCharL, points);
+            charutils::AddPoints(PCharL, "allied_notes", points);
             PCharL->pushPacket(new CConquestPacket(PCharL));
+
+            std::string a;
+            if (PCharL->allegiance == 2)
+            {
+                a = "San d'Oria";
+            }
+            else if (PCharL->allegiance == 3)
+            {
+                a = "Bastok";
+            }
+            else if (PCharL->allegiance == 4)
+            {
+                a = "Windurst";
+            }
+
+            std::string M1 = PCharL->name + " [" + a + "] earned " + std::to_string(points) + " Allied Notes.";
+            std::string M2 = "Use the command '!pvpa' to see the current XP/Gil bonus in Sigil areas.";
+            std::string M3 = "~~~~~~~~~ PVP RESULT ~~~~~~~~~";
+            message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PCharL, MESSAGE_NS_LINKSHELL3, M1));
+            message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PCharL, MESSAGE_NS_LINKSHELL3, M2));
+            message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket(PCharL, MESSAGE_NS_LINKSHELL3, M3));
             return 0;
         }
 
@@ -4095,6 +4239,60 @@ namespace charutils
 
     /************************************************************************
     *                                                                       *
+    *  SAVE BOUNTY POINTS                                                   *
+    *                                                                       *
+    ************************************************************************/
+    uint8 AddBounty(CBattleEntity* PLastAttacker, uint8 bounty)
+    {
+        CCharEntity* PChar = dynamic_cast<CCharEntity*>(PLastAttacker);
+        if (PChar)
+        {
+            const char* var = "bounty_points";
+            const char* Query =
+                "INSERT INTO char_vars "
+                "SET charid = %u, varname = '%s', value = %i "
+                "ON DUPLICATE KEY UPDATE value = value + %i;";
+
+            Sql_Query(SqlHandle, Query,
+                PChar->id,
+                var,
+                bounty,
+                bounty);
+
+            return 0;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    uint8 ModBounty(CCharEntity* PChar, uint8 bountymod)
+    {
+        if (PChar)
+        {
+            const char* var = "bounty_points";
+            const char* Query =
+                "INSERT INTO char_vars "
+                "SET charid = %u, varname = '%s', value = %i "
+                "ON DUPLICATE KEY UPDATE value = value - %i;";
+
+            Sql_Query(SqlHandle, Query,
+                PChar->id,
+                var,
+                bountymod,
+                bountymod);
+
+            return 0;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    /************************************************************************
+    *                                                                       *
     *  Добавляем очки опытка указанному персонажу                           *
     *                                                                       *
     ************************************************************************/
@@ -4108,6 +4306,13 @@ namespace charutils
         {
             exp = (uint32)(exp * map_config.exp_rate);
         }
+
+        // RETRIB - Avarati Challenge
+        if (ServerEvent->SA->IsActive() && ServerEvent->SA->GetTask() == Retrib::Stat::STAT_EXPERIENCE)
+        {
+            ServerEvent->SA->AddPoints(PChar->id, (exp / 50) >> Retrib::StatPoints::SP_EXPERIENCE);
+        }
+
         uint16 currentExp = PChar->jobs.exp[PChar->GetMJob()];
         bool onLimitMode = false;
 
@@ -4187,6 +4392,14 @@ namespace charutils
                 PChar->pushPacket(new CConquestPacket(PChar));
             }
 
+            // Should this user be awarded allied notes..
+            if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SIGIL) &&
+                (region >= 33 && region <= 40))
+            {
+                charutils::AddPoints(PChar, "allied_notes", (int32)(exp * 0.2f));
+                PChar->pushPacket(new CConquestPacket(PChar));
+            }
+
             // Cruor Drops in Abyssea zones.
             uint16 Pzone = PChar->getZone();
             if (zoneutils::GetCurrentRegion(Pzone) == REGION_ABYSSEA)
@@ -4229,6 +4442,17 @@ namespace charutils
                     PChar->jobs.exp[PChar->GetMJob()] = GetExpNEXTLevel(PChar->jobs.job[PChar->GetMJob()] + 1) - 1;
                 }
                 PChar->jobs.job[PChar->GetMJob()] += 1;
+
+                // RETRIB - Add Job to 75 Points
+                if (PChar->jobs.job[PChar->GetMJob()] == 75)
+                {
+                    if (!PChar->RPC->HasJobTo75(PChar->GetMJob()))
+                    {
+                        PChar->RPC->SetJobTo75(PChar->GetMJob());
+                        PChar->RPC->AddStat(Retrib::Stat::STAT_JOBTO75, Retrib::StatPoints::SP_JOBTO75);
+                    }
+                }
+                // RETRIB
 
                 if (PChar->m_LevelRestriction == 0 ||
                     PChar->m_LevelRestriction > PChar->GetMLevel())
@@ -5551,5 +5775,29 @@ namespace charutils
         }
         return 0;
     }
+
+    /*int32 GetCPVPLBPlayer(uint8 offset)
+    {
+        char a = 0;
+
+        const char* Query =
+            "SELECT charname, VALUE FROM char_vars "
+            "INNER JOIN chars "
+            "ON char_vars.charid = chars.charid "
+            "WHERE varname = 'conquestpvppoints' "
+            "ORDER BY VALUE DESC, charname ASC "
+            "LIMIT 1 OFFSET %u;";
+
+        int32 ret = Sql_Query(SqlHandle, Query, offset);
+
+        if (ret != SQL_ERROR &&
+            Sql_NumRows(SqlHandle) != 0 &&
+            Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+        {
+            a = Sql_GetIntData(SqlHandle, 0);
+            return a;
+        }
+        return 0;
+    }*/
 
 }; // namespace charutils

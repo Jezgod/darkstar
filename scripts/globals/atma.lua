@@ -115,7 +115,8 @@ local atmaMods =
     [dsp.ki.ATMA_OF_AQUATIC_ARDOR]              = {dsp.mod.ABSORB_DMG_CHANCE, 6, dsp.mod.MAGIC_ABSORB, 6},
     [dsp.ki.ATMA_OF_THE_FALLEN_ONE]             = {dsp.mod.INT, 30, dsp.mod.MND, 30},
     [dsp.ki.ATMA_OF_FIRES_AND_FLARES]           = {dsp.mod.AGI, 20, dsp.mod.RATT, 40},
-    [dsp.ki.ATMA_OF_THE_APOCALYPSE]             = {dsp.mod.TRIPLE_ATTACK, 15, dsp.mod.RERAISE_III, 1, dsp.mod.QUICK_MAGIC, 10},
+    --[dsp.ki.ATMA_OF_THE_APOCALYPSE]             = {dsp.mod.TRIPLE_ATTACK, 15, dsp.mod.RERAISE_III, 1, dsp.mod.QUICK_MAGIC, 10},
+    [dsp.ki.ATMA_OF_THE_APOCALYPSE]             = {dsp.mod.TRIPLE_ATTACK, 15, dsp.mod.NULL_PHYSICAL_DAMAGE, 10, dsp.mod.MAGIC_NULL, 10, dsp.mod.QUICK_MAGIC, 10},
     
     -- GROUP 2
     [dsp.ki.ATMA_OF_THE_HEIR]                   = {},
@@ -182,6 +183,12 @@ function dsp.atma.onEffectGain(target, effect)
     	target:addMod(mods[3],mods[4])
     	target:addMod(mods[5],mods[6])
     	printf("Count: %i", count)
+    elseif count == 8 then
+ 	target:addMod(mods[1],mods[2])
+    	target:addMod(mods[3],mods[4])
+    	target:addMod(mods[5],mods[6])
+        target:addMod(mods[7],mods[8])
+    	printf("Count: %i", count)
     end
 end
 
@@ -200,5 +207,10 @@ function dsp.atma.onEffectLose(target, effect)
  	target:delMod(mods[1],mods[2])
     	target:delMod(mods[3],mods[4])
     	target:delMod(mods[5],mods[6])
+    elseif count == 8 then
+ 	target:delMod(mods[1],mods[2])
+    	target:delMod(mods[3],mods[4])
+    	target:delMod(mods[5],mods[6])
+    	target:delMod(mods[7],mods[8])
     end
 end

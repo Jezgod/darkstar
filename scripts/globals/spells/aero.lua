@@ -25,6 +25,8 @@ function onSpellCast(caster, target, spell)
     spellParams.M100 = 0
     spellParams.M200 = 0
     spellParams.I = 35
+    --local mobLv = target:getMainLvl()
 
+    --printf("Mob Level : %u",mobLv)
     return doElementalNuke(caster, spell, target, spellParams)
 end

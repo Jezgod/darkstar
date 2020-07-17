@@ -42,6 +42,10 @@ This file is part of DarkStar-server source code.
 #include "utils/zoneutils.h"
 #include "utils/jailutils.h"
 #include "items/item_linkshell.h"
+#include "retrib/retrib_events.h"
+
+extern bool EVENT_SERVER;           // RETRIB
+extern CRetribEvent* ServerEvent;   // RETRIB
 
 namespace message
 {
@@ -524,6 +528,53 @@ namespace message
                         PChar->clearPacketList();
 
                         charutils::SendToZone(PChar, 2, zoneutils::GetZoneIPP(PChar->loc.destination));
+                    }
+                }
+            }
+            break;
+        }
+
+        case MSG_UPDATE_EVENT:
+        {
+            uint8 UP = ref<uint8>((uint8*)extra->data(), 0);
+
+            if (UP == 0) // Update for Daily Gift
+            {
+                if (!EVENT_SERVER)
+                {
+                    zoneutils::ForEachZone([](CZone* PZone)
+                        {
+                            PZone->ForEachChar([](CCharEntity* PC)
+                                {
+                                    const char* Query = "SELECT GiftDay FROM ava_pc_daily WHERE ID = %u;";
+                                    int32 Result = Sql_Query(SqlHandle, Query, PC->id);
+                                    if (Result != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+                                    {
+                                        PC->RPC->Event->SetDailyGiftDay((uint8)Sql_GetUIntData(SqlHandle, 0));
+                                        PC->RPC->Event->ResetDailyGift();
+                                    }
+                                });
+                        });
+                }
+            }
+            else // Update for Strongest Adventurer
+            {
+                if (!EVENT_SERVER)
+                {
+                    ServerEvent->SA->LoadData();
+                }
+
+                uint16 ID = ref<uint16>((uint8*)extra->data(), 1);
+
+                if (ID)
+                {
+                    CCharEntity* PC = zoneutils::GetChar(ID);
+                    if (PC)
+                    {
+                        uint8 Type = ref<uint8>((uint8*)extra->data(), 3);
+                        PC->RPC->SetMessageAuthority(true);
+                        ServerEvent->SA->SendAnnouncement(PC, Type);
+                        PC->RPC->SetMessageAuthority(false);
                     }
                 }
             }

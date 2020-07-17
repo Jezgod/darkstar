@@ -8,7 +8,7 @@ require("scripts/globals/status")
 require("scripts/globals/titles")
 -----------------------------------
 
-local path =
+local pathNodes =
 {
     -539, 0, -481,
     -556, 0, -478,
@@ -20,16 +20,18 @@ local path =
 }
 
 function onMobSpawn(mob)
+    mob:speed(100)
     onMobRoam(mob)
 end
 
-function onMobRoamAction(mob)
-    dsp.path.patrol(mob, path, dsp.path.flag.REVERSE)
-end
+function onPath(mob)
+    dsp.path.patrol(mob, pathNodes, dsp.path.flag.RUN);
+end;
 
 function onMobRoam(mob)
+    -- move to start position if not moving
     if not mob:isFollowingPath() then
-        mob:pathThrough(dsp.path.first(path))
+        mob:pathThrough(dsp.path.first(pathNodes), dsp.path.flag.REVERSE)
     end
 end
 

@@ -367,6 +367,69 @@ local loot =
         },
     },
 
+    -- Royal Jelly (BS40)
+    [77] =
+    {
+        {
+            {itemid =  637, droprate  = 1000}, -- slime_oil
+        },
+        {
+            {itemid =  637, droprate  = 1000}, -- slime_oil
+        },
+        {
+            {itemid =     0, droprate =  909}, -- nothing
+            {itemid = 15551, droprate =   91}, -- shikaree_ring
+        },
+        {
+            {itemid =     0, droprate =   35}, -- nothing
+            {itemid = 14651, droprate =  469}, -- mana_ring
+            {itemid = 17693, droprate =  152}, -- grudge_sword
+            {itemid = 17936, droprate =  120}, -- de_saintres_axe
+            {itemid = 17696, droprate =  118}, -- buzzard_tuck
+            {itemid =  4947, droprate =  106}, -- scroll_of_utsusemi_ni
+        },
+        {
+            {itemid =     0, droprate =  293}, -- nothing
+            {itemid = 14650, droprate =  258}, -- marksmans_ring
+            {itemid = 17573, droprate =  101}, -- himmel_stock
+            {itemid = 17463, droprate =   98}, -- sealed_mace
+            {itemid = 17203, droprate =   98}, -- shikar_bow
+            {itemid = 17572, droprate =  152}, -- dusky_staff
+        },
+        {
+            {itemid =  4874, droprate =  123}, -- scroll_of_absorb-str
+            {itemid =  4751, droprate =  165}, -- scroll_of_erase
+            {itemid =  4714, droprate =  140}, -- scroll_of_phalanx
+            {itemid =  4896, droprate =  145}, -- fire_spirit_pact
+            {itemid =   666, droprate =  229}, -- steel_sheet
+            {itemid =   652, droprate =  238}, -- steel_ingot
+        },
+        {
+            {itemid =     0, droprate =  314}, -- nothing
+            {itemid =  4947, droprate =  177}, -- scroll_of_utsusemi_ni
+            {itemid =  4858, droprate =  246}, -- scroll_of_ice_spikes
+            {itemid =  4717, droprate =  263}, -- scroll_of_refresh
+        },
+        {
+            {itemid =     0, droprate =  552}, -- nothing
+            {itemid =   748, droprate =  182}, -- gold_beastcoin
+            {itemid =   749, droprate =  133}, -- mythril_beastcoin
+            {itemid =   699, droprate =    5}, -- oak_log
+            {itemid =   701, droprate =    5}, -- rosewood_log
+            {itemid =   793, droprate =   12}, -- black_pearl
+            {itemid =   811, droprate =    7}, -- ametrine
+            {itemid =   815, droprate =   15}, -- sphene
+            {itemid =   770, droprate =    9}, -- Blue Rock
+            {itemid =   775, droprate =   11}, -- Black Rock
+            {itemid =   772, droprate =   11}, -- Green Rock
+            {itemid =   776, droprate =    9}, -- White Rock
+            {itemid =   788, droprate =   27}, -- peridot
+            {itemid =   798, droprate =   20}, -- turquoise
+            {itemid =  4172, droprate =    2}, -- reraiser
+            {itemid =  1255, droprate =   50}, -- elemental_ore
+        }
+    },
+
     -- BCNM The Final Bout
     [78] =
     {

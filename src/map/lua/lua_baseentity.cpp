@@ -146,6 +146,22 @@
 #include "../utils/puppetutils.h"
 #include "../utils/zoneutils.h"
 
+#include "../packets/server_message.h"              // RETRIBUTION
+#include "../packets/inventory_item.h"              // RETRIBUTION
+#include "../retrib/retrib_enums.h"                 // RETRIBUTION
+#include "../retrib/retrib_events.h"                // RETRIBUTION
+#include "../retrib/retrib_player.h"                // RETRIBUTION
+#include "../retrib/retrib_player_event.h"          // RETRIBUTION
+#include "../retrib/retrib_enums.h"                 // RETRIBUTION
+#include "../retrib/retrib_utils.h"                 // RETRIBUTION
+#include "../retrib/retrib_player_hunter.h"         // RETRIBUTION
+#include "../retrib/retrib_player_quest.h"          // RETRIBUTION
+#include "../retrib/retrib_player_synergy.h"        // RETRIBUTION
+#include <iostream>                                 // RETRIBUTION
+#include <fstream>                                  // RETRIBUTION
+
+extern CRetribEvent* ServerEvent;
+
 CLuaBaseEntity::CLuaBaseEntity(lua_State* L)
 {
     if (!lua_isnil(L, 1))
@@ -164,6 +180,374 @@ CLuaBaseEntity::CLuaBaseEntity(lua_State* L)
 CLuaBaseEntity::CLuaBaseEntity(CBaseEntity* PEntity)
 {
     m_PBaseEntity = PEntity;
+}
+
+/************************************************************************
+*
+* Avarati Methods
+*
+************************************************************************/
+
+inline int32 CLuaBaseEntity::AddRetribStat(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Stat = (uint8)lua_tointeger(L, 1);
+    int16 Points = (int16)lua_tointeger(L, 2);
+    PC->RPC->AddStat(Stat, Points);
+    return 0;
+}
+
+inline int32 CLuaBaseEntity::GetRetribStat(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Stat = (uint8)lua_tointeger(L, 1);
+    lua_pushinteger(L, PC->RPC->GetStat(Stat));
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::Has75Job(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Job = (uint8)lua_tointeger(L, 1);
+    lua_pushboolean(L, PC->RPC->HasJobTo75(Job));
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::GetHighestLevel(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 HighLevel = 1;
+    for (auto Job : PC->jobs.job)
+        if (Job > HighLevel)
+            HighLevel = Job;
+
+    lua_pushinteger(L, HighLevel);
+    return 1;
+}
+
+/************************************************************************
+*  Retribution Event Methods
+************************************************************************/
+
+inline int32 CLuaBaseEntity::GetEventNPC(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    lua_pushinteger(L, PC->RPC->Event->GetEventNPC());
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::SetEventNPC(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint32 NPC = (uint32)lua_tointeger(L, 1);
+    PC->RPC->Event->SetEventNPC(NPC);
+    return 0;
+}
+
+inline int32 CLuaBaseEntity::SendSelectionMenu(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    auto Type = CHAT_MESSAGE_TYPE::MESSAGE_GMPROMPT;
+    char* Message = (char*)lua_tostring(L, 1); // If this doesn't work, it's because of GM setting in packet
+
+    PC->RPC->SetMessageAuthority(true);
+    message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket((CCharEntity*)m_PBaseEntity, Type, Message));
+    PC->RPC->SetMessageAuthority(false);
+    return 0;
+}
+
+inline int32 CLuaBaseEntity::SendServerMessage(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    auto Type = MESSAGE_NS_LINKSHELL2;
+    char* Message = (char*)lua_tostring(L, 1);
+
+    PC->RPC->SetMessageAuthority(true);
+    message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket((CCharEntity*)m_PBaseEntity, Type, Message));
+    PC->RPC->SetMessageAuthority(false);
+
+    return 0;
+}
+
+inline int32 CLuaBaseEntity::InjectNPCActionPacket(lua_State* L)
+{
+    CBaseEntity* NPC = (CBaseEntity*)m_PBaseEntity;
+
+    uint16 action = (uint16)lua_tointeger(L, 1);
+    uint16 anim = (uint16)lua_tointeger(L, 2);
+    SPECEFFECT speceffect = (SPECEFFECT)lua_tointeger(L, 3);
+    REACTION reaction = (REACTION)lua_tointeger(L, 4);
+    uint16 message = (uint16)lua_tointeger(L, 5);
+
+    ACTIONTYPE actiontype = ACTION_MAGIC_FINISH;
+    switch (action)
+    {
+    case 3: actiontype = ACTION_WEAPONSKILL_FINISH; break;
+    case 4: actiontype = ACTION_MAGIC_FINISH; break;
+    case 5: actiontype = ACTION_ITEM_FINISH; break;
+    case 6: actiontype = ACTION_JOBABILITY_FINISH; break;
+    case 8: actiontype = ACTION_MAGIC_START; break;
+    case 14: actiontype = ACTION_DANCE; break;
+    }
+
+    action_t Action;
+
+    Action.id = NPC->id;
+    Action.actionid = 1;
+
+    Action.actiontype = actiontype;
+    actionList_t& list = Action.getNewActionList();
+    list.ActionTargetID = NPC->id;
+    actionTarget_t& target = list.getNewActionTarget();
+    target.animation = anim;
+    target.param = 10;
+    target.messageID = message;
+    target.speceffect = speceffect;
+    target.reaction = reaction;
+
+    if (actiontype == ACTION_MAGIC_START)
+    {
+        SPELLGROUP castType = (SPELLGROUP)lua_tointeger(L, 2);
+        uint16 castAnim = (uint16)lua_tointeger(L, 3);
+
+        Action.spellgroup = castType;
+        Action.actiontype = actiontype;
+        target.reaction = REACTION_NONE;
+        target.speceffect = SPECEFFECT_NONE;
+        if (lua_isnil(L, 3))
+        {
+            target.animation = 0;
+        }
+        else
+        {
+            target.animation = castAnim;
+        }
+        target.param = message;
+        target.messageID = 327; // starts casting
+        return 0;
+    }
+
+    NPC->loc.zone->PushPacket(NPC, CHAR_INRANGE_SELF, new CActionPacket(Action));
+
+    return 0;
+}
+
+inline int32 CLuaBaseEntity::SilentRelease(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    RELEASE_TYPE releaseType = RELEASE_STANDARD;
+    if (PC->m_event.EventID != -1)
+    {
+        releaseType = RELEASE_SKIPPING;
+        PC->pushPacket(new CMessageSystemPacket(0, 0, -1));
+    }
+    PC->pushPacket(new CReleasePacket(PC, releaseType));
+    PC->pushPacket(new CReleasePacket(PC, RELEASE_EVENT));
+    return 0;
+}
+
+/************************************************************************
+*  Avarati Hunter Methods
+************************************************************************/
+
+inline int32 CLuaBaseEntity::RegisterHunter(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    PC->RPC->RegisterHunter();
+    return 0;
+}
+
+inline int32 CLuaBaseEntity::HasHunt(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    lua_pushboolean(L, PC->RPC->Hunter->HasHunt());
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::DeleteHunt(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    PC->RPC->Hunter->DeleteHunt();
+    return 0;
+}
+
+inline int32 CLuaBaseEntity::GetNewHunt(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Level = (uint8)lua_tointeger(L, 1);
+
+    Hunt_t NewHunt = PC->RPC->Hunter->GetNewHunt(Level);
+
+    lua_newtable(L);
+    lua_pushstring(L, NewHunt.Name.c_str());
+    lua_rawseti(L, -2, 1);
+    lua_pushnumber(L, NewHunt.Gender);
+    lua_rawseti(L, -2, 2);
+    lua_pushnumber(L, NewHunt.XP);
+    lua_rawseti(L, -2, 3);
+    lua_pushnumber(L, NewHunt.Gil);
+    lua_rawseti(L, -2, 4);
+    lua_pushstring(L, NewHunt.ZNText.c_str());
+    lua_rawseti(L, -2, 5);
+
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::GetHunt(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+
+    Hunt_t CurrentHunt = PC->RPC->Hunter->GetHunt();
+
+    lua_newtable(L);
+    lua_pushstring(L, CurrentHunt.Name.c_str());
+    lua_rawseti(L, -2, 1);
+    lua_pushnumber(L, CurrentHunt.Gil);
+    lua_rawseti(L, -2, 2);
+
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::HasKilledHunt(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    lua_pushboolean(L, PC->RPC->Hunter->HasKilledTarget());
+    return 1;
+}
+
+/************************************************************************
+*  Retribution Daily Gift Methods
+************************************************************************/
+
+inline int32 CLuaBaseEntity::HasDailyGift(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    lua_pushboolean(L, PC->RPC->Event->HasDailyGift());
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::GiveDailyGift(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    PC->RPC->Event->GiveDailyGift();
+    return 0;
+}
+
+inline int32 CLuaBaseEntity::GetDailyGiftDay(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    lua_pushinteger(L, PC->RPC->Event->GetDailyGiftDay());
+    return 1;
+}
+
+/************************************************************************
+*  Retribution Ranking Methods
+************************************************************************/
+inline int32 CLuaBaseEntity::GetRankings(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Type = (uint8)lua_tointeger(L, 1);
+    bool Daily = lua_isnil(L, 2) ? false : (bool)lua_toboolean(L, 2);
+
+    std::string Top3[3];
+    uint16 Totals[3] = { {0}, {0}, {0} };
+    uint16 Rank = 0;
+
+    if (Type == Retrib::Event::OVERALL)
+        Rank = PC->RPC->Event->GetRankings(Top3, Totals);
+    else if (Type == Retrib::Event::STRONGEST)
+        Rank = ServerEvent->SA->GetRankings(Top3, Totals, PC->id, Daily);
+
+    lua_newtable(L);
+    lua_pushstring(L, Top3[0].c_str());
+    lua_rawseti(L, -2, 1);
+    lua_pushinteger(L, Totals[0]);
+    lua_rawseti(L, -2, 2);
+    lua_pushstring(L, Top3[1].c_str());
+    lua_rawseti(L, -2, 3);
+    lua_pushinteger(L, Totals[1]);
+    lua_rawseti(L, -2, 4);
+    lua_pushstring(L, Top3[2].c_str());
+    lua_rawseti(L, -2, 5);
+    lua_pushinteger(L, Totals[2]);
+    lua_rawseti(L, -2, 6);
+    lua_pushinteger(L, Rank);
+    lua_rawseti(L, -2, 7);
+
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::GetEventRewards(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Type = (uint8)lua_tointeger(L, 1);
+    std::vector<std::string> Items;
+
+    if (Type == Retrib::Event::STRONGEST)
+        ServerEvent->SA->GetRewards(Items);
+
+    lua_newtable(L);
+
+    for (uint8 x = 0; x < Items.size(); x++)
+    {
+        lua_pushstring(L, Items[x].c_str());
+        lua_rawseti(L, -2, x + 1);
+    }
+
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::GetEventTask(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Type = (uint8)lua_tointeger(L, 1);
+    std::string Task;
+
+    if (Type == Retrib::Event::STRONGEST)
+        ServerEvent->SA->GetTask(Task);
+
+    lua_pushstring(L, Task.c_str());
+
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::SAEventState(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Type = (uint8)lua_tointeger(L, 1);
+    uint32 choice = (uint32)lua_tointeger(L, 2);
+
+    if (Type == Retrib::Event::STRONGEST)
+    {
+
+        switch (choice)
+        {
+        case 1:
+            ServerEvent->SA->Start();
+            break;
+        case 2:
+            ServerEvent->SA->NewDay();
+            break;
+        case 3:
+            ServerEvent->SA->Finish();
+            break;
+        default:
+            ShowDebug("Menu %i not implemented, yet.\n", choice);
+            break;
+        }
+    }
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::RegisterSA(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Type = (uint8)lua_tointeger(L, 1);
+
+    if (Type == Retrib::Event::STRONGEST)
+        ServerEvent->SA->RegisterSA(PC->id, (const char*)PC->GetName());
+
+    return 1;
 }
 
 /************************************************************************
@@ -337,6 +721,16 @@ inline int32 CLuaBaseEntity::PrintToArea(lua_State* L)
     Todo: Unity, LS 1 and LS 2 for the lols?
     */
 
+    return 0;
+}
+
+inline int32 CLuaBaseEntity::PrintToServer(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
+    //DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isstring(L, 1));
+    CHAT_MESSAGE_TYPE messageType = (!lua_isnil(L, 2) && lua_isnumber(L, 2) ? (CHAT_MESSAGE_TYPE)lua_tointeger(L, 2) : MESSAGE_SYSTEM_1);
+    message::send(MSG_CHAT_SERVMES, 0, 0, new CChatMessagePacket((CCharEntity*)m_PBaseEntity, messageType, (char*)lua_tostring(L, 1)));
     return 0;
 }
 
@@ -3245,6 +3639,7 @@ inline int32 CLuaBaseEntity::resetPlayer(lua_State *L)
 /************************************************************************
 *  Function: goToEntity()
 *  Purpose : Transports PC to a Mob or NPC; works across multiple servers
+*  Purpose : Transports PC to a Mob or NPC; works across multiple servers
 *  Example : player:goToEntity(ID, Option)
 *  Notes   : Option 0: Spawned/Unspawned | Option 1: Spawned only
 ************************************************************************/
@@ -5064,6 +5459,60 @@ inline int32 CLuaBaseEntity::getAlliedPointRatio(lua_State* L)
     return 1;
 }
 
+inline int32 CLuaBaseEntity::getBounty(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Type = (uint8)lua_tointeger(L, 1);
+    uint16 Rank = 0;
+
+    std::string Top3[6];
+
+    if (Type == Retrib::Event::BOUNTY)
+    {
+        Rank = PC->RPC->Event->GetBounty(Top3);
+    }
+
+    lua_newtable(L);
+    lua_pushstring(L, Top3[0].c_str());
+    lua_rawseti(L, -2, 1);
+    lua_pushstring(L, Top3[1].c_str());
+    lua_rawseti(L, -2, 2);
+    lua_pushstring(L, Top3[2].c_str());
+    lua_rawseti(L, -2, 3);
+    lua_pushstring(L, Top3[3].c_str());
+    lua_rawseti(L, -2, 4);
+    lua_pushstring(L, Top3[4].c_str());
+    lua_rawseti(L, -2, 5);
+    lua_pushstring(L, Top3[5].c_str());
+    lua_rawseti(L, -2, 6);
+
+    return 1;
+}
+
+inline int32 CLuaBaseEntity::getBountyPoints(lua_State* L)
+{
+    CCharEntity* PC = (CCharEntity*)m_PBaseEntity;
+    uint8 Type = (uint8)lua_tointeger(L, 1);
+    uint16 Point = 0;
+
+    std::string Top3S[3];
+
+    if (Type == Retrib::Event::BOUNTY)
+    {
+        Point = PC->RPC->Event->GetBountyPoints(Top3S);
+    }
+
+    lua_newtable(L);
+    lua_pushstring(L, Top3S[0].c_str());
+    lua_rawseti(L, -2, 1);
+    lua_pushstring(L, Top3S[1].c_str());
+    lua_rawseti(L, -2, 2);
+    lua_pushstring(L, Top3S[2].c_str());
+    lua_rawseti(L, -2, 3);
+
+    return 1;
+}
+
 /************************************************************************
 *  Function: getNewPlayer()
 *  Purpose : Returns true if a player is new
@@ -6409,6 +6858,7 @@ inline int32 CLuaBaseEntity::completeQuest(lua_State *L)
             PChar->pushPacket(new CQuestMissionLogPacket(PChar, questLogID, LOG_QUEST_CURRENT));
             PChar->pushPacket(new CQuestMissionLogPacket(PChar, questLogID, LOG_QUEST_COMPLETE));
             charutils::SaveQuestsList(PChar);
+            PChar->RPC->AddStat(Retrib::Stat::STAT_QUEST, Retrib::StatPoints::SP_QUEST); // RETRIB: AVARATI CHALLENGE
         }
     }
     else
@@ -6624,6 +7074,7 @@ inline int32 CLuaBaseEntity::completeMission(lua_State *L)
             PChar->pushPacket(new CQuestMissionLogPacket(PChar, missionLogID, LOG_MISSION_CURRENT));
 
             charutils::SaveMissionsList(PChar);
+            PChar->RPC->AddStat(Retrib::Stat::STAT_MISSION, Retrib::StatPoints::SP_MISSION); // RETRIB: AVARATI CHALLENGE
         }
     }
     else
@@ -14158,8 +14609,44 @@ const char CLuaBaseEntity::className[] = "CBaseEntity";
 
 Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 {
+    // Stats
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, GetRetribStat),    // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, AddRetribStat),    // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, Has75Job),         // Retribution 
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, GetHighestLevel),  // Retribution 
+
+    // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getBounty),                 // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, getBountyPoints),           // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, GetEventNPC),               // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, SetEventNPC),               // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, SendSelectionMenu),         // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, SendServerMessage),         // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, InjectNPCActionPacket),     // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, SilentRelease),             // Retribution
+
+     // NM Hunts
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, RegisterHunter),   // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, HasHunt),          // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, DeleteHunt),       // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, GetNewHunt),       // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, GetHunt),          // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, HasKilledHunt),    // Retribution
+
+    // Daily Login Gifts
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, HasDailyGift),     // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, GiveDailyGift),    // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, GetDailyGiftDay),  // Retribution
+
+    // Event Rankings
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, GetRankings),      // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, GetEventRewards),  // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, GetEventTask),     // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, SAEventState),     // Retribution
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity, RegisterSA),       // Retribution
 
 // Messaging System
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,PrintToServer),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,showText),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,messageText),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,PrintToPlayer),
