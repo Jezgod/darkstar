@@ -7,6 +7,7 @@ local ID = require("scripts/zones/The_Colosseum/IDs")
 require("scripts/globals/status")
 require("scripts/globals/ability")
 require("scripts/globals/teleports")
+require("scripts/globals/msg")
 -----------------------------------
 
 local job_map =
@@ -40,8 +41,6 @@ function onZoneIn(player,prevZone)
     local cs = -1;
     local mjob = player:getMainJob()
     local jobmap = job_map[mjob]
-    --local maxtime = player:getCharVar("invasion")
-    --local time = os.time()
     local nation = 0
     local nationByNum = {
 	[0] = "None",
@@ -50,10 +49,6 @@ function onZoneIn(player,prevZone)
         [3] = "Bastok",
         [4] = "Windurst",
     }
-
-    --if (maxtime > time) then
-	--player:addStatusEffectEx(dsp.effect.TELEPORT, 0, dsp.teleport.id.HOME_NATION, 0, 1)
-    --end
 	
     -- turn on stylelock
     player:lockstyleOn()
@@ -67,6 +62,8 @@ function onZoneIn(player,prevZone)
     player:PrintToPlayer( string.format("Allegiance set to %s", nationByNum[allegiance]));
     
     -- prepare for war
+    player:addStatusEffect(dsp.effect.SJ_RESTRICTION, 1, 3, 300)
+    player:messageBasic(dsp.msg.basic.UNABLE_TO_ACCESS_SJ)
     player:delStatusEffect(jobmap.effect);
     player:dispelAllStatusEffect();
     player:eraseAllStatusEffect();

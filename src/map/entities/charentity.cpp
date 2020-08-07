@@ -1747,7 +1747,7 @@ void CCharEntity::Die()
         {
             shift = 2;
         }
-        else if ((LMlvl - TMlvl) > 2)
+        else if ((LMlvl - TMlvl) > 1)
         {
             shift = 1;
         }

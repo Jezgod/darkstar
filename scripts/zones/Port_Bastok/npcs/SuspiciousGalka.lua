@@ -7,127 +7,92 @@ local ID = require("scripts/zones/Port_Bastok/IDs")
 require("scripts/globals/settings");
 -----------------------------------
 
+local job_map =
+{
+	[dsp.job.RDM]	=	{relic = {final = 18270, name = "MANDAU",        base = 18266, ore1 = 1262, ore2 = 1258, qty1 = 12, qty2 = 12}},
+	[dsp.job.THF]	=	{relic = {final = 18270, name = "MANDAU",        base = 18266, ore1 = 1262, ore2 = 1258, qty1 = 12, qty2 = 12}},
+	[dsp.job.BRD]	=	{relic = {final = 18270, name = "MANDAU",        base = 18266, ore1 = 1262, ore2 = 1258, qty1 = 12, qty2 = 12}},
+        [dsp.job.DNC]	=	{relic = {final = 18270, name = "MANDAU",        base = 18266, ore1 = 1262, ore2 = 1258, qty1 = 12, qty2 = 12}},
+	[dsp.job.WAR]	=	{relic = {final = 18282, name = "RAGNAROK",      base = 18278, ore1 = 1261, ore2 = 1255, qty1 = 12, qty2 = 12}},
+        [dsp.job.PLD]	=	{relic = {final = 18282, name = "RAGNAROK",      base = 18278, ore1 = 1261, ore2 = 1255, qty1 = 12, qty2 = 12}},
+        [dsp.job.DRK]	=	{relic = {final = 18282, name = "RAGNAROK",      base = 18278, ore1 = 1261, ore2 = 1255, qty1 = 12, qty2 = 12}},
+	[dsp.job.BST]	=	{relic = {final = 18288, name = "GUTTLER",       base = 18284, ore1 = 1262, ore2 = 1258, qty1 = 12, qty2 = 12}},
+	[dsp.job.DRG]	=	{relic = {final = 18300, name = "GUNGNIR",       base = 18296, ore1 = 1260, ore2 = 1256, qty1 = 12, qty2 = 12}},
+	[dsp.job.SAM]	=	{relic = {final = 18318, name = "AMANOMURAKUMO", base = 18314, ore1 = 1259, ore2 = 1257, qty1 = 12, qty2 = 12}},
+	[dsp.job.BLM]	=	{relic = {final = 18330, name = "CLAUSTRUM",     base = 18326, ore1 = 1260, ore2 = 1256, qty1 = 12, qty2 = 12}},
+	[dsp.job.SMN]	=	{relic = {final = 18330, name = "CLAUSTRUM",     base = 18326, ore1 = 1260, ore2 = 1256, qty1 = 12, qty2 = 12}},
+	[dsp.job.RNG]	=	{relic = {final = 18336, name = "ANNIHILATOR",   base = 18332, ore1 = 1259, ore2 = 1257, qty1 = 12, qty2 = 12}},
+	[dsp.job.PLD]	=	{relic = {final = 15070, name = "AEGIS",         base = 15066, ore1 = 1262, ore2 = 1261, qty1 = 12, qty2 = 12}}
+}
+
 function onTrade(player,npc,trade)
-	local mjob = player:getMainJob()
-        local pLevel = player:getMainLvl()
+	local pLevel = player:getMainLvl()
+	local mJob = player:getMainJob()
+	local pJobMap = job_map[mJob]
+	local hasBase = trade:hasItemQty(pJobMap.relic.base, 1)
+        local hasFinal = player:hasItem(pJobMap.relic.final)
 	local pCP = player:getCP()
-        local rCP = 1000000
+	local rCP = 1000000
 	local item = 0
+	local qOne = pJobMap.relic.qty1
+	local qTwo = pJobMap.relic.qty2
+	local sum1 = (qOne + qTwo) / 2 + 1
+	local sum2 = (qOne + qTwo)
+        local name = pJobMap.relic.name
 
-	if (trade:getItemCount() ~= 24 or trade:getGil() ~= 0) then
-		player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED);
-	
-	--RDM/THF/BRD RELIC: MANDAU (DARK/EARTH)
-	elseif ((mjob == dsp.job.RDM or mjob == dsp.job.THF or mjob == dsp.job.BRD) and pLevel == 75 and pCP >= rCP and 
-                trade:hasItemQty(1262,12) and 
-	   	trade:hasItemQty(1258,12) and 
-		trade:getItemCount() == 24 and
-            	trade:getGil() == 0) then
+        if (pCP < rCP) then
+  	        player:PrintToPlayer("Relics require 1,000,000 Conquest Points to obtain.", 29)
+                player:PrintToPlayer(string.format("You currently possess %u.", pCP), 29)
+                return 1
+        end
 
-              	item = 18270
-		player:tradeComplete();
-    		player:addItem(item);
-       		player:delCP(rCP);
-    		player:messageSpecial(ID.text.ITEM_OBTAINED,item);
+        if (pLevel < 75) then
+  	        player:PrintToPlayer("Relics require Level 75 to obtain.", 29)
+                return 1
+        end
 
-	--WAR/PLD/DRK RELIC: RAGNAROK (LIGHT/FIRE)
-	elseif ((mjob == dsp.job.WAR or mjob == dsp.job.PLD or mjob == dsp.job.DRK) and pLevel == 75 and pCP >= rCP and 
-                trade:hasItemQty(1261,12) and 
-		trade:hasItemQty(1255,12) and
-		trade:getItemCount() == 24 and
-            	trade:getGil() == 0) then
-              	
-		item = 18282
-		player:tradeComplete();
-    		player:addItem(item);
-       		player:delCP(rCP);
-    		player:messageSpecial(ID.text.ITEM_OBTAINED,item);
-
-        --BST RELIC: GUTTLER (DARK/EARTH)
-	elseif (mjob == dsp.job.BST and pLevel == 75 and pCP >= rCP and 
-		trade:hasItemQty(1262,12) and 
-		trade:hasItemQty(1258,12) and
-		trade:getItemCount() == 24 and
-            	trade:getGil() == 0) then
-
-              	item = 18288
-		player:tradeComplete();
-    		player:addItem(item);
-       		player:delCP(rCP);
-    		player:messageSpecial(ID.text.ITEM_OBTAINED,item);
-
-        --DRG RELIC: GUNGNIR (ICE/WATER)
-	elseif (mjob == dsp.job.DRG and pLevel == 75 and pCP >= rCP and 
-		trade:hasItemQty(1260,12) and 
-		trade:hasItemQty(1256,12) and
-		trade:getItemCount() == 24 and
-            	trade:getGil() == 0) then
-              	
-		item = 18300
-		player:tradeComplete();
-    		player:addItem(item);
-       		player:delCP(rCP);
-    		player:messageSpecial(ID.text.ITEM_OBTAINED,item);
-
-        --SAM RELIC: AMANOMURAKUMO (THUNDER/WIND)
-	elseif (mjob == dsp.job.SAM and pLevel == 75 and pCP >= rCP and 
-		trade:hasItemQty(1259,12) and 
-		trade:hasItemQty(1257,12) and
-		trade:getItemCount() == 24 and
-            	trade:getGil() == 0) then
-              	
-		item = 18318
-		player:tradeComplete();
-    		player:addItem(item);
-       		player:delCP(rCP);
-    		player:messageSpecial(ID.text.ITEM_OBTAINED,item);
-
-        --BLM/SMN RELIC: CLAUSTRUM (ICE/WATER)
-	elseif ((mjob == dsp.job.BLM or mjob == dsp.job.SMN) and pLevel == 75 and pCP >= rCP and 
-		trade:hasItemQty(1256,12) and 
-		trade:hasItemQty(1260,12) and
-		trade:getItemCount() == 24 and
-            	trade:getGil() == 0) then
-              				
-		item = 18330
-		player:tradeComplete();
-    		player:addItem(item);
-       		player:delCP(rCP);
-    		player:messageSpecial(ID.text.ITEM_OBTAINED,item);
-
-        --RNG RELIC: ANNIHILATOR (THUNDER/WIND)
-	elseif (mjob == dsp.job.RNG and pLevel == 75 and pCP >= rCP and 
-		trade:hasItemQty(1259,12) and 
-		trade:hasItemQty(1257,12) and
-		trade:getItemCount() == 24 and
-            	trade:getGil() == 0) then
-              	
-		item = 18336
-		player:tradeComplete();
-    		player:addItem(item);
-       		player:delCP(rCP);
-    		player:messageSpecial(ID.text.ITEM_OBTAINED,item);
-
-        --PLD RELIC: AEGIS (LIGHT/DARK)
-	elseif (mjob == dsp.job.PLD and pLevel == 75 and pCP >= rCP and 
-		trade:hasItemQty(1261,12) and 
-		trade:hasItemQty(1262,12) and
-		trade:getItemCount() == 24 and
-            	trade:getGil() == 0) then
-              	
-		item = 15070
-		player:tradeComplete();
-    		player:addItem(item);
-       		player:delCP(rCP);
-    		player:messageSpecial(ID.text.ITEM_OBTAINED,item);
-
-        else
-		player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED);
+        if hasFinal then
+		player:PrintToPlayer("You already possess this Relic.", 29)
+                return 1
 	end
-end;
+
+        if hasBase then
+	    if (pLevel == 75 and pCP >= rCP and
+	    	trade:hasItemQty(pJobMap.relic.ore1, qOne / 2) and
+                trade:hasItemQty(pJobMap.relic.ore2, qTwo / 2) and
+                trade:getGil() == 0 and
+                trade:getItemCount() == sum1)  then
+
+	    	item = pJobMap.relic.final
+                player:tradeComplete()
+                player:addItem(item)
+                player:delCP(rCP)
+                player:PrintToPlayer(string.format("Congratulations, you have just earned the %s Relic.", name), 29)
+                player:messageSpecial(ID.text.ITEM_OBTAINED,item)
+	    else
+            	player:PrintToPlayer("Please trade the appropriate items for your desired Relic.", 29)
+            end
+        else 
+	    if (pLevel == 75 and pCP >= rCP and
+	        trade:hasItemQty(pJobMap.relic.ore1, qOne) and
+                trade:hasItemQty(pJobMap.relic.ore2, qTwo) and
+                trade:getGil() == 0 and
+                trade:getItemCount() == sum2) then
+
+                item = pJobMap.relic.final
+                player:tradeComplete()
+                player:addItem(item)
+                player:delCP(rCP)
+                player:PrintToPlayer(string.format("Congratulations, you have just earned the %s Relic.", name), 29)
+                player:messageSpecial(ID.text.ITEM_OBTAINED,item)
+            else
+               player:PrintToPlayer("Please trade the appropriate items for your desired Relic.", 29)
+            end
+        end
+end
 
 function onTrigger(player,npc)
-	player:PrintToPlayer( string.format("Obtain Relic Weapons Here...") )
+	player:PrintToPlayer( string.format("Obtain stage five Relics here.  Trading the first stage Relic cuts the ore cost in half."), 29)
 end;
 
 function onEventUpdate(player,csid,option)

@@ -18,8 +18,11 @@ end
 
 function onMobSpawn(mob)
     mob:setMobMod(dsp.mobMod.GA_CHANCE,25)
+    if GetMobByID(mob:getID() - 1):isDead() and GetMobByID(mob:getID() - 2):isDead() then
+        mob:getBattlefield():setLocalVar("phaseChange", 0)
+    end
 end
 
 function onMobDeath(mob, player, isKiller)
-    mob:getBattlefield():setLocalVar("loot", 0)
+    --mob:getBattlefield():setLocalVar("loot", 0)
 end

@@ -12,6 +12,7 @@ function onMobInitialize(mob)
 end
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 266)
 end
 
 function onMobDespawn(mob)

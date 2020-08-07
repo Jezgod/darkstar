@@ -25,18 +25,18 @@ function onTrade(player,npc,trade)
     printf("whisper? : %s",whisper)
 
     if (whisper == false) then
-      player:PrintToPlayer( string.format("Please obtain the %s...", name ) )
+      player:PrintToPlayer( string.format("Please obtain the %s...", name ), 29 )
       return 1
     end
 
     if (trade:getGil() ~= 250000) then
-      player:PrintToPlayer( string.format("The cost is 250,000 G to produce the staff...") )
+      player:PrintToPlayer( string.format("The cost is 250,000 G to produce the staff..."),29 )
       return 1
     elseif (trade:getGil() == 250000 and tradeCount == 1) then
-      player:PrintToPlayer( string.format("This action requires between 1 to 10 %s ores...", oretype) )
+      player:PrintToPlayer( string.format("This action requires between 1 to 10 %s ores...", oretype),29 )
       return 1
     elseif (tradeCount > 11 or trade:confirmItem(ore) ~= true ) then
-      player:PrintToPlayer( string.format("This action requires between 1 to 10 %s ores...", oretype) )
+      player:PrintToPlayer( string.format("This action requires between 1 to 10 %s ores...", oretype),29 )
       return 1  
     end
 

@@ -473,6 +473,12 @@ void CAttack::ProcessDamage()
     {
         m_trickAttackDamage += m_attacker->AGI() * (1 + m_attacker->getMod(Mod::TRICK_ATK_AGI) / 100);
     }
+    else if (m_attacker->GetSJob() == JOB_THF &&
+        m_isFirstSwing &&
+        m_attackRound->GetTAEntity() != nullptr)
+    {
+        m_trickAttackDamage += m_attacker->AGI() * (1 + m_attacker->getMod(Mod::TRICK_ATK_AGI) / 100);
+    }
 
     SLOTTYPE slot = (SLOTTYPE)GetWeaponSlot();
     if (m_attackRound->IsH2H())

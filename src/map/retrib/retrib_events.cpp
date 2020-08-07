@@ -427,7 +427,7 @@ auto CStrongest::GiveRewards(uint8 Type) -> void
     }
 }
 
-auto CStrongest::GetRankings(std::string Top3[], uint16 Totals[], uint16 ID, bool Daily) -> uint16
+auto CStrongest::GetRankings(std::string Top3[], uint32 Totals[], uint16 ID, bool Daily) -> uint32
 {
     uint16 Rank = 0;
 
@@ -442,7 +442,7 @@ auto CStrongest::GetRankings(std::string Top3[], uint16 Totals[], uint16 ID, boo
             while (Sql_NextRow(SqlHandle) == SQL_SUCCESS)
             {
                 Top3[y].insert(0, (const char*)Sql_GetData(SqlHandle, 0));
-                Totals[y] = (uint16)Sql_GetUIntData(SqlHandle, 1);
+                Totals[y] = (uint32)Sql_GetUIntData(SqlHandle, 1);
                 y++;
             }
         }
@@ -466,7 +466,7 @@ auto CStrongest::GetRankings(std::string Top3[], uint16 Totals[], uint16 ID, boo
             while (Sql_NextRow(SqlHandle) == SQL_SUCCESS)
             {
                 Top3[x].insert(0, (const char*)Sql_GetData(SqlHandle, 0));
-                Totals[x] = (uint16)Sql_GetUIntData(SqlHandle, 1);
+                Totals[x] = (uint32)Sql_GetUIntData(SqlHandle, 1);
                 x++;
             }
         }

@@ -34,13 +34,13 @@ local skill_map =
 
 local testimony_map =
 {
-	[1426] = {augment =  45, min = 0, max = 31}, 	--warriors_testimony / DMG:+1
-	[1427] = {augment = 145, min = 0, max = 31},	--monks_testimony / Counter+1
+	[1426] = {augment = 143, min = 0, max = 31}, 	--warriors_testimony / Dbl.Atk.+1
+	[1427] = {augment =  45, min = 0, max = 31},	--monks_testimony / DMG:+1
 	[1428] = {augment = 329, min = 0, max = 31}, 	--white_mages_testimony / Cure potency +1%
 	[1429] = {augment = 133, min = 0, max = 31}, 	--black_mages_testimony / Mag.Atk.Bns.+1
 	[1430] = {augment = 335, min = 0, max = 31}, 	--red_mages_testimony / Mag. crit. hit dmg. +1%
-	[1431] = {augment = 144, min = 0, max = 31}, 	--thiefs_testimony / Triple Atk.+1
-	[1432] = {augment =  41, min = 0, max = 31}, 	--paladins_testimony / Crit.hit rate+1
+	[1431] = {augment =  31, min = 0, max = 31}, 	--thiefs_testimony / Evasion.+1
+	[1432] = {augment =  54, min = 0, max = 31}, 	--paladins_testimony / Phys. dmg. taken -1%
 	[1433] = {augment =  25, min = 0, max = 31}, 	--dark_knights_testimony / Attack+1
 	[1434] = {augment = 327, min = 0, max = 31}, 	--beastmasters_testimony / Weapon skill damage +1%
 	[1435] = {augment = 137, min = 0, max = 31}, 	--bards_testimony / Regen+1
@@ -51,8 +51,8 @@ local testimony_map =
 	[1440] = {augment = 138, min = 0, max = 31}, 	--summoners_testimony / Refresh+1
 	[2331] = {augment =  57, min = 0, max = 31}, 	--blue_mages_testimony / Magic crit. hit rate +1
 	[2332] = {augment =  27, min = 0, max = 31}, 	--corsairs_testimony / Rng.Acc.+1
-	[2333] = {augment =  48, min = 0, max = 31}, 	--puppetmasters_testimony / Delay:-1%
-	[2556] = {augment = 146, min = 0, max = 31}, 	--dancers_testimony / Dual Wield+1
+	[2333] = {augment =  41, min = 0, max = 31}, 	--puppetmasters_testimony / Crit.hit rate+1
+	[2556] = {augment = 195, min = 0, max = 31}, 	--dancers_testimony / Subtle Blow +1
 	[2557] = {augment =  35, min = 0, max = 31}, 	--scholars_testimony / Mag.Acc.+1
 }
 

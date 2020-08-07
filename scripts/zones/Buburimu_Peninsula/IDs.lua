@@ -45,6 +45,7 @@ zones[dsp.zone.BUBURIMU_PENINSULA] =
     },
     mob =
     {
+        BACKOO        = 17260613,
         BUBURIMBOO_PH =
         {
             [17261000] = 17261003, -- 443.429 19.500 135.322

@@ -2,8 +2,11 @@
 -- Area: Yuhtunga Jungle
 --  Mob: Koropokkur
 -----------------------------------
+require("scripts/globals/hunts")
+-----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 361)
 end;
 
 function onMobDespawn(mob)

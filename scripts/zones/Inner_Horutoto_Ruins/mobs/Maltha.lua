@@ -2,8 +2,11 @@
 -- Area: Inner Horutoto Ruins
 --   NM: Maltha
 -----------------------------------
+require("scripts/globals/hunts")
+-----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 288)
 end
 
 function onMobDespawn(mob)

@@ -13,17 +13,26 @@ require("scripts/globals/msg")
 -----------------------------------
 
 function onAbilityCheck(player,target,ability)
+    local leaderid = player:getLeaderID()
+    local targetid = target:getLeaderID()
+    local master = target:getMaster()
+
     if (player:getAnimation() ~= 1) then
         return dsp.msg.basic.REQUIRES_COMBAT,0
-    else
-        if (player:hasStatusEffect(dsp.effect.TRANCE)) then
-            return 0,0
-        elseif (player:getTP() < 100) then
-            return dsp.msg.basic.NOT_ENOUGH_TP,0
-        else
-            return 0,0
-        end
+    elseif (leaderid ~= targetid and master == nil) then
+    elseif (leaderid == targetid) then
+	return dsp.msg.basic.CANNOT_ATTACK_TARGET,0
+    elseif (leaderid == master:getLeaderID()) then
+	return dsp.msg.basic.CANNOT_ATTACK_TARGET,0
     end
+
+    if (player:hasStatusEffect(dsp.effect.TRANCE)) then
+        return 0,0
+    elseif (player:getTP() < 100) then
+        return dsp.msg.basic.NOT_ENOUGH_TP,0
+    else
+        return 0,0
+    end  
 end
 
 function onUseAbility(player,target,ability,action)

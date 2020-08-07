@@ -3,6 +3,7 @@
 --   NM: Shii
 -----------------------------------
 require("scripts/globals/mobs")
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobInitialize(mob)
@@ -15,4 +16,5 @@ function onAdditionalEffect(mob, target, damage)
 end
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 179)
 end

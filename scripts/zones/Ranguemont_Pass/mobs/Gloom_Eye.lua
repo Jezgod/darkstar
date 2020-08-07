@@ -4,6 +4,7 @@
 -----------------------------------
 require("scripts/globals/status")
 require("scripts/globals/utils")
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobFight(mob, target)
@@ -24,4 +25,5 @@ function onMobFight(mob, target)
 end
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 346)
 end

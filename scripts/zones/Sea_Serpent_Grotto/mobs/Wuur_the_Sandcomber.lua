@@ -3,6 +3,7 @@
 --   NM: Wuur the Sandcomber
 -----------------------------------
 mixins = {require("scripts/mixins/job_special")}
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobInitialize(mob)
@@ -11,4 +12,5 @@ function onMobInitialize(mob)
 end
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 370)
 end

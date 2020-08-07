@@ -2,8 +2,11 @@
 -- Area: Carpenters' Landing
 --   NM: Tempest Tigon
 -----------------------------------
+require("scripts/globals/hunts")
+-----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 168)
 end
 
 function onMobDespawn(mob)

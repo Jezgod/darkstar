@@ -35,7 +35,7 @@ function onTrade(player,npc,trade)
 end;
 
 function onTrigger(player,npc)
-	player:PrintToPlayer( string.format("I can show you the power of light and dark...") )
+	player:PrintToPlayer( string.format("I can show you the power of light and dark..."),29 )
 end;
 
 function onEventUpdate(player,csid,option)

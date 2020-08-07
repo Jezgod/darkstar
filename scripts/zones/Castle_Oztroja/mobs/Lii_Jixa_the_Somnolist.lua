@@ -3,9 +3,11 @@
 --   NM: Lii Jixa the Somnolist
 -----------------------------------
 mixins = {require("scripts/mixins/job_special")}
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 306)
 end
 
 function onMobDespawn(mob)

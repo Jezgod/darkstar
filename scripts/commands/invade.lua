@@ -318,27 +318,27 @@ function onTrigger(player, target)
 
    if (targ ~= nil and targ:getID() ~= player:getID()) then
         if (targ:getObjType() ~= 1) then
-            player:PrintToPlayer( string.format("Only a PC can be invaded"));
+            player:PrintToPlayer( string.format("Only a PC can be invaded."), 29);
             return 1;
         elseif (pNation == targ:getNation()) then
-            player:PrintToPlayer( string.format("Target must be from a different nation"));
+            player:PrintToPlayer( string.format("Target must be from a different nation."), 29);
             return 1;
         elseif (targ:isDead()) then
-            player:PrintToPlayer( string.format("Target cannot be dead"));
+            player:PrintToPlayer( string.format("Target cannot be dead."), 29);
             return 1;
         elseif (targ:checkSoloPartyAlliance() ~= 0 and targ:getPartySize() > 1) then
-            player:PrintToPlayer( string.format("Only a solo player can be invaded"));
+            player:PrintToPlayer( string.format("Only a solo player can be invaded."), 29);
             --printf("State : %i",targ:checkSoloPartyAlliance())
             --printf("Size : %i",targ:getPartySize())
             return 1;
         elseif (targ:getMainLvl() > pHlvl or targ:getMainLvl() < pLlvl) then
-            player:PrintToPlayer( string.format("Only a player of similar level can be invaded"));
+            player:PrintToPlayer( string.format("Only a player of similar level can be invaded."), 29);
             return 1;
         elseif (pLife < 90) then
-            player:PrintToPlayer( string.format("Cannot invade with the current health status"));
+            player:PrintToPlayer( string.format("Cannot invade with the current health status."), 29);
             return 1;
         elseif (player:getZoneID() == zone) then
-            player:PrintToPlayer( string.format("This function cannot be used here"));
+            player:PrintToPlayer( string.format("This function cannot be used here."), 29);
             return 1;
         else
         end
@@ -349,9 +349,9 @@ function onTrigger(player, target)
     	player:setPos(x1, y1, z1, rot1, zone);
     	targ:setPos(x2, y2, z2, rot2, zone);
         -- notification of successful invasion
-        player:PrintToPlayer( string.format("Successful invasion attempt!"));
-        targ:PrintToPlayer( string.format("Successful invasion attempt!"));
+        player:PrintToPlayer( string.format("Successful invasion attempt!"), 29);
+        targ:PrintToPlayer( string.format("Successful invasion attempt!"), 29);
     else
-    	player:PrintToPlayer("Must select a valid target using in game cursor first");
+    	player:PrintToPlayer(("Must select a valid target using in game cursor first."), 29);
     end
 end

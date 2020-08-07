@@ -72,7 +72,8 @@ local function teleportMenuUpdate(player, option)
             elseif choice == optionMap.REPLACE_FAVORITE then
                 favorites[bit.rshift(option, 24) + 1] = index
             elseif choice == optionMap.SET_MENU_LAYOUT then
-                favorites[10] = (bit.rshift(option, 16) and 1) or 0
+                printf("TestA")
+                favorites[10] = (bit.rshift(option, 16)) --and 1) or 0
             end
 
             player:setTeleportMenu(travelType, favorites)
@@ -118,6 +119,14 @@ dsp.survivalGuide.onTrigger = function(player)
             if player:hasKeyItem(dsp.keyItem.RHAPSODY_IN_WHITE) then
                 -- "Rhapsody in White" key item reduces teleport fee by 80%
                 param = bit.bor(param, 0x2000)
+            end
+   
+            if (player:hasPet()) then
+                        --player:despawnPet()
+                        --player:setPos(guide.posX, guide.posY, guide.posZ, guide.posRot, guide.zoneId)
+                         player:PrintToPlayer("Release pet before using this Survival Guide.", 29)
+                         return 1
+            else
             end
 
             local G1,G2,G3,G4 = unpack(player:getTeleport(travelType))
@@ -177,7 +186,7 @@ dsp.survivalGuide.onEventFinish = function(player, eventId, option)
                 end
 
                 if canTeleport then
-                    player:setPos(guide.posX, guide.posY, guide.posZ, guide.posRot, guide.zoneId)
+                        player:setPos(guide.posX, guide.posY, guide.posZ, guide.posRot, guide.zoneId)
                 end
             end
         end

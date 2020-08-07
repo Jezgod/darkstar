@@ -5,7 +5,7 @@
 -----------------------------------
 
 function onMobEngaged(mob, target)
-    mob:setLocalVar("docile", os.time() + 60)
+    mob:setLocalVar("docile", os.time() + 30)
     mob:SetAutoAttackEnabled(false)
     mob:SetMobAbilityEnabled(false)
 end

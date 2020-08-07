@@ -3,6 +3,7 @@
 --   NM: Wake Warder Wanda
 -----------------------------------
 require("scripts/globals/status")
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobInitialize(mob)
@@ -18,6 +19,7 @@ function onMobDisengage(mob)
 end
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 260)
 end
 
 function onMobDespawn(mob)

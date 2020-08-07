@@ -18,6 +18,7 @@ function onTrade(player,npc,trade)
     local pCP = player:getCP()
     local rCP = 250000
     local item = 1474
+    local FreeSlots = player:getFreeSlotsCount();
 
     if (FlyerForRegine == 1) then
         local count = trade:getItemCount();
@@ -29,10 +30,14 @@ function onTrade(player,npc,trade)
 
     if (trade:getGil() == cost and pLevel >= 70 and pCP >= rCP and
         trade:getItemCount() == 1) then
-	player:tradeComplete();
-    	player:addItem(item);
-        player:delCP(rCP);
-        player:messageSpecial(ID.text.ITEM_OBTAINED,item);
+        if (FreeSlots >= 1) then
+	    player:tradeComplete();
+    	    player:addItem(item);
+            player:delCP(rCP);
+            player:messageSpecial(ID.text.ITEM_OBTAINED,item);
+        else
+	    player:messageSpecial(ID.text.FULL_INVENTORY_AFTER_TRADE,1474);
+        end
     else
 	player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED,item);
     end

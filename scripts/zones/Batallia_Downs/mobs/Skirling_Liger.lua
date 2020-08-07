@@ -3,6 +3,7 @@
 --  Mob: Skirling Liger
 -----------------------------------
 require("scripts/globals/status");
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobEngaged(mob,target)
@@ -14,6 +15,7 @@ function onMobDisengage(mob)
 end;
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 162)
 end;
 
 function onMobDespawn(mob)

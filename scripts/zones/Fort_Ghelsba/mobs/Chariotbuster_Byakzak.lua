@@ -4,9 +4,11 @@
 -----------------------------------
 mixins = {require("scripts/mixins/job_special")};
 local ID = require("scripts/zones/Fort_Ghelsba/IDs");
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+     dsp.hunts.checkHunt(mob, player, 174)
 end;
 
 function onMobDespawn(mob)

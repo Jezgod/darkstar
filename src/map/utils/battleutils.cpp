@@ -2309,6 +2309,12 @@ namespace battleutils
             CBattleEntity* taChar = battleutils::getAvailableTrickAttackChar(PAttacker, PDefender);
             if (taChar != nullptr) crithitrate = 100;
         }
+        else if (PAttacker->objtype == TYPE_PC && PAttacker->GetSJob() == JOB_THF && charutils::hasTrait((CCharEntity*)PAttacker, TRAIT_ASSASSIN) && (!ignoreSneakTrickAttack) &&
+            PAttacker->StatusEffectContainer->HasStatusEffect(EFFECT_TRICK_ATTACK))
+        {
+            CBattleEntity* taChar = battleutils::getAvailableTrickAttackChar(PAttacker, PDefender);
+            if (taChar != nullptr) crithitrate = 50;
+        }
         else
         {
             //apply merit mods and traits

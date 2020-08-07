@@ -2,8 +2,11 @@
 -- Area: Ghelsba Outpost (140)
 --  Mob: Orcish Wallbreacher
 -----------------------------------
+require("scripts/globals/hunts")
+-----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 169)
 end
 
 function onMobDespawn(mob)

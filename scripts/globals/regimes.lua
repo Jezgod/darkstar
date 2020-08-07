@@ -979,7 +979,20 @@ local function getFinishOpts(regimeType)
     return out
 end
 
-local function clearPlayerVars(player)
+--local function clearPlayerVars(player)
+    --player:setCharVar("[regime]type", 0)
+    --player:setCharVar("[regime]zone", 0)
+    --player:setCharVar("[regime]id", 0)
+    --player:setCharVar("[regime]repeat", 0)
+    --player:setCharVar("[regime]lastReward", 0)
+
+    --for i = 1, 4 do
+        --player:setCharVar("[regime]needed" .. i, 0)
+        --player:setCharVar("[regime]killed" .. i, 0)
+    --end
+--end
+
+dsp.regime.clearRegimeVars = function(player)
     player:setCharVar("[regime]type", 0)
     player:setCharVar("[regime]zone", 0)
     player:setCharVar("[regime]id", 0)
@@ -1082,7 +1095,7 @@ dsp.regime.bookOnEventFinish = function(player, option, regimeType)
         player:delCurrency("valor_point", opt.cost)
 
         if act == "CANCEL_REGIME" then
-            clearPlayerVars(player)
+            dsp.regime.clearRegimeVars(player)
             player:showText(player, msgOffset + 2) -- Training regime canceled.
 
         elseif act == "REPATRIATION" then
@@ -1359,6 +1372,6 @@ dsp.regime.checkRegime = function(player, mob, regimeId, index, regimeType)
 
         player:messageBasic(dsp.msg.basic.FOV_REGIME_BEGINS_ANEW)
     else
-        clearPlayerVars(player)
+        dsp.regime.clearRegimeVars(player)
     end
 end

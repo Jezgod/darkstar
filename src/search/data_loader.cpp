@@ -214,6 +214,7 @@ std::list<SearchEntity*> CDataLoader::GetPlayersList(search_req sr, int* count)
     {
         int totalResults = 0; //gives ALL matching criteria (total)
         int visibleResults = 0; //capped at first 20
+        int LevelCheck = 0;
         while (Sql_NextRow(SqlHandle) == SQL_SUCCESS)
         {
             SearchEntity* PPlayer = new SearchEntity;
@@ -225,14 +226,24 @@ std::list<SearchEntity*> CDataLoader::GetPlayersList(search_req sr, int* count)
             /*PPlayer->zone = (uint16)Sql_GetIntData(SqlHandle, 3);*/
             PPlayer->prevzone = (uint16)Sql_GetIntData(SqlHandle, 4);
             PPlayer->nation = (uint8)Sql_GetIntData(SqlHandle, 5);
+     
             PPlayer->mjob = (uint8)Sql_GetIntData(SqlHandle, 11);
             PPlayer->sjob = (uint8)Sql_GetIntData(SqlHandle, 12);
             PPlayer->mlvl = (uint8)Sql_GetIntData(SqlHandle, 13);
             PPlayer->slvl = (uint8)Sql_GetIntData(SqlHandle, 14);
+            
             PPlayer->race = (uint8)Sql_GetIntData(SqlHandle, 9);
             PPlayer->rank = (uint8)Sql_GetIntData(SqlHandle, 6 + PPlayer->nation);
 
             PPlayer->zone = (PPlayer->zone == 0 ? PPlayer->prevzone : PPlayer->zone);
+            LevelCheck = PPlayer->mlvl;
+            if (LevelCheck < 70)
+            {
+                PPlayer->mjob = 0;
+                PPlayer->sjob = 0;
+                PPlayer->mlvl = 0;
+                PPlayer->slvl = 0;
+            }
 
             uint32 partyid = (uint32)Sql_GetUIntData(SqlHandle, 1);
             uint32 nameflag = (uint32)Sql_GetUIntData(SqlHandle, 10);
@@ -319,7 +330,8 @@ std::list<SearchEntity*> CDataLoader::GetPlayersList(search_req sr, int* count)
             {
                 continue;
             }
-            if (visibleResults < 20){
+            if (visibleResults < 20)
+            {
                 PlayersList.push_back(PPlayer);
                 visibleResults++;
             }

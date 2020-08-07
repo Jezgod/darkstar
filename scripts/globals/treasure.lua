@@ -863,9 +863,9 @@ local treasureInfo =
                     {-139.729,  -71.750,  -53.252,  63},
                     {-100.197,  -72.511,  -13.141,  65},
                 },
-                gil = {0.652, 7320, 18000},
+                gil = {0.804, 7320, 18000},
                 gem = {0.044, 791, 801, 810, 784, 802, 797, 803, 805},
-                item = {0.304, 14670},
+                item = {0.152, 14670, 13548},
             },
             [dsp.zone.THE_BOYAHDA_TREE] = -- 153
             {
@@ -1547,19 +1547,31 @@ dsp.treasure.onTrade = function(player, npc, trade, chestType)
 
     -- gil
     if roll <= info.gil[1] then
-        players = player:getParty()
-        for i = 1, #players, 1 do
-            if player:getZoneID() ~= players[i]:getZoneID() then
-                table.remove(players, i)
+        --players = player:getParty()
+        --for i = 1, #players, 1 do
+        --    if player:getZoneID() ~= players[i]:getZoneID() then
+        --        table.remove(players, i)
+        --    end
+        --end
+        local partyMembers = player:getAlliance()
+        local membersInZone = {}
+        for i = 1, #partyMembers do
+            if player:getZoneID() == partyMembers[i]:getZoneID() then
+                table.insert(membersInZone, partyMembers[i])
             end
         end
         local gilAmount = math.random(info.gil[2], info.gil[3])
-        local gil = gilAmount/#players
-        for i = 1, #players, 1 do
-            if player:getZoneID() == players[i]:getZoneID() then
-                players[i]:addGil(gil)
-                players[i]:messageSpecial(ID.text.GIL_OBTAINED, gil)
-            end
+        --local gil = gilAmount/#players
+        --for i = 1, #players, 1 do
+        --    if player:getZoneID() == players[i]:getZoneID() then
+        --        players[i]:addGil(gil)
+        --        players[i]:messageSpecial(ID.text.GIL_OBTAINED, gil)
+        --    end
+        --end
+        local gil = gilAmount/#membersInZone
+        for i = 1, #membersInZone do
+            membersInZone[i]:addGil(gil)
+            membersInZone[i]:messageSpecial(ID.text.GIL_OBTAINED, gil)
         end
 
     -- gem

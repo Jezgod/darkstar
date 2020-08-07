@@ -5,6 +5,7 @@
 require("scripts/globals/status")
 require("scripts/globals/magic")
 require("scripts/globals/msg")
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobInitialize(mob)
@@ -37,6 +38,7 @@ function onSpikesDamage(mob, target, damage)
 end
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 333)
 end
 
 function onMobDespawn(mob)

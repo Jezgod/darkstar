@@ -3,11 +3,13 @@
 --  Mob: Lumbering Lambert
 -----------------------------------
 local ID = require("scripts/zones/La_Theine_Plateau/IDs");
+require("scripts/globals/hunts")
 -----------------------------------
 require("scripts/globals/mobs")
 -----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 156)
 end
 
 function onMobDespawn(mob)

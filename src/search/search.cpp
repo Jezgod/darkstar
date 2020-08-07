@@ -781,7 +781,7 @@ search_req _HandleSearchRequest(CTCPRequestPacket& PTCPRequest)
         {
             if (isPresent == 0x1) //Name send
             {
-                if ((bitOffset + 5) >= workloadBits)
+                /*if ((bitOffset + 5) >= workloadBits)
                 {
                     bitOffset = workloadBits;
                     break;
@@ -795,7 +795,7 @@ search_req _HandleSearchRequest(CTCPRequestPacket& PTCPRequest)
                 {
                     name[i] = (char)unpackBitsLE(&data[0x11], bitOffset, 7);
                     bitOffset += 7;
-                }
+                }*/
                 //printf("SEARCH::Name Entry Found. (%s).\n",name);
             }
             //printf("SEARCH::SortByName: %s.\n",(sortDescending == 0 ? "ascending" : "descending"));

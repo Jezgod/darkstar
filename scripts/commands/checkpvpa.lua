@@ -38,10 +38,10 @@ function onTrigger(player, arg1)
 
     -- show variable
     if (targ == player) then
-	player:PrintToPlayer(string.format("%s's total PvP Allied Notes : %u", player:getName(), player:getCharVar(varName)));
+	player:PrintToPlayer(string.format("%s's total PvP Allied Notes : %u", player:getName(), player:getCharVar(varName)), 29);
     else
-    	player:PrintToPlayer(string.format("%s's total PvP Allied Notes : %u", targ:getName(), targ:getCharVar(varName)));
-    	player:PrintToPlayer(string.format("%s's total PvP Allied Notes : %u", player:getName(), player:getCharVar(varName)));    
+    	player:PrintToPlayer(string.format("%s's total PvP Allied Notes : %u", targ:getName(), targ:getCharVar(varName)), 29);
+    	player:PrintToPlayer(string.format("%s's total PvP Allied Notes : %u", player:getName(), player:getCharVar(varName)), 29);    
     end
 
 end

@@ -450,7 +450,7 @@ inline int32 CLuaBaseEntity::GetRankings(lua_State* L)
     bool Daily = lua_isnil(L, 2) ? false : (bool)lua_toboolean(L, 2);
 
     std::string Top3[3];
-    uint16 Totals[3] = { {0}, {0}, {0} };
+    uint32 Totals[3] = { {0}, {0}, {0} };
     uint16 Rank = 0;
 
     if (Type == Retrib::Event::OVERALL)
@@ -862,7 +862,7 @@ inline int32 CLuaBaseEntity::messageSpecial(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-    DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
+    //DSP_DEBUG_BREAK_IF(lua_isnil(L, 1) || !lua_isnumber(L, 1));
 
     uint16 messageID = (uint16)lua_tointeger(L, 1);
 
@@ -2225,13 +2225,24 @@ inline int32 CLuaBaseEntity::pathTo(lua_State* L)
 
     position_t point;
 
+    uint8 flags;
+
     point.x = (float)lua_tonumber(L, 1);
     point.y = (float)lua_tonumber(L, 2);
     point.z = (float)lua_tonumber(L, 3);
 
     if (m_PBaseEntity->PAI->PathFind)
     {
-        m_PBaseEntity->PAI->PathFind->PathTo(point, PATHFLAG_RUN | PATHFLAG_WALLHACK | PATHFLAG_SCRIPT);
+        /*m_PBaseEntity->PAI->PathFind->PathTo(point, PATHFLAG_RUN | PATHFLAG_WALLHACK | PATHFLAG_SCRIPT);*/
+        if (lua_isnumber(L, 4))
+        {
+            flags = (uint8)lua_tointeger(L, 4);
+            m_PBaseEntity->PAI->PathFind->PathTo(point, flags);
+        }
+        else
+        {
+            m_PBaseEntity->PAI->PathFind->PathTo(point, PATHFLAG_RUN | PATHFLAG_WALLHACK | PATHFLAG_SCRIPT);
+        }
     }
 
     return 0;

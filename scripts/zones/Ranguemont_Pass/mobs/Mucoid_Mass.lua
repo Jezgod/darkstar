@@ -2,8 +2,11 @@
 -- Area: Ranguemont Pass
 --  Mob: Mucoid Mass
 -----------------------------------
+require("scripts/globals/hunts")
+-----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 345)
 end;
 
 function onMobDespawn(mob)

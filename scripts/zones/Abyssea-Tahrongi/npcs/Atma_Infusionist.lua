@@ -31,14 +31,14 @@ function onTrade(player,npc,trade)
 	    	trade:getItemCount() == count) then
 	    	player:tradeComplete();
     	    	player:addKeyItem(ki3);
-            	player:messageSpecial(ID.text.KEYITEM_OBTAINED,ki2);
+            	player:messageSpecial(ID.text.KEYITEM_OBTAINED,ki3);
         else
 	    player:PrintToPlayer( string.format("Please try trading the appropriate items."), 13 )
     	end
 end
 
 function onTrigger(player,npc)
-	player:PrintToPlayer( string.format("Trade 100 Beastmen's Seals and 100 Kindred Seals, at Level 75, to receive your second Lunar Abyssite."), 13 )
+	player:PrintToPlayer( string.format("Trade 100 Kindred's Crests, at Level 75, to receive your third Lunar Abyssite."), 13 )
     
 end
 

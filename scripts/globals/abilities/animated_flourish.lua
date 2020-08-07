@@ -32,8 +32,11 @@ function onAbilityCheck(player,target,ability)
 end
 
 function onUseAbility(player,target,ability)
+    local bindduration = 2
+    local stunduration = 1
     local duration = 1
     local TPGain = 1000
+    local pet = target:getPet()
 
     if (player:hasStatusEffect(dsp.effect.FINISHING_MOVE_1)) then
         player:delStatusEffect(dsp.effect.FINISHING_MOVE_1)
@@ -43,7 +46,8 @@ function onUseAbility(player,target,ability)
         player:delStatusEffect(dsp.effect.FINISHING_MOVE_2)
         if (target:getObjType() == 1 or target:getObjType() == 8) then	
 		player:setCursorTarget();
-                target:addStatusEffect(dsp.effect.STUN,1,0,duration);
+                target:addStatusEffect(dsp.effect.BIND,1,0,bindduration);
+                target:addStatusEffect(dsp.effect.STUN,1,0,stunduration);
                 target:addTP(TPGain);
 	else
 		target:addEnmity(player, 0, 500)
@@ -54,7 +58,8 @@ function onUseAbility(player,target,ability)
         player:addStatusEffect(dsp.effect.FINISHING_MOVE_1,1,0,7200)
         if (target:getObjType() == 1 or target:getObjType() == 8) then
 		player:setCursorTarget();
-                target:addStatusEffect(dsp.effect.STUN,1,0,duration);
+                target:addStatusEffect(dsp.effect.BIND,1,0,bindduration);
+                target:addStatusEffect(dsp.effect.STUN,1,0,stunduration);
                 target:addTP(TPGain);
 	else
 		target:addEnmity(player, 0, 500)
@@ -65,7 +70,8 @@ function onUseAbility(player,target,ability)
         player:addStatusEffect(dsp.effect.FINISHING_MOVE_2,1,0,7200)
         if (target:getObjType() == 1 or target:getObjType() == 8) then	
 		player:setCursorTarget();
-                target:addStatusEffect(dsp.effect.STUN,1,0,duration);
+                target:addStatusEffect(dsp.effect.BIND,1,0,bindduration);
+                target:addStatusEffect(dsp.effect.STUN,1,0,stunduration);
                 target:addTP(TPGain);
 	else
 		target:addEnmity(player, 0, 500)
@@ -76,7 +82,8 @@ function onUseAbility(player,target,ability)
         player:addStatusEffect(dsp.effect.FINISHING_MOVE_3,1,0,7200)
         if (target:getObjType() == 1 or target:getObjType() == 8) then	
 		player:setCursorTarget();
-                target:addStatusEffect(dsp.effect.STUN,1,0,duration);
+                target:addStatusEffect(dsp.effect.BIND,1,0,bindduration);
+                target:addStatusEffect(dsp.effect.STUN,1,0,stunduration);
                 target:addTP(TPGain);
 	else
 		target:addEnmity(player, 0, 500)

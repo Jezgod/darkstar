@@ -25,7 +25,8 @@ zones[dsp.zone.THRONE_ROOM] =
     mob =
     {
         SHADOW_LORD_STAGE_2_OFFSET = 17453060,
-        ZEID_BCNM_OFFSET           = 17453064,
+        --ZEID_BCNM_OFFSET           = 17453064,
+        ZEID_BCNM_OFFSET           = 17453063,
     },
     npc =
     {

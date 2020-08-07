@@ -2,7 +2,8 @@
 -- Area: Giddeus (145)
 --   NM: Hoo Mjuu the Torrent
 -----------------------------------
-mixins = {require("scripts/mixins/job_special")};
+mixins = {require("scripts/mixins/job_special")}
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobSpawn(mob)
@@ -15,4 +16,5 @@ function onMobSpawn(mob)
 end;
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 281)
 end;

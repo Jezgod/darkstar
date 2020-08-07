@@ -15,5 +15,5 @@ end
 
 function onUseAbility(player,target,ability)
     player:delStatusEffect(dsp.effect.COMPOSURE)
-    player:addStatusEffect(dsp.effect.COMPOSURE,1,0,7200)
+    player:addStatusEffect(dsp.effect.COMPOSURE,1,0,600)
 end

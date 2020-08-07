@@ -22,7 +22,7 @@ class CRetribPlayerEvent
     auto GetEventNPC            (void)           -> uint32;
     auto SetEventNPC            (uint32)         -> void;
 
-    auto GetRankings            (std::string [], uint16[]) -> uint16;
+    auto GetRankings            (std::string [], uint32[]) -> uint32;
     auto GetBounty              (std::string []) -> uint16;
     auto GetBountyPoints        (std::string []) -> uint16;
 

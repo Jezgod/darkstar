@@ -33,7 +33,7 @@ class CStrongest
     auto GiveRewards(uint8)                          -> void;
     auto SendAnnouncement(CCharEntity*, uint8)       -> void;
     
-    auto GetRankings(std::string[], uint16[], uint16, bool)    -> uint16;
+    auto GetRankings(std::string[], uint32[], uint16, bool)    -> uint32;
     
     auto AddPoints(uint16, uint16)                   -> void;
     auto DelPoints(uint16, uint16)                   -> void;

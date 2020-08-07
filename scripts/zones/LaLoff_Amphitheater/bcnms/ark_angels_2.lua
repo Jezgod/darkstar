@@ -46,6 +46,7 @@ function onEventFinish(player, csid, option)
                 player:completeMission(ZILART, dsp.mission.id.zilart.ARK_ANGELS)
                 player:addMission(ZILART, dsp.mission.id.zilart.THE_SEALED_SHRINE)
                 player:setCharVar("ZilartStatus", 0)
+                player:setCharVar("DM_alt", 1)
             end
         end
     end

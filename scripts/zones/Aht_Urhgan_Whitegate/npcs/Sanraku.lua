@@ -9,8 +9,9 @@ require("scripts/globals/besieged")
 local ID = require("scripts/zones/Aht_Urhgan_Whitegate/IDs")
 -----------------------------------
 
+local zeni = math.random(250,500)
+
 function onTrade(player,npc,trade)
-    --[[
     local trophies =
     {
         2616, 2617, 2618, 2613, 2614, 2615, 2610, 2611, 2612,
@@ -37,7 +38,7 @@ function onTrade(player,npc,trade)
 
     if trade:getItemCount() == 1 then
         if trade:hasItemQty(2477,1) then -- Trade Soul Plate
-            zeni = math.random(1,200) -- random value since soul plates aren't implemented yet.
+            --zeni = math.random(1,200) -- random value since soul plates aren't implemented yet.
             player:tradeComplete()
             player:addCurrency("zeni_point", zeni)
             player:startEvent(910,zeni)
@@ -59,15 +60,16 @@ function onTrade(player,npc,trade)
                     player:startEvent(912,0,0,0,seals[znm])
                 else
                     player:messageSpecial(ID.text.SANCTION + 8,seals[znm]) -- You already possess .. (not sure this is authentic)
+		    player:addCurrency("zeni_point", zeni)
+                    player:tradeComplete()
+                    player:startEvent(910,zeni)
                 end
             end
         end
     end
-    ]]
 end
 
 function onTrigger(player,npc)
-    --[[
     if player:getCharVar("ZeniStatus") == 0 then
         player:startEvent(908)
     else
@@ -112,12 +114,10 @@ function onTrigger(player,npc)
 
         player:startEvent(909,param)
     end
-    ]]
 end
 
 function onEventUpdate(player,csid,option)
     -- printf("updateRESULT: %u",option)
-    --[[
     local lures =
     {
         2580, 2581, 2582, 2577, 2578, 2579, 2574, 2575, 2576,
@@ -227,15 +227,12 @@ function onEventUpdate(player,csid,option)
             end
         end
     end
-    ]]
 end
 
 function onEventFinish(player,csid,option)
     -- printf("finishRESULT: %u",option)
-    --[[
     if csid == 908 then
         player:setCharVar("ZeniStatus",1)
-        player:addCurrency("zeni_point", 2000)
+        --player:addCurrency("zeni_point", 2000)
     end
-    ]]
 end

@@ -184,10 +184,10 @@ survivalGuides =
         group = 1,
         groupMask = 2^16,
         groupIndex = 17,
-        posX = 549,
+        posX = -553,
         posY = -6,
-        posZ = -56,
-        posRot = 64
+        posZ = -55,
+        posRot = 127
     },
     [64] =
     {
@@ -525,7 +525,7 @@ survivalGuides =
         group = 2,
         groupMask = 2^15,
         groupIndex = 16,
-        posX = 51,
+        posX = 13,
         posY = -28,
         posZ = 53,
         posRot = 64

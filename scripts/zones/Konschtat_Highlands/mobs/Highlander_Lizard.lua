@@ -4,6 +4,7 @@
 -----------------------------------
 require("scripts/globals/regimes")
 require("scripts/globals/status")
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobInitialize(mob)
@@ -16,6 +17,7 @@ function onMobInitialize(mob)
 end
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 206)
     -- I think he still counts the FoV pages? Most NM's do not though.
     dsp.regime.checkRegime(player, mob, 20, 2, dsp.regime.type.FIELDS)
     dsp.regime.checkRegime(player, mob, 82, 2, dsp.regime.type.FIELDS)

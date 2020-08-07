@@ -2,8 +2,11 @@
 -- Area: Castle Zvahl Baileys (161)
 --   NM: Likho
 -----------------------------------
+require("scripts/globals/hunts")
+-----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 351)
 end
 
 function onMobDespawn(mob)

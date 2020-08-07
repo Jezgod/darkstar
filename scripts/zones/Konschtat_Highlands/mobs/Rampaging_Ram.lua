@@ -4,9 +4,11 @@
 -----------------------------------
 local ID = require("scripts/zones/Konschtat_Highlands/IDs")
 require("scripts/globals/mobs")
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 205)
 end
 
 function onMobDespawn(mob)

@@ -2,8 +2,11 @@
 -- Area: Sauromugue Champaign
 --   NM: Thunderclaw Thuban
 -----------------------------------
+require("scripts/globals/hunts")
+-----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 274)
 end
 
 function onMobDespawn(mob)

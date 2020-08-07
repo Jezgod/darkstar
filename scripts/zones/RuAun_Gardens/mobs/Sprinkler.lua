@@ -11,8 +11,8 @@ function onMobDeath(mob, player, isKiller)
 end;
 
 -- Return the selected spell ID.
-function onMonsterMagicPrepare(mob, target)
-    return 212; -- burst
+--function onMonsterMagicPrepare(mob, target)
+--    return 212; -- burst
 
     -- -- Example of how you can select logical spells
     -- if (target:getMod(dsp.mod.UTSUSEMI) > 0) then
@@ -20,4 +20,4 @@ function onMonsterMagicPrepare(mob, target)
     -- else
     --     return 212; -- burst
     -- end
-end;
+--end;

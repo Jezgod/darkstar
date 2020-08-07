@@ -3,6 +3,7 @@
 --   NM: Tyrant
 -----------------------------------
 require("scripts/globals/status")
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobInitialize(mob)
@@ -10,4 +11,5 @@ function onMobInitialize(mob)
 end
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 343)
 end

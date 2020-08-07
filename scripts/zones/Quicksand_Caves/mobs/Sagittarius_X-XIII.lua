@@ -4,9 +4,11 @@
 -----------------------------------
 mixins = {require("scripts/mixins/job_special")}
 require("scripts/globals/regimes")
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 427)
     dsp.regime.checkRegime(player, mob, 812, 2, dsp.regime.type.GROUNDS)
     dsp.regime.checkRegime(player, mob, 813, 2, dsp.regime.type.GROUNDS)
     dsp.regime.checkRegime(player, mob, 814, 2, dsp.regime.type.GROUNDS)

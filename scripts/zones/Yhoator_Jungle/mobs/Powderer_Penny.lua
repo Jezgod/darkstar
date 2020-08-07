@@ -2,8 +2,11 @@
 -- Area: Yhoator Jungle (124)
 --   NM: Powderer Penny
 -----------------------------------
+require("scripts/globals/hunts")
+-----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 365)
 end
 
 function onMobDespawn(mob)

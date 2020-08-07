@@ -2,6 +2,8 @@
 -- Area: Dangruf Wadi (191)
 --  Mob: Geyser Lizard
 -----------------------------------
+require("scripts/globals/hunts")
+-----------------------------------
 
 function onMobInitialize( mob )
     mob:setMobMod(dsp.mobMod.IDLE_DESPAWN, 180);
@@ -12,6 +14,7 @@ function onMobSpawn(mob)
 end;
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 225)
 end;
 
 function onMobDespawn(mob)

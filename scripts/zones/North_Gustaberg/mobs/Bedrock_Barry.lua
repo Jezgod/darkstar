@@ -4,6 +4,7 @@
 -----------------------------------
 require("scripts/globals/regimes")
 require("scripts/globals/status")
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobSpawn(mob)
@@ -11,6 +12,7 @@ function onMobSpawn(mob)
 end
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 199)
     dsp.regime.checkRegime(player, mob, 16, 1, dsp.regime.type.FIELDS)
 end
 

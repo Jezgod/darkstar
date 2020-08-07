@@ -54,11 +54,13 @@ zones[dsp.zone.YUHTUNGA_JUNGLE] =
         ROSE_GARDEN_PH          = 17281356,
         ROSE_GARDEN             = 17281357,
         VOLUPTUOUS_VILMA        = 17281358,
+        NASUS_OFFSET            = 17281491,
     },
     npc =
     {
         CASKET_BASE           = 17281559,
         BLUE_RAFFLESIA_OFFSET = 17281586,
+	TUNING_OUT_QM         = 17281590,
         OVERSEER_BASE         = 17281600,
         CERMET_HEADSTONE      = 17281625,
         PEDDLESTOX            = 17281640,

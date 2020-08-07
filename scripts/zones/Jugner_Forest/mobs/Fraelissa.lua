@@ -4,9 +4,11 @@
 -----------------------------------
 local ID = require("scripts/zones/Jugner_Forest/IDs")
 require("scripts/globals/mobs")
+require("scripts/globals/hunts")
 -----------------------------------
 
 function onMobDeath(mob, player, isKiller)
+    dsp.hunts.checkHunt(mob, player, 158)
 end
 
 function onMobDespawn(mob)

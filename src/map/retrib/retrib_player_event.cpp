@@ -53,7 +53,7 @@ auto CRetribPlayerEvent::SetEventNPC(uint32 NPC) -> void
 //* Stat Rankings
 //************************************************************************************/
 
-auto CRetribPlayerEvent::GetRankings(std::string Top3[], uint16 Totals[]) -> uint16
+auto CRetribPlayerEvent::GetRankings(std::string Top3[], uint32 Totals[]) -> uint32
 {
     uint16 Rank = 0;
     const char* Query = "SELECT Name, Points FROM retrib_pc_stats ORDER BY Points DESC LIMIT 3;";
@@ -65,7 +65,7 @@ auto CRetribPlayerEvent::GetRankings(std::string Top3[], uint16 Totals[]) -> uin
         while (Sql_NextRow(SqlHandle) == SQL_SUCCESS)
         {
             Top3[x].insert(0, (const char*)Sql_GetData(SqlHandle, 0));
-            Totals[x] = (uint16)Sql_GetUIntData(SqlHandle, 1);
+            Totals[x] = (uint32)Sql_GetUIntData(SqlHandle, 1);
             x++;
         }
     }

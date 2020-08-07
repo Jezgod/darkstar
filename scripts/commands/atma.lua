@@ -133,7 +133,9 @@ local zone_list =
         31,     --MONARCH LINN
         32,     --SEALION'S DEN
         33,     --AlTaieu
+        34,     --Grand Palace of Hux
         35,     --THE GARDEN OF RU'HMET
+        36,     --Empyreal Paradox
         37,     --TEMENOS
         38,     --APOLLYON
         39,     --Dynamis-Valkurm

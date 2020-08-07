@@ -14,6 +14,18 @@ require("scripts/globals/titles")
 -----------------------------------
 
 function onTrade(player,npc,trade)
+    local item = trade:getItemId(0)
+    local testimony = trade:getItemId(1)
+    local augmentType = 54
+    local augmentAmt = 4
+
+    if (item == 15093 and testimony == 1432 and trade:getGil() == 0) then
+        player:tradeComplete();
+    	player:addItem(item, 1, augmentType, augmentAmt);
+    	player:messageSpecial(ID.text.ITEM_OBTAINED,item);
+    else
+        player:PrintToPlayer("Please trade the appropriate items for your augment.", 29)
+    end         
 end
 
 function onTrigger(player,npc)
